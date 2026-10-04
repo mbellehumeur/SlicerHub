@@ -1,0 +1,31 @@
+{
+  "name": "$model_id",
+  "label": "$label",
+  "description": "$description",
+  "categories": [
+    "$category"
+  ],
+  "modalities": $modalities,
+  "inputs": [
+    {
+      "label": "Primary input",
+      "modality": "$primary_modality",
+      "format": "NIfTI",
+      "description": "$input_description"
+    }
+  ],
+  "predictions": [
+    {
+      "label": "Primary segmentation",
+      "modality": "Segmentation",
+      "format": "NIfTI",
+      "description": "$output_description"
+    }
+  ],
+  "license": {
+    "model": "$license_model",
+    "weights": "$license_weights"
+  },
+  "requires_gpu": $requires_gpu,
+  "docker_image": "$docker_image"
+}

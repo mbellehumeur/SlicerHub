@@ -1,0 +1,2671 @@
+{
+  "cache_date": "2025-01-29",
+  "source": "segdb Python package",
+  "segment_count": 155,
+  "segments": {
+    "LEFT_ADRENAL_GLAND": {
+      "name": "Left adrenal gland",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ADRENAL_STRUCTURE",
+      "type_code": 23451007,
+      "type_scheme": "SCT",
+      "type_meaning": "Adrenal structure",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        199,
+        27,
+        27
+      ]
+    },
+    "RIGHT_ADRENAL_GLAND": {
+      "name": "Right adrenal gland",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ADRENAL_STRUCTURE",
+      "type_code": 23451007,
+      "type_scheme": "SCT",
+      "type_meaning": "Adrenal structure",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        199,
+        27,
+        27
+      ]
+    },
+    "AORTA": {
+      "name": "Aorta",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_AORTIC_STRUCTURE",
+      "type_code": 15825003,
+      "type_scheme": "SCT",
+      "type_meaning": "Aortic structure",
+      "modifier": NaN,
+      "color_rgb": [
+        224,
+        97,
+        76
+      ]
+    },
+    "LEFT_AUTOCHTHONOUS_BACK_MUSCLE": {
+      "name": "Left autochthonous back muscle",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_BACK_AUTOCHTHONOUS_STRUCTURE",
+      "type_code": 244849004,
+      "type_scheme": "SCT",
+      "type_meaning": "Autochthonous back muscle structure",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "RIGHT_AUTOCHTHONOUS_BACK_MUSCLE": {
+      "name": "Right autochthonous back muscle",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_BACK_AUTOCHTHONOUS_STRUCTURE",
+      "type_code": 244849004,
+      "type_scheme": "SCT",
+      "type_meaning": "Autochthonous back muscle structure",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "BRAIN": {
+      "name": "Brain",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BRAIN_STRUCTURE",
+      "type_code": 12738006,
+      "type_scheme": "SCT",
+      "type_meaning": "Brain structure",
+      "modifier": NaN,
+      "color_rgb": [
+        250,
+        250,
+        225
+      ]
+    },
+    "LEFT_CLAVICLE": {
+      "name": "Left clavicle",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BONE_CLAVICLE_STRUCTURE",
+      "type_code": 51299004,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of clavicle",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        188,
+        38
+      ]
+    },
+    "RIGHT_CLAVICLE": {
+      "name": "Right clavicle",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BONE_CLAVICLE_STRUCTURE",
+      "type_code": 51299004,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of clavicle",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        188,
+        38
+      ]
+    },
+    "COLON": {
+      "name": "Colon",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_COLON_STRUCTURE",
+      "type_code": 71854001,
+      "type_scheme": "SCT",
+      "type_meaning": "Colon structure",
+      "modifier": NaN,
+      "color_rgb": [
+        204,
+        168,
+        143
+      ]
+    },
+    "DUODENUM": {
+      "name": "Duodenum",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DUODENAL_STRUCTURE",
+      "type_code": 38848004,
+      "type_scheme": "SCT",
+      "type_meaning": "Duodenal structure",
+      "modifier": NaN,
+      "color_rgb": [
+        255,
+        253,
+        229
+      ]
+    },
+    "ESOPHAGUS": {
+      "name": "Esophagus",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ESOPHAGEAL_STRUCTURE",
+      "type_code": 32849002,
+      "type_scheme": "SCT",
+      "type_meaning": "Esophageal structure",
+      "modifier": NaN,
+      "color_rgb": [
+        211,
+        171,
+        143
+      ]
+    },
+    "FACE": {
+      "name": "Face",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_FACE_STRUCTURE",
+      "type_code": 89545001,
+      "type_scheme": "SCT",
+      "type_meaning": "Face structure",
+      "modifier": NaN,
+      "color_rgb": [
+        140,
+        139,
+        139
+      ]
+    },
+    "LEFT_FEMUR": {
+      "name": "Left femur",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BONE_FEMUR_STRUCTURE",
+      "type_code": 71341001,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of femur",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        130,
+        222,
+        207
+      ]
+    },
+    "RIGHT_FEMUR": {
+      "name": "Right femur",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BONE_FEMUR_STRUCTURE",
+      "type_code": 71341001,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of femur",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        130,
+        222,
+        207
+      ]
+    },
+    "GALLBLADDER": {
+      "name": "Gallbladder",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_GALLBLADDER_STRUCTURE",
+      "type_code": 28231008,
+      "type_scheme": "SCT",
+      "type_meaning": "Gallbladder structure",
+      "modifier": NaN,
+      "color_rgb": [
+        139,
+        150,
+        98
+      ]
+    },
+    "LEFT_GLUTEUS_MAXIMUS": {
+      "name": "Left gluteus maximus",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_GLUTEUS_MAXIMUS_STRUCTURE",
+      "type_code": 181674001,
+      "type_scheme": "SCT",
+      "type_meaning": "Muscle structure of the gluteus maximus",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "RIGHT_GLUTEUS_MAXIMUS": {
+      "name": "Right gluteus maximus",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_GLUTEUS_MAXIMUS_STRUCTURE",
+      "type_code": 181674001,
+      "type_scheme": "SCT",
+      "type_meaning": "Muscle structure of the gluteus maximus",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "LEFT_GLUTEUS_MEDIUS": {
+      "name": "Left gluteus medius",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_GLUTEUS_MEDIUS_STRUCTURE",
+      "type_code": 78333006,
+      "type_scheme": "SCT",
+      "type_meaning": "Muscle structure of the gluteus medius",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "RIGHT_GLUTEUS_MEDIUS": {
+      "name": "Right gluteus medius",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_GLUTEUS_MEDIUS_STRUCTURE",
+      "type_code": 78333006,
+      "type_scheme": "SCT",
+      "type_meaning": "Muscle structure of the gluteus medius",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "LEFT_GLUTEUS_MINIMUS": {
+      "name": "Left gluteus minimus",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_GLUTEUS_MINIMUS_STRUCTURE",
+      "type_code": 75297007,
+      "type_scheme": "SCT",
+      "type_meaning": "Muscle structure of the gluteus minumus",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "RIGHT_GLUTEUS_MINIMUS": {
+      "name": "Right gluteus minimus",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_GLUTEUS_MINIMUS_STRUCTURE",
+      "type_code": 75297007,
+      "type_scheme": "SCT",
+      "type_meaning": "Muscle structure of the gluteus minumus",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "LEFT_ATRIUM": {
+      "name": "Left atrium",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ATRIAL_STRUCTURE",
+      "type_code": 59652004,
+      "type_scheme": "SCT",
+      "type_meaning": "Atrial structure",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        193,
+        156,
+        49
+      ]
+    },
+    "RIGHT_ATRIUM": {
+      "name": "Right atrium",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ATRIAL_STRUCTURE",
+      "type_code": 59652004,
+      "type_scheme": "SCT",
+      "type_meaning": "Atrial structure",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        193,
+        156,
+        49
+      ]
+    },
+    "MYOCARDIUM": {
+      "name": "Myocardium",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_MYOCARDIUM_STRUCTURE",
+      "type_code": 74281007,
+      "type_scheme": "SCT",
+      "type_meaning": "Muscle structure of the myocardium",
+      "modifier": NaN,
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "LEFT_VENTRICLE": {
+      "name": "Left ventricle",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_CARDIAC_VENTRICULAR_LEFT_STRUCTURE",
+      "type_code": 87878005,
+      "type_scheme": "SCT",
+      "type_meaning": "Left cardiac ventricular structure",
+      "modifier": NaN,
+      "color_rgb": [
+        152,
+        55,
+        13
+      ]
+    },
+    "RIGHT_VENTRICLE": {
+      "name": "Right ventricle",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_CARDIAC_VENTRICULAR_RIGHT_STRUCTURE",
+      "type_code": 53085002,
+      "type_scheme": "SCT",
+      "type_meaning": "Right cardiac ventricular structure",
+      "modifier": NaN,
+      "color_rgb": [
+        181,
+        85,
+        57
+      ]
+    },
+    "LEFT_HIP": {
+      "name": "Left hip",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_HIP_STRUCTURE",
+      "type_code": 29836001,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of the hip",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_HIP": {
+      "name": "Right hip",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_HIP_STRUCTURE",
+      "type_code": 29836001,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of the hip",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_HUMERUS": {
+      "name": "Left humerus",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BONE_HUMERUS_STRUCTURE",
+      "type_code": 85050009,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of humerus",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        95,
+        229,
+        185
+      ]
+    },
+    "RIGHT_HUMERUS": {
+      "name": "Right humerus",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BONE_HUMERUS_STRUCTURE",
+      "type_code": 85050009,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of humerus",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        95,
+        229,
+        185
+      ]
+    },
+    "LEFT_ILIAC_ARTERY": {
+      "name": "Left iliac artery",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ILIAC_ARTERY_COMMON_STRUCTURE",
+      "type_code": 73634005,
+      "type_scheme": "SCT",
+      "type_meaning": "Common iliac artery structure",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        217,
+        162,
+        48
+      ]
+    },
+    "RIGHT_ILIAC_ARTERY": {
+      "name": "Right iliac artery",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ILIAC_ARTERY_COMMON_STRUCTURE",
+      "type_code": 73634005,
+      "type_scheme": "SCT",
+      "type_meaning": "Common iliac artery structure",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        217,
+        162,
+        48
+      ]
+    },
+    "LEFT_ILIAC_VEIN": {
+      "name": "Left iliac vein",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ILIAC_VEIN_COMMON_STRUCTURE",
+      "type_code": 46027005,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of common iliac vein",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        197,
+        174,
+        37
+      ]
+    },
+    "RIGHT_ILIAC_VEIN": {
+      "name": "Right iliac vein",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ILIAC_VEIN_COMMON_STRUCTURE",
+      "type_code": 46027005,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of common iliac vein",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        197,
+        174,
+        37
+      ]
+    },
+    "LEFT_ILIOPSOAS": {
+      "name": "Left iliopsoas",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_ILIOPSOAS_STRUCTURE",
+      "type_code": 68455001,
+      "type_scheme": "SCT",
+      "type_meaning": "Muscle structure of the iliopsoas",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "RIGHT_ILIOPSOAS": {
+      "name": "Right iliopsoas",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_MUSCLE_ILIOPSOAS_STRUCTURE",
+      "type_code": 68455001,
+      "type_scheme": "SCT",
+      "type_meaning": "Muscle structure of the iliopsoas",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        192,
+        104,
+        88
+      ]
+    },
+    "INFERIOR_VENA_CAVA": {
+      "name": "Inferior vena cava",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_INFERIOR_VENA_CAVA_STRUCTURE",
+      "type_code": 64131007,
+      "type_scheme": "SCT",
+      "type_meaning": "Inferior vena cava structure",
+      "modifier": NaN,
+      "color_rgb": [
+        110,
+        165,
+        54
+      ]
+    },
+    "SUPERIOR_VENA_CAVA": {
+      "name": "Superior vena cava",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_SUPERIOR_VENA_CAVA_STRUCTURE",
+      "type_code": 48345005,
+      "type_scheme": "SCT",
+      "type_meaning": "Superior vena cava structure",
+      "modifier": NaN,
+      "color_rgb": [
+        56,
+        135,
+        219
+      ]
+    },
+    "LEFT_KIDNEY": {
+      "name": "Left kidney",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_KIDNEY_STRUCTURE",
+      "type_code": 64033007,
+      "type_scheme": "SCT",
+      "type_meaning": "Kidney structure",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        212,
+        126,
+        151
+      ]
+    },
+    "RIGHT_KIDNEY": {
+      "name": "Right kidney",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_KIDNEY_STRUCTURE",
+      "type_code": 64033007,
+      "type_scheme": "SCT",
+      "type_meaning": "Kidney structure",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        212,
+        126,
+        151
+      ]
+    },
+    "KIDNEY": {
+      "name": "Kidney",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_KIDNEY_STRUCTURE",
+      "type_code": 64033007,
+      "type_scheme": "SCT",
+      "type_meaning": "Kidney structure",
+      "modifier": NaN,
+      "color_rgb": [
+        212,
+        126,
+        151
+      ]
+    },
+    "LIVER": {
+      "name": "Liver",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_LIVER_STRUCTURE",
+      "type_code": 10200004,
+      "type_scheme": "SCT",
+      "type_meaning": "Liver structure",
+      "modifier": NaN,
+      "color_rgb": [
+        221,
+        130,
+        101
+      ]
+    },
+    "LEFT_LUNG": {
+      "name": "Left lung",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_LUNG",
+      "type_code": 39607008,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of lung",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        195,
+        156,
+        89
+      ]
+    },
+    "RIGHT_LUNG": {
+      "name": "Right lung",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_LUNG",
+      "type_code": 39607008,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of lung",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        81,
+        166,
+        79
+      ]
+    },
+    "LEFT_LOWER_LUNG_LOBE": {
+      "name": "Left lower lung lobe",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_LUNG_LOBE_LOWER_STRUCTURE",
+      "type_code": 90572001,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of lower lobe of lung",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        242,
+        150,
+        232
+      ]
+    },
+    "RIGHT_LOWER_LUNG_LOBE": {
+      "name": "Right lower lung lobe",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_LUNG_LOBE_LOWER_STRUCTURE",
+      "type_code": 90572001,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of lower lobe of lung",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        117,
+        212,
+        208
+      ]
+    },
+    "RIGHT_MIDDLE_LUNG_LOBE": {
+      "name": "Right middle lung lobe",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_LUNG_LOBE_MIDDLE_RIGHT_STRUCTURE",
+      "type_code": 72481006,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of middle lobe of right lung",
+      "modifier": NaN,
+      "color_rgb": [
+        202,
+        164,
+        140
+      ]
+    },
+    "LEFT_UPPER_LUNG_LOBE": {
+      "name": "Left upper lung lobe",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_LUNG_LOBE_UPPER_STRUCTURE",
+      "type_code": 45653009,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of upper lobe of lung",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        112,
+        162,
+        95
+      ]
+    },
+    "RIGHT_UPPER_LUNG_LOBE": {
+      "name": "Right upper lung lobe",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_LUNG_LOBE_UPPER_STRUCTURE",
+      "type_code": 45653009,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of upper lobe of lung",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        173,
+        69,
+        44
+      ]
+    },
+    "PANCREAS": {
+      "name": "Pancreas",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_PANCREATIC_STRUCTURE",
+      "type_code": 15776009,
+      "type_scheme": "SCT",
+      "type_meaning": "Pancreatic structure",
+      "modifier": NaN,
+      "color_rgb": [
+        249,
+        180,
+        111
+      ]
+    },
+    "PORTAL_AND_SPLENIC_VEIN": {
+      "name": "Portal and splenic vein",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_VENOUS_STRUCTURE",
+      "type_code": 29092000,
+      "type_scheme": "SCT",
+      "type_meaning": "Venous structure",
+      "modifier": NaN,
+      "color_rgb": [
+        0,
+        151,
+        206
+      ]
+    },
+    "PULMONARY_ARTERY": {
+      "name": "Pulmonary artery",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ARTERY_PULMONARY_STRUCTURE",
+      "type_code": 81040000,
+      "type_scheme": "SCT",
+      "type_meaning": "Pulmonary artery structure",
+      "modifier": NaN,
+      "color_rgb": [
+        0,
+        122,
+        171
+      ]
+    },
+    "LEFT_RIB_10": {
+      "name": "Left rib 10",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_10_STRUCTURE",
+      "type_code": 77644006,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of tenth rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_11": {
+      "name": "Left rib 11",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_11_STRUCTURE",
+      "type_code": 58830002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of eleventh rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_12": {
+      "name": "Left rib 12",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_12_STRUCTURE",
+      "type_code": 43993008,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of twelfth rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_1": {
+      "name": "Left rib 1",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_1_STRUCTURE",
+      "type_code": 48535007,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of first rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_2": {
+      "name": "Left rib 2",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_2_STRUCTURE",
+      "type_code": 78247007,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of second rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_3": {
+      "name": "Left rib 3",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_3_STRUCTURE",
+      "type_code": 25888004,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of third rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_4": {
+      "name": "Left rib 4",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_4_STRUCTURE",
+      "type_code": 25523003,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of fourth rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_5": {
+      "name": "Left rib 5",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_5_STRUCTURE",
+      "type_code": 15339008,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of fifth rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_6": {
+      "name": "Left rib 6",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_6_STRUCTURE",
+      "type_code": 59558009,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of sixth rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_7": {
+      "name": "Left rib 7",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_7_STRUCTURE",
+      "type_code": 24915002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of seventh rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_8": {
+      "name": "Left rib 8",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_8_STRUCTURE",
+      "type_code": 5953002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of eight rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "LEFT_RIB_9": {
+      "name": "Left rib 9",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_9_STRUCTURE",
+      "type_code": 22565002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of ninth rib",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_10": {
+      "name": "Right rib 10",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_10_STRUCTURE",
+      "type_code": 77644006,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of tenth rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_11": {
+      "name": "Right rib 11",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_11_STRUCTURE",
+      "type_code": 58830002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of eleventh rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_12": {
+      "name": "Right rib 12",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_12_STRUCTURE",
+      "type_code": 43993008,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of twelfth rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_1": {
+      "name": "Right rib 1",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_1_STRUCTURE",
+      "type_code": 48535007,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of first rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_2": {
+      "name": "Right rib 2",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_2_STRUCTURE",
+      "type_code": 78247007,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of second rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_3": {
+      "name": "Right rib 3",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_3_STRUCTURE",
+      "type_code": 25888004,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of third rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_4": {
+      "name": "Right rib 4",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_4_STRUCTURE",
+      "type_code": 25523003,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of fourth rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_5": {
+      "name": "Right rib 5",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_5_STRUCTURE",
+      "type_code": 15339008,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of fifth rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_6": {
+      "name": "Right rib 6",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_6_STRUCTURE",
+      "type_code": 59558009,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of sixth rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_7": {
+      "name": "Right rib 7",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_7_STRUCTURE",
+      "type_code": 24915002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of seventh rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_8": {
+      "name": "Right rib 8",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_8_STRUCTURE",
+      "type_code": 5953002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of eight rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "RIGHT_RIB_9": {
+      "name": "Right rib 9",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_RIB_9_STRUCTURE",
+      "type_code": 22565002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of ninth rib",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "SACRUM": {
+      "name": "Sacrum",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BONE_SACRUM_STRUCTURE",
+      "type_code": 54735007,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of sacrum",
+      "modifier": NaN,
+      "color_rgb": [
+        163,
+        140,
+        140
+      ]
+    },
+    "LEFT_SCAPULA": {
+      "name": "Left scapula",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BONE_SCAPULA_STRUCTURE",
+      "type_code": 79601000,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of scapula",
+      "modifier": "M_LEFT",
+      "color_rgb": [
+        199,
+        204,
+        131
+      ]
+    },
+    "RIGHT_SCAPULA": {
+      "name": "Right scapula",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BONE_SCAPULA_STRUCTURE",
+      "type_code": 79601000,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of scapula",
+      "modifier": "M_RIGHT",
+      "color_rgb": [
+        199,
+        204,
+        131
+      ]
+    },
+    "SMALL_INTESTINE": {
+      "name": "Small intestine",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_INTESTINE_SMALL_STRUCTURE",
+      "type_code": 30315005,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of small intestine",
+      "modifier": NaN,
+      "color_rgb": [
+        205,
+        167,
+        142
+      ]
+    },
+    "SPLEEN": {
+      "name": "Spleen",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_SPLENIC_STRUCTURE",
+      "type_code": 78961009,
+      "type_scheme": "SCT",
+      "type_meaning": "Splenic structure",
+      "modifier": NaN,
+      "color_rgb": [
+        157,
+        108,
+        162
+      ]
+    },
+    "STOMACH": {
+      "name": "Stomach",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_STOMACH_STRUCTURE",
+      "type_code": 69695003,
+      "type_scheme": "SCT",
+      "type_meaning": "Stomach structure",
+      "modifier": NaN,
+      "color_rgb": [
+        216,
+        132,
+        105
+      ]
+    },
+    "TRACHEA": {
+      "name": "Trachea",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_TRACHEAL_STRUCTURE",
+      "type_code": 44567001,
+      "type_scheme": "SCT",
+      "type_meaning": "Tracheal structure",
+      "modifier": NaN,
+      "color_rgb": [
+        182,
+        228,
+        255
+      ]
+    },
+    "URINARY_BLADDER": {
+      "name": "Urinary bladder",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BLADDER_STRUCTURE",
+      "type_code": 89837001,
+      "type_scheme": "SCT",
+      "type_meaning": "Urinary bladder structure",
+      "modifier": NaN,
+      "color_rgb": [
+        222,
+        154,
+        132
+      ]
+    },
+    "VERTEBRAE_C1": {
+      "name": "Vertebrae C1",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_C1_STRUCTURE",
+      "type_code": 14806007,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae C1",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_C2": {
+      "name": "Vertebrae C2",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_C2_STRUCTURE",
+      "type_code": 39976000,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae C2",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_C3": {
+      "name": "Vertebrae C3",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_C3_STRUCTURE",
+      "type_code": 113205007,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae C3",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_C4": {
+      "name": "Vertebrae C4",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_C4_STRUCTURE",
+      "type_code": 5329002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae C4",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_C5": {
+      "name": "Vertebrae C5",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_C5_STRUCTURE",
+      "type_code": 36978003,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae C5",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_C6": {
+      "name": "Vertebrae C6",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_C6_STRUCTURE",
+      "type_code": 36054005,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae C6",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_C7": {
+      "name": "Vertebrae C7",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_C7_STRUCTURE",
+      "type_code": 87391001,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae C7",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_L1": {
+      "name": "Vertebrae L1",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_L1_STRUCTURE",
+      "type_code": 66794005,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae L1",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_L2": {
+      "name": "Vertebrae L2",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_L2_STRUCTURE",
+      "type_code": 14293000,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae L2",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_L3": {
+      "name": "Vertebrae L3",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_L3_STRUCTURE",
+      "type_code": 36470004,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae L3",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_L4": {
+      "name": "Vertebrae L4",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_L4_STRUCTURE",
+      "type_code": 11994002,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae L4",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_L5": {
+      "name": "Vertebrae L5",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_L5_STRUCTURE",
+      "type_code": 49668003,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae L5",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T10": {
+      "name": "Vertebrae T10",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T10_STRUCTURE",
+      "type_code": 7610001,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T10",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T11": {
+      "name": "Vertebrae T11",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T11_STRUCTURE",
+      "type_code": 12989004,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T11",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T12": {
+      "name": "Vertebrae T12",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T12_STRUCTURE",
+      "type_code": 23215003,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T12",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T1": {
+      "name": "Vertebrae T1",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T1_STRUCTURE",
+      "type_code": 64864005,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T1",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T2": {
+      "name": "Vertebrae T2",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T2_STRUCTURE",
+      "type_code": 53733008,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T2",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T3": {
+      "name": "Vertebrae T3",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T3_STRUCTURE",
+      "type_code": 1626008,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T3",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T4": {
+      "name": "Vertebrae T4",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T4_STRUCTURE",
+      "type_code": 73071006,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T4",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T5": {
+      "name": "Vertebrae T5",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T5_STRUCTURE",
+      "type_code": 56401006,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T5",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T6": {
+      "name": "Vertebrae T6",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T6_STRUCTURE",
+      "type_code": 45296009,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T6",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T7": {
+      "name": "Vertebrae T7",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T7_STRUCTURE",
+      "type_code": 62487009,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T7",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T8": {
+      "name": "Vertebrae T8",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T8_STRUCTURE",
+      "type_code": 11068009,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T8",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_T9": {
+      "name": "Vertebrae T9",
+      "category": "C_TISSUE_STRUCTURE",
+      "category_code": 85756007,
+      "category_scheme": "SCT",
+      "category_meaning": "Body tissue structure",
+      "type_id": "T_BONE_VERTEBRAE_T9_STRUCTURE",
+      "type_code": 82687006,
+      "type_scheme": "SCT",
+      "type_meaning": "Bone structure of vertebrae T9",
+      "modifier": NaN,
+      "color_rgb": [
+        241,
+        214,
+        145
+      ]
+    },
+    "VERTEBRAE_DISK_C2C3": {
+      "name": "Vertebrae Disk C2/C3",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_C2C3_STRUCTURE",
+      "type_code": 1078209008,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of second cervical vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_C3C4": {
+      "name": "Vertebrae Disk C3/C4",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_C3C4_STRUCTURE",
+      "type_code": 58820006,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of third cervical vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_C4C5": {
+      "name": "Vertebrae Disk C4/C5",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_C4C5_STRUCTURE",
+      "type_code": 49400002,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of fourth cervical vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_C5C6": {
+      "name": "Vertebrae Disk C5/C6",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_C5C6_STRUCTURE",
+      "type_code": 73959003,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of fifth cervical vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_C6C7": {
+      "name": "Vertebrae Disk C6/C7",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_C6C7_STRUCTURE",
+      "type_code": 75095006,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of sixth cervical vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_C7T1": {
+      "name": "Vertebrae Disk C7/T1",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_C7T1_STRUCTURE",
+      "type_code": 37414007,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of seventh cervical vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T1T2": {
+      "name": "Vertebrae Disk T1/T2",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T1T2_STRUCTURE",
+      "type_code": 40908007,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of first thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T2T3": {
+      "name": "Vertebrae Disk T2/T3",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T2T3_STRUCTURE",
+      "type_code": 6004007,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of second thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T3T4": {
+      "name": "Vertebrae Disk T3/T4",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T3T4_STRUCTURE",
+      "type_code": 2620004,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of third thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T4T5": {
+      "name": "Vertebrae Disk T4/T5",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T4T5_STRUCTURE",
+      "type_code": 82965004,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of fourth thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T5T6": {
+      "name": "Vertebrae Disk T5/T6",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T5T6_STRUCTURE",
+      "type_code": 72692000,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of fifth thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T6T7": {
+      "name": "Vertebrae Disk T6/T7",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T6T7_STRUCTURE",
+      "type_code": 74401007,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of sixth thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T7T8": {
+      "name": "Vertebrae Disk T7/T8",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T7T8_STRUCTURE",
+      "type_code": 28693002,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of seventh thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T8T9": {
+      "name": "Vertebrae Disk T8/T9",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T8T9_STRUCTURE",
+      "type_code": 9188009,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of eighth thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T9T10": {
+      "name": "Vertebrae Disk T9/T10",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T9T10_STRUCTURE",
+      "type_code": 113209001,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of ninth thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T10T11": {
+      "name": "Vertebrae Disk T10/T11",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T10T11_STRUCTURE",
+      "type_code": 34959001,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of tenth thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T11T12": {
+      "name": "Vertebrae Disk T11/T12",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T11T12_STRUCTURE",
+      "type_code": 1537001,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of eleventh thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_T12L1": {
+      "name": "Vertebrae Disk T12/L1",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_T12L1_STRUCTURE",
+      "type_code": 76206002,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of twelfth thoracic vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_L1L2": {
+      "name": "Vertebrae Disk L1/L2",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_L1L2_STRUCTURE",
+      "type_code": 80064006,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of first lumbar vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_L2L3": {
+      "name": "Vertebrae Disk L2/L3",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_L2L3_STRUCTURE",
+      "type_code": 67459009,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of second lumbar vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_L3L4": {
+      "name": "Vertebrae Disk L3/L4",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_L3L4_STRUCTURE",
+      "type_code": 62551000,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of third lumbar vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_L4L5": {
+      "name": "Vertebrae Disk L4/L5",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_L4L5_STRUCTURE",
+      "type_code": 84020006,
+      "type_scheme": "SCT",
+      "type_meaning": "Intervertebral disc structure of fourth lumbar vertebra (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "VERTEBRAE_DISK_L5S1": {
+      "name": "Vertebrae Disk L5/S1",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_DISK_VERTEBRAE_L5S1_STRUCTURE",
+      "type_code": 715056000,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of intervertebral disc of L5 and S1 (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        191,
+        169,
+        113
+      ]
+    },
+    "CORONARY_ARTERY_RIGHT": {
+      "name": "Right Coronary Artery",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ARTERY_CORONARY_RIGHT_STRUCTURE",
+      "type_code": 13647002,
+      "type_scheme": "SCT",
+      "type_meaning": "Right coronary artery structure",
+      "modifier": NaN,
+      "color_rgb": [
+        172,
+        74,
+        74
+      ]
+    },
+    "CORONARY_ARTERY_LEFT": {
+      "name": "Left Coronary Artery",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ARTERY_CORONARY_LEFT_STRUCTURE",
+      "type_code": 3227004,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of left main coronary artery",
+      "modifier": NaN,
+      "color_rgb": [
+        172,
+        74,
+        74
+      ]
+    },
+    "CORONARY_ARTERY_CFLX": {
+      "name": "Circumflex Branch of the Coronary Artery",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ARTERY_CORONARY_CFLX_LEFT_STRUCTURE",
+      "type_code": 57396003,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of circumflex branch of left coronary artery",
+      "modifier": NaN,
+      "color_rgb": [
+        233,
+        123,
+        123
+      ]
+    },
+    "CORONARY_ARTERY_LAD": {
+      "name": "Left Anterior Descending Coronary Artery",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ARTERY_CORONARY_AD_LEFT_STRUCTURE",
+      "type_code": 59438005,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of left anterior descending artery",
+      "modifier": NaN,
+      "color_rgb": [
+        180,
+        49,
+        49
+      ]
+    },
+    "CORONARY_ARTERY": {
+      "name": "Coronary Artery",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ARTERY_CORONARY_STRUCTURE",
+      "type_code": 41801008,
+      "type_scheme": "SCT",
+      "type_meaning": "Coronary artery structure (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        172,
+        74,
+        74
+      ]
+    },
+    "HEART": {
+      "name": "Heart",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_HEART_STRUCTURE",
+      "type_code": 80891009,
+      "type_scheme": "SCT",
+      "type_meaning": "Heart structure",
+      "modifier": NaN,
+      "color_rgb": [
+        206,
+        110,
+        84
+      ]
+    },
+    "NEOPLASM_MALIGNANT_PRIMARY": {
+      "name": "Primary malignant neoplasm",
+      "category": "C_MORPHOLOGICALLY_ABNORMAL_STRUCTURE",
+      "category_code": 49755003,
+      "category_scheme": "SCT",
+      "category_meaning": "Morphologically abnormal structure",
+      "type_id": "T_NEOPLASM_MALIGNANT_PRIMARY_MABNORMALITY",
+      "type_code": 86049000,
+      "type_scheme": "SCT",
+      "type_meaning": "Malignant neoplasm, primary (morphologic abnormality)",
+      "modifier": NaN,
+      "color_rgb": [
+        255,
+        0,
+        0
+      ]
+    },
+    "AORTIC_VALVE": {
+      "name": "Aortic valve",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_VALVE_AORTIC_STRUCTURE",
+      "type_code": 34202007,
+      "type_scheme": "SCT",
+      "type_meaning": "Aortic valve structure",
+      "modifier": NaN,
+      "color_rgb": [
+        218,
+        123,
+        97
+      ]
+    },
+    "MITRAL_VALVE": {
+      "name": "Mitral valve",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_VALVE_MITRAL_STRUCTURE",
+      "type_code": 91134007,
+      "type_scheme": "SCT",
+      "type_meaning": "Mitral valve structure",
+      "modifier": NaN,
+      "color_rgb": [
+        159,
+        63,
+        27
+      ]
+    },
+    "PULMONARY_VALVE": {
+      "name": "Pulmonary valve",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_VALVE_PULMONARY_STRUCTURE",
+      "type_code": 39057004,
+      "type_scheme": "SCT",
+      "type_meaning": "Pulmonary valve structure",
+      "modifier": NaN,
+      "color_rgb": [
+        225,
+        130,
+        104
+      ]
+    },
+    "TRICUSPID_VALVE": {
+      "name": "Tricuspid valve",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_VALVE_TRICUSPID_STRUCTURE",
+      "type_code": 46030003,
+      "type_scheme": "SCT",
+      "type_meaning": "Tricuspid valve structure",
+      "modifier": NaN,
+      "color_rgb": [
+        166,
+        70,
+        38
+      ]
+    },
+    "SINOTRIAL_NODE": {
+      "name": "Sinoatrial conduction node",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_NODE_SINOATRIAL_STRUCTURE",
+      "type_code": 88210001,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of sinoatrial node",
+      "modifier": NaN,
+      "color_rgb": [
+        255,
+        255,
+        255
+      ]
+    },
+    "ATRIOVENTRICULAR_NODE": {
+      "name": "Atrioventricular conduction node",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_NODE_ATRIOVENTRICULAR_STRUCTURE",
+      "type_code": 25943004,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of atrioventricular node",
+      "modifier": NaN,
+      "color_rgb": [
+        255,
+        255,
+        255
+      ]
+    },
+    "PROSTATE": {
+      "name": "Prostate",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_PROSTATIC_STRUCTURE",
+      "type_code": 41216001,
+      "type_scheme": "SCT",
+      "type_meaning": "Prostatic structure",
+      "modifier": NaN,
+      "color_rgb": [
+        230,
+        158,
+        140
+      ]
+    },
+    "PROSTATE_PERIPHERAL_ZONE": {
+      "name": "Peripheral zone of prostate",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_PROSTATIC_PZ_STRUCTURE",
+      "type_code": 279706003,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of peripheral glandular zone of prostate (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        230,
+        149,
+        140
+      ]
+    },
+    "PROSTATE_TRANSITION_ZONE": {
+      "name": "Transition zone of prostate",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_PROSTATIC_TZ_STRUCTURE",
+      "type_code": 399384005,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of transition zone of prostate (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        230,
+        194,
+        140
+      ]
+    },
+    "CYST": {
+      "name": "Cyst",
+      "category": "C_MORPHOLOGICALLY_ABNORMAL_STRUCTURE",
+      "category_code": 49755003,
+      "category_scheme": "SCT",
+      "category_meaning": "Morphologically abnormal structure",
+      "type_id": "T_CYST_MABNORMALITY",
+      "type_code": 367643001,
+      "type_scheme": "SCT",
+      "type_meaning": "Cyst (morphologic abnormality)",
+      "modifier": NaN,
+      "color_rgb": [
+        150,
+        87,
+        42
+      ]
+    },
+    "SPINAL_CANAL": {
+      "name": "Spinal canal",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_SPINAL_CANAL_STRUCTURE",
+      "type_code": 61853006,
+      "type_scheme": "SCT",
+      "type_meaning": "Spinal canal structure (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        204,
+        99,
+        61
+      ]
+    },
+    "PATHOLOGIC_CALCIFICATION": {
+      "name": "Pathologic calcification",
+      "category": "C_MORPHOLOGICALLY_ABNORMAL_STRUCTURE",
+      "category_code": 49755003,
+      "category_scheme": "SCT",
+      "category_meaning": "Morphologically abnormal structure",
+      "type_id": "T_PATHOLOGIC_CALCIFICATION_MABNORMALITY",
+      "type_code": 18115005,
+      "type_scheme": "SCT",
+      "type_meaning": "Pathologic calcification, calcified structure (morphologic abnormality)",
+      "modifier": NaN,
+      "color_rgb": [
+        255,
+        255,
+        255
+      ]
+    },
+    "PANCREATIC_DUCT": {
+      "name": "Pancreatic duct",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_PANCREATIC_DUCT_STRUCTURE",
+      "type_code": 69930009,
+      "type_scheme": "SCT",
+      "type_meaning": "Pancreatic duct structure (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        173,
+        61,
+        29
+      ]
+    },
+    "BILE_DUCT": {
+      "name": "Bile duct",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_BILE_DUCT_STRUCTURE",
+      "type_code": 28273000,
+      "type_scheme": "SCT",
+      "type_meaning": "Bile duct structure (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        217,
+        36,
+        36
+      ]
+    },
+    "RENAL_VEIN": {
+      "name": "Renal vein",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_RENAL_VEIN_STRUCTURE",
+      "type_code": 56400007,
+      "type_scheme": "SCT",
+      "type_meaning": "Structure of renal vein (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        222,
+        22,
+        22
+      ]
+    },
+    "ARTERY": {
+      "name": "Artery (unspecific)",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_ARTERIAL_STRUCTURE",
+      "type_code": 51114001,
+      "type_scheme": "SCT",
+      "type_meaning": "Arterial structure (body structure)",
+      "modifier": NaN,
+      "color_rgb": [
+        171,
+        27,
+        30
+      ]
+    },
+    "VEIN": {
+      "name": "Vein (unspecific)",
+      "category": "C_BODY_STRUCTURE",
+      "category_code": 123037004,
+      "category_scheme": "SCT",
+      "category_meaning": "Body structure",
+      "type_id": "T_VENOUS_STRUCTURE",
+      "type_code": 29092000,
+      "type_scheme": "SCT",
+      "type_meaning": "Venous structure",
+      "modifier": NaN,
+      "color_rgb": [
+        27,
+        9,
+        99
+      ]
+    }
+  },
+  "categories": {
+    "C_BODY_STRUCTURE": {
+      "CodeValue": 123037004,
+      "CodingSchemeDesignator": "SCT",
+      "CodeMeaning": "Body structure"
+    },
+    "C_TISSUE_STRUCTURE": {
+      "CodeValue": 85756007,
+      "CodingSchemeDesignator": "SCT",
+      "CodeMeaning": "Body tissue structure"
+    },
+    "C_MORPHOLOGICALLY_ABNORMAL_STRUCTURE": {
+      "CodeValue": 49755003,
+      "CodingSchemeDesignator": "SCT",
+      "CodeMeaning": "Morphologically abnormal structure"
+    }
+  },
+  "modifiers": {
+    "M_LEFT": {
+      "CodeValue": 7771000,
+      "CodingSchemeDesignator": "SCT",
+      "CodeMeaning": "Left"
+    },
+    "M_RIGHT": {
+      "CodeValue": 24028007,
+      "CodingSchemeDesignator": "SCT",
+      "CodeMeaning": "Right"
+    }
+  }
+}

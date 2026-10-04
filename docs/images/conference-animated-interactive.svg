@@ -1,0 +1,387 @@
+<svg id="confFlow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" data-step="0" role="img" aria-labelledby="confTitle confDesc" style="cursor: pointer; max-width: 100%; height: auto;">
+  <title id="confTitle">Hub conferencing (animated)</title>
+  <desc id="confDesc">Click to play each step: separate sessions, host starts conference, hub links colleagues, shared study open, synchronized navigation.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0b1b5f" flood-opacity="0.14"/>
+    </filter>
+    <symbol id="clinicianSeated" viewBox="0 0 52 76">
+      <circle cx="26" cy="14" r="10" fill="#e8c4a0" stroke="#b8956e" stroke-width="1.2"/>
+      <path d="M16 11 Q26 5 36 11 Q36 8 26 4 Q16 8 16 11" fill="#2c1810"/>
+      <path d="M14 24 Q26 34 38 24" fill="none" stroke="#475569" stroke-width="1.5"/>
+      <path d="M12 26 L12 58 L40 58 L40 26 L32 26 L30 34 L22 34 L20 26 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="1.2" stroke-linejoin="round"/>
+      <path d="M22 34 L30 34 L28 42 L24 42 Z" fill="#0e7490"/>
+      <circle cx="26" cy="50" r="3.5" fill="#94a3b8" stroke="#475569" stroke-width="1"/>
+      <rect x="18" y="58" width="16" height="6" rx="2" fill="#1e3a5f"/>
+      <path d="M12 30 L5 44" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="4" cy="45" r="3" fill="#e8c4a0" stroke="#b8956e" stroke-width="1"/>
+      <path d="M40 30 L47 44" fill="none" stroke="#ffffff" stroke-width="3.5" stroke-linecap="round"/>
+      <circle cx="48" cy="45" r="3" fill="#e8c4a0" stroke="#b8956e" stroke-width="1"/>
+    </symbol>
+    <style>
+      .clickHint { font: 600 14px Arial, Helvetica, sans-serif; fill: #64748b; }
+      .stepDot { fill: #cbd5e1; }
+      .hint { display: none; }
+
+      #castHubGraphic { transform-origin: 0px 0px; }
+      #hubBroadcastArcs { opacity: 0.4; }
+      #lineHostHub, #lineHubA, #lineHubB, #lineHubC, #lineHubD {
+        stroke: #cbd5e1;
+        opacity: 0.45;
+      }
+      #step2Caption, #step3Caption, #step4Caption, #step5Caption,
+      #bridgeRing, #bridgeA, #bridgeB, #bridgeC, #bridgeD, #bridgeE,
+      #hostBadge,
+      #hostStudy, #attendeeAStudy, #attendeeBStudy, #attendeeCStudy, #attendeeDStudy,
+      .packetHost, .packetFanA, .packetFanB, .packetFanC, .packetFanD { opacity: 0; }
+      .packetHost, .packetFanA, .packetFanB, .packetFanC, .packetFanD {
+        transform: translate(600px, 340px);
+      }
+
+      #confFlow[data-step="2"] #hostBadge,
+      #confFlow[data-step="3"] #hostBadge,
+      #confFlow[data-step="4"] #hostBadge { opacity: 1; }
+      #confFlow[data-step="2"] #bridgeRing,
+      #confFlow[data-step="2"] #bridgeA,
+      #confFlow[data-step="2"] #bridgeB,
+      #confFlow[data-step="2"] #bridgeC,
+      #confFlow[data-step="2"] #bridgeD,
+      #confFlow[data-step="2"] #bridgeE,
+      #confFlow[data-step="3"] #bridgeRing,
+      #confFlow[data-step="3"] #bridgeA,
+      #confFlow[data-step="3"] #bridgeB,
+      #confFlow[data-step="3"] #bridgeC,
+      #confFlow[data-step="3"] #bridgeD,
+      #confFlow[data-step="3"] #bridgeE,
+      #confFlow[data-step="4"] #bridgeRing,
+      #confFlow[data-step="4"] #bridgeA,
+      #confFlow[data-step="4"] #bridgeB,
+      #confFlow[data-step="4"] #bridgeC,
+      #confFlow[data-step="4"] #bridgeD,
+      #confFlow[data-step="4"] #bridgeE { opacity: 1; }
+      #confFlow[data-step="2"] #hubBroadcastArcs,
+      #confFlow[data-step="3"] #hubBroadcastArcs,
+      #confFlow[data-step="4"] #hubBroadcastArcs { opacity: 1; }
+      #confFlow[data-step="3"] #lineHostHub,
+      #confFlow[data-step="3"] #lineHubA,
+      #confFlow[data-step="3"] #lineHubB,
+      #confFlow[data-step="3"] #lineHubC,
+      #confFlow[data-step="3"] #lineHubD,
+      #confFlow[data-step="4"] #lineHostHub,
+      #confFlow[data-step="4"] #lineHubA,
+      #confFlow[data-step="4"] #lineHubB,
+      #confFlow[data-step="4"] #lineHubC,
+      #confFlow[data-step="4"] #lineHubD {
+        stroke: #2457d6;
+        opacity: 1;
+      }
+
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+      @keyframes animHubPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.06); }
+      }
+      @keyframes animHubArcsBright {
+        from { opacity: 0.4; }
+        to { opacity: 1; }
+      }
+      @keyframes animPacketHost {
+        0% { opacity: 0; transform: translate(250px, 250px); }
+        10% { opacity: 1; transform: translate(250px, 250px); }
+        100% { opacity: 1; transform: translate(600px, 340px); }
+      }
+      @keyframes animPacketFanA {
+        0% { opacity: 0; transform: translate(600px, 340px); }
+        10% { opacity: 1; transform: translate(600px, 340px); }
+        100% { opacity: 1; transform: translate(1065px, 123px); }
+      }
+      @keyframes animPacketFanB {
+        0% { opacity: 0; transform: translate(600px, 340px); }
+        10% { opacity: 1; transform: translate(600px, 340px); }
+        100% { opacity: 1; transform: translate(1065px, 238px); }
+      }
+      @keyframes animPacketFanC {
+        0% { opacity: 0; transform: translate(600px, 340px); }
+        10% { opacity: 1; transform: translate(600px, 340px); }
+        100% { opacity: 1; transform: translate(1065px, 353px); }
+      }
+      @keyframes animPacketFanD {
+        0% { opacity: 0; transform: translate(600px, 340px); }
+        10% { opacity: 1; transform: translate(600px, 340px); }
+        100% { opacity: 1; transform: translate(1065px, 468px); }
+      }
+      @keyframes animStudyIn {
+        from { opacity: 0; }
+        to { opacity: 0.95; }
+      }
+
+      #confFlow[data-step="0"] .hint0,
+      #confFlow[data-step="1"] .hint1,
+      #confFlow[data-step="2"] .hint2,
+      #confFlow[data-step="3"] .hint3,
+      #confFlow[data-step="4"] .hint4 { display: block; }
+      #confFlow[data-step="0"] .stepDot0,
+      #confFlow[data-step="1"] .stepDot1,
+      #confFlow[data-step="2"] .stepDot2,
+      #confFlow[data-step="3"] .stepDot3,
+      #confFlow[data-step="4"] .stepDot4 { fill: #2457d6; }
+
+      #confFlow[data-step="1"][data-anim] #step1Caption { animation: fadeOut 0.3s forwards; }
+      #confFlow[data-step="1"][data-anim] #step2Caption { animation: fadeIn 0.3s 0.12s forwards; }
+      #confFlow[data-step="1"][data-anim] #hostBadge { animation: fadeIn 0.4s 0.2s forwards; }
+      #confFlow[data-step="1"][data-anim] #castHubGraphic { animation: animHubPulse 1s ease forwards; }
+      #confFlow[data-step="1"]:not([data-anim]) #step2Caption,
+      #confFlow[data-step="1"]:not([data-anim]) #hostBadge { opacity: 1; }
+      #confFlow[data-step="1"]:not([data-anim]) #step1Caption { opacity: 0; }
+
+      #confFlow[data-step="2"][data-anim] #step2Caption { animation: fadeOut 0.3s forwards; }
+      #confFlow[data-step="2"][data-anim] #step3Caption { animation: fadeIn 0.3s 0.12s forwards; }
+      #confFlow[data-step="2"][data-anim] #bridgeRing,
+      #confFlow[data-step="2"][data-anim] #bridgeA,
+      #confFlow[data-step="2"][data-anim] #bridgeB,
+      #confFlow[data-step="2"][data-anim] #bridgeC,
+      #confFlow[data-step="2"][data-anim] #bridgeD,
+      #confFlow[data-step="2"][data-anim] #bridgeE { animation: fadeIn 0.45s 0.15s forwards; }
+      #confFlow[data-step="2"][data-anim] #hubBroadcastArcs { animation: animHubArcsBright 0.5s 0.2s forwards; }
+      #confFlow[data-step="2"][data-anim] #castHubGraphic { animation: animHubPulse 1.1s ease forwards; }
+      #confFlow[data-step="2"]:not([data-anim]) #step3Caption { opacity: 1; }
+      #confFlow[data-step="2"]:not([data-anim]) #step1Caption,
+      #confFlow[data-step="2"]:not([data-anim]) #step2Caption { opacity: 0; }
+
+      #confFlow[data-step="3"][data-anim] #step3Caption { animation: fadeOut 0.3s forwards; }
+      #confFlow[data-step="3"][data-anim] #step4Caption { animation: fadeIn 0.3s 0.12s forwards; }
+      #confFlow[data-step="3"][data-anim] .packetHost { animation: animPacketHost 1.1s ease forwards; }
+      #confFlow[data-step="3"][data-anim] .packetFanA { animation: animPacketFanA 1s ease 0.35s forwards; }
+      #confFlow[data-step="3"][data-anim] .packetFanB { animation: animPacketFanB 1s ease 0.45s forwards; }
+      #confFlow[data-step="3"][data-anim] .packetFanC { animation: animPacketFanC 1s ease 0.55s forwards; }
+      #confFlow[data-step="3"][data-anim] .packetFanD { animation: animPacketFanD 1s ease 0.65s forwards; }
+      #confFlow[data-step="3"]:not([data-anim]) #step4Caption { opacity: 1; }
+      #confFlow[data-step="3"]:not([data-anim]) #step1Caption,
+      #confFlow[data-step="3"]:not([data-anim]) #step2Caption,
+      #confFlow[data-step="3"]:not([data-anim]) #step3Caption,
+      #confFlow[data-step="3"]:not([data-anim]) .packetHost,
+      #confFlow[data-step="3"]:not([data-anim]) .packetFanA,
+      #confFlow[data-step="3"]:not([data-anim]) .packetFanB,
+      #confFlow[data-step="3"]:not([data-anim]) .packetFanC,
+      #confFlow[data-step="3"]:not([data-anim]) .packetFanD { opacity: 0; }
+
+      #confFlow[data-step="4"][data-anim] #step4Caption { animation: fadeOut 0.3s forwards; }
+      #confFlow[data-step="4"][data-anim] #step5Caption { animation: fadeIn 0.3s 0.12s forwards; }
+      #confFlow[data-step="4"][data-anim] #hostStudy { animation: animStudyIn 0.45s 0.2s forwards; }
+      #confFlow[data-step="4"][data-anim] #attendeeAStudy { animation: animStudyIn 0.45s 0.3s forwards; }
+      #confFlow[data-step="4"][data-anim] #attendeeBStudy { animation: animStudyIn 0.45s 0.4s forwards; }
+      #confFlow[data-step="4"][data-anim] #attendeeCStudy { animation: animStudyIn 0.45s 0.5s forwards; }
+      #confFlow[data-step="4"][data-anim] #attendeeDStudy { animation: animStudyIn 0.45s 0.6s forwards; }
+      #confFlow[data-step="4"]:not([data-anim]) #step5Caption,
+      #confFlow[data-step="4"]:not([data-anim]) #hostStudy,
+      #confFlow[data-step="4"]:not([data-anim]) #attendeeAStudy,
+      #confFlow[data-step="4"]:not([data-anim]) #attendeeBStudy,
+      #confFlow[data-step="4"]:not([data-anim]) #attendeeCStudy,
+      #confFlow[data-step="4"]:not([data-anim]) #attendeeDStudy { opacity: 0.95; }
+      #confFlow[data-step="4"]:not([data-anim]) #step1Caption,
+      #confFlow[data-step="4"]:not([data-anim]) #step2Caption,
+      #confFlow[data-step="4"]:not([data-anim]) #step3Caption,
+      #confFlow[data-step="4"]:not([data-anim]) #step4Caption { opacity: 0; }
+
+      #confFlow[data-step="0"][data-anim] #step5Caption,
+      #confFlow[data-step="0"][data-anim] #step4Caption,
+      #confFlow[data-step="0"][data-anim] #hostBadge,
+      #confFlow[data-step="0"][data-anim] #bridgeRing,
+      #confFlow[data-step="0"][data-anim] #bridgeA,
+      #confFlow[data-step="0"][data-anim] #bridgeB,
+      #confFlow[data-step="0"][data-anim] #bridgeC,
+      #confFlow[data-step="0"][data-anim] #bridgeD,
+      #confFlow[data-step="0"][data-anim] #bridgeE,
+      #confFlow[data-step="0"][data-anim] #hostStudy,
+      #confFlow[data-step="0"][data-anim] #attendeeAStudy,
+      #confFlow[data-step="0"][data-anim] #attendeeBStudy,
+      #confFlow[data-step="0"][data-anim] #attendeeCStudy,
+      #confFlow[data-step="0"][data-anim] #attendeeDStudy,
+      #confFlow[data-step="0"][data-anim] #hubBroadcastArcs { animation: fadeOut 0.45s forwards; }
+      #confFlow[data-step="0"][data-anim] #step1Caption { animation: fadeIn 0.45s 0.2s forwards; }
+      #confFlow[data-step="0"]:not([data-anim]) #step1Caption { opacity: 1; }
+      #confFlow[data-step="0"]:not([data-anim]) #step2Caption,
+      #confFlow[data-step="0"]:not([data-anim]) #step3Caption,
+      #confFlow[data-step="0"]:not([data-anim]) #step4Caption,
+      #confFlow[data-step="0"]:not([data-anim]) #step5Caption { opacity: 0; }
+
+      #confFlow[data-anim] { cursor: wait; }
+
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" fill="#ffffff"/>
+
+  <text x="600" y="52" text-anchor="middle" class="title">Hub Conferencing</text>
+  <text x="600" y="84" text-anchor="middle" class="small">Share the same case across workstations</text>
+
+  <g id="step1Caption">
+    <rect class="captionBox" x="210" y="108" width="780" height="44" rx="8"/>
+    <text x="600" y="136" text-anchor="middle" class="captionText">Step 1: Each clinician works in their own viewer session</text>
+  </g>
+  <g id="step2Caption">
+    <rect class="captionBox" x="210" y="108" width="780" height="44" rx="8"/>
+    <text x="600" y="136" text-anchor="middle" class="captionText">Step 2: The host starts a conference and invites colleagues</text>
+  </g>
+  <g id="step3Caption">
+    <rect class="captionBox" x="180" y="108" width="840" height="44" rx="8"/>
+    <text x="600" y="136" text-anchor="middle" class="captionText">Step 3: The hub links their sessions for the duration of the meeting</text>
+  </g>
+  <g id="step4Caption">
+    <rect class="captionBox" x="170" y="108" width="860" height="44" rx="8"/>
+    <text x="600" y="136" text-anchor="middle" class="captionText">Step 4: When the host opens a study, everyone follows the same case</text>
+  </g>
+  <g id="step5Caption">
+    <rect class="captionBox" x="190" y="108" width="820" height="44" rx="8"/>
+    <text x="600" y="136" text-anchor="middle" class="captionText">Step 5: Navigation, images, and annotations stay in sync for the group</text>
+  </g>
+
+  <path id="lineHostHub" class="conn" d="M280 250 L520 330"/>
+  <path id="lineHubA" class="conn" d="M680 330 L980 123"/>
+  <path id="lineHubB" class="conn" d="M680 340 L980 238"/>
+  <path id="lineHubC" class="conn" d="M680 350 L980 353"/>
+  <path id="lineHubD" class="conn" d="M670 360 L980 468"/>
+
+  <circle id="bridgeRing" cx="600" cy="340" r="132" fill="none" stroke="#7c3aed" stroke-width="3" stroke-dasharray="10 8"/>
+  <path id="bridgeA" d="M600 340 L280 250" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 8"/>
+  <path id="bridgeB" d="M600 340 L1065 123" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 8"/>
+  <path id="bridgeC" d="M600 340 L1065 238" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 8"/>
+  <path id="bridgeD" d="M600 340 L1065 353" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 8"/>
+  <path id="bridgeE" d="M600 340 L1065 468" fill="none" stroke="#7c3aed" stroke-width="3" stroke-linecap="round" stroke-dasharray="10 8"/>
+
+  <g id="hostStation" transform="translate(80, 170)">
+    <rect class="panel" x="0" y="0" width="240" height="128" rx="12"/>
+    <text x="120" y="34" text-anchor="middle" class="label">Host</text>
+    <text x="120" y="56" text-anchor="middle" class="small">Worklist</text>
+    <rect id="hostStudy" x="42" y="68" width="156" height="48" rx="4" fill="#1d4ed8" stroke="#334155" stroke-width="1.5"/>
+    <text x="120" y="98" text-anchor="middle" class="screenLabel">study list</text>
+    <rect x="90" y="122" width="60" height="6" rx="2" fill="#94a3b8"/>
+    <g id="hostBadge">
+      <rect x="168" y="8" width="64" height="22" rx="11" fill="#7c3aed"/>
+      <text x="200" y="23" text-anchor="middle" class="badge">LIVE</text>
+    </g>
+    <use href="#clinicianSeated" x="84" y="78" width="72" height="106"/>
+  </g>
+
+  <g id="attendeeA" transform="translate(980, 85)">
+    <rect class="panel" x="0" y="0" width="170" height="76" rx="12"/>
+    <text x="85" y="28" text-anchor="middle" class="label">OHIF</text>
+    <rect id="attendeeAStudy" x="28" y="40" width="114" height="28" rx="3" fill="#1d4ed8" stroke="#334155" stroke-width="1.5"/>
+    <text x="85" y="58" text-anchor="middle" class="screenLabel">viewer</text>
+    <rect x="55" y="70" width="60" height="6" rx="2" fill="#94a3b8"/>
+    <use href="#clinicianSeated" x="61" y="36" width="48" height="70"/>
+  </g>
+
+  <g id="attendeeB" transform="translate(980, 200)">
+    <rect class="panel" x="0" y="0" width="170" height="76" rx="12"/>
+    <text x="85" y="28" text-anchor="middle" class="label">VolView</text>
+    <rect id="attendeeBStudy" x="28" y="40" width="114" height="28" rx="3" fill="#1d4ed8" stroke="#334155" stroke-width="1.5"/>
+    <text x="85" y="58" text-anchor="middle" class="screenLabel">viewer</text>
+    <rect x="55" y="70" width="60" height="6" rx="2" fill="#94a3b8"/>
+    <use href="#clinicianSeated" x="61" y="36" width="48" height="70"/>
+  </g>
+
+  <g id="attendeeC" transform="translate(980, 315)">
+    <rect class="panel" x="0" y="0" width="170" height="76" rx="12"/>
+    <text x="85" y="28" text-anchor="middle" class="label">Slim</text>
+    <rect id="attendeeCStudy" x="28" y="40" width="114" height="28" rx="3" fill="#1d4ed8" stroke="#334155" stroke-width="1.5"/>
+    <text x="85" y="58" text-anchor="middle" class="screenLabel">viewer</text>
+    <rect x="55" y="70" width="60" height="6" rx="2" fill="#94a3b8"/>
+    <use href="#clinicianSeated" x="61" y="36" width="48" height="70"/>
+  </g>
+
+  <g id="attendeeD" transform="translate(980, 430)">
+    <rect class="panel" x="0" y="0" width="170" height="76" rx="12"/>
+    <text x="85" y="28" text-anchor="middle" class="label">3D Slicer</text>
+    <rect id="attendeeDStudy" x="28" y="40" width="114" height="28" rx="3" fill="#1d4ed8" stroke="#334155" stroke-width="1.5"/>
+    <text x="85" y="58" text-anchor="middle" class="screenLabel">viewer</text>
+    <rect x="55" y="70" width="60" height="6" rx="2" fill="#94a3b8"/>
+    <use href="#clinicianSeated" x="61" y="36" width="48" height="70"/>
+  </g>
+
+  <g id="castHub">
+    <text x="648" y="318" text-anchor="start" class="heading">Hub</text>
+  </g>
+  <g transform="translate(600, 340)">
+    <g id="castHubGraphic">
+      <g transform="rotate(-42)">
+        <g id="hubBroadcastArcs" fill="none" stroke="#38bdf8" stroke-linecap="round">
+          <path d="M30 -12 A 14 14 0 0 1 30 12" stroke-width="3"/>
+          <path d="M38 -20 A 22 22 0 0 1 38 20" stroke-width="2.5" opacity="0.8"/>
+          <path d="M46 -28 A 30 30 0 0 1 46 28" stroke-width="2" opacity="0.55"/>
+        </g>
+        <g id="hubDish">
+          <circle cx="0" cy="0" r="20" fill="#e0f2fe" stroke="#1e40af" stroke-width="4"/>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <g class="packetHost">
+    <rect x="-34" y="-12" width="68" height="24" rx="6" fill="#2457d6" stroke="#1e40af" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetText">open study</text>
+  </g>
+  <g class="packetFanA">
+    <rect x="-28" y="-10" width="56" height="20" rx="5" fill="#2457d6" stroke="#1e40af" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetText">sync</text>
+  </g>
+  <g class="packetFanB">
+    <rect x="-28" y="-10" width="56" height="20" rx="5" fill="#2457d6" stroke="#1e40af" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetText">sync</text>
+  </g>
+  <g class="packetFanC">
+    <rect x="-28" y="-10" width="56" height="20" rx="5" fill="#2457d6" stroke="#1e40af" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetText">sync</text>
+  </g>
+  <g class="packetFanD">
+    <rect x="-28" y="-10" width="56" height="20" rx="5" fill="#2457d6" stroke="#1e40af" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetText">sync</text>
+  </g>
+
+  <g transform="translate(120, 590)">
+    <text x="0" y="0" class="small">Tumor board, case review, or live teaching</text>
+    <text x="0" y="22" class="small">- everyone sees what the group is discussing</text>
+  </g>
+
+  <g id="clickHint" pointer-events="none">
+    <text x="600" y="688" text-anchor="middle" class="clickHint hint hint0">Click to play · step 1 of 5</text>
+    <text x="600" y="688" text-anchor="middle" class="clickHint hint hint1">Click to play · step 2 of 5</text>
+    <text x="600" y="688" text-anchor="middle" class="clickHint hint hint2">Click to play · step 3 of 5</text>
+    <text x="600" y="688" text-anchor="middle" class="clickHint hint hint3">Click to play · step 4 of 5</text>
+    <text x="600" y="688" text-anchor="middle" class="clickHint hint hint4">Click to restart · step 5 of 5</text>
+    <circle class="stepDot stepDot0" cx="500" cy="694" r="5"/>
+    <circle class="stepDot stepDot1" cx="520" cy="694" r="5"/>
+    <circle class="stepDot stepDot2" cx="540" cy="694" r="5"/>
+    <circle class="stepDot stepDot3" cx="560" cy="694" r="5"/>
+    <circle class="stepDot stepDot4" cx="580" cy="694" r="5"/>
+  </g>
+
+  <script><![CDATA[
+    (function () {
+      var root = document.getElementById('confFlow');
+      var step = 0;
+      var busy = false;
+      var DURATION = { 0: 700, 1: 1000, 2: 1200, 3: 1700, 4: 1000 };
+
+      function play(next) {
+        busy = true;
+        step = next;
+        root.setAttribute('data-step', String(next));
+        root.setAttribute('data-anim', '1');
+        window.setTimeout(function () {
+          root.removeAttribute('data-anim');
+          busy = false;
+        }, DURATION[next]);
+      }
+
+      root.addEventListener('click', function () {
+        if (busy) {
+          return;
+        }
+        play((step + 1) % 5);
+      });
+    })();
+  ]]></script>
+
+</svg>

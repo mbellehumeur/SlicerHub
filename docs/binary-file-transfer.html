@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Binary file transfer — Hub</title>
+  <script>
+    (function () {
+      var k = 'hub-pages-mode';
+      var s = localStorage.getItem(k);
+      var m =
+        s === 'light' || s === 'dark'
+          ? s
+          : window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+      document.documentElement.dataset.mode = m;
+    })();
+  </script>
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+  <main>
+    <div class="page-toolbar">
+      <p class="back-link"><a href="index.html">← Slicer Hub documentation</a></p>
+      <button type="button" id="theme-toggle" class="theme-toggle">Dark mode</button>
+    </div>
+    <h1 id="binary-file-transfer">Hub binary file transfer</h1>
+    <p>
+      Resource Server → Image Display: POST multipart files to the hub, WebSocket
+      metadata fan-out, then GET payload bytes. Click the diagram to play each
+      step (five steps plus restart).
+    </p>
+    <div class="diagram">
+      <object
+        data="images/binary-file-transfer-rs-to-id-interactive.svg"
+        type="image/svg+xml"
+        width="1200"
+        height="700"
+        aria-label="Interactive binary file transfer diagram (Resource Server to Image Display)">
+        <p>
+          Your browser cannot display this interactive SVG.
+          <a href="images/binary-file-transfer-rs-to-id-interactive.svg">Open the SVG directly</a>.
+        </p>
+      </object>
+    </div>
+    <p class="diagram-caption">
+      Steps: multipart POST · hub stores payloadIds · WebSocket notify · GET file bytes · payload TTL expires.
+    </p>
+
+    <p>
+      Hub carries imaging files (DICOM, NIfTI, PNG, NRRD, and similar) through a
+      Slicer hub without putting raw bytes on the WebSocket. The hub is a
+      <strong>router</strong> with a short-lived in-memory file store—not a PACS or
+      long-term archive.
+    </p>
+    <p><strong>Two steps for every file:</strong></p>
+    <ol>
+      <li>
+        <strong>Notify</strong> — Publisher sends metadata (and uploads bytes) over HTTP.
+        The hub fans out one text-only WebSocket message listing
+        <code>payloadIds[]</code> per file.
+      </li>
+      <li>
+        <strong>Download</strong> — Each subscriber pulls bytes when ready via
+        <code>GET /api/hub/payloads/&#123;payloadId&#125;</code>, reassembles chunks,
+        and attaches the full file to <code>event.context.files[]</code>.
+      </li>
+    </ol>
+    <p>
+      Full write-up:
+      <a href="https://github.com/mbellehumeur/SlicerHub/blob/main/HubInterface/docs/binary-file-transfer.md">binary-file-transfer.md</a>
+      · Auto-play loop SVG in repo:
+      <a href="https://github.com/mbellehumeur/SlicerHub/blob/main/HubInterface/docs/images/binary-file-transfer-animated-rs-to-id.svg">rs-to-id animated</a>
+    </p>
+  </main>
+  <script src="theme.js"></script>
+</body>
+</html>

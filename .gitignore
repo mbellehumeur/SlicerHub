@@ -1,0 +1,39 @@
+# Byte-compiled
+__pycache__/
+*.py[cod]
+
+# Packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Slicer hub deploy artifacts
+HubInterface/hub/slicer-hub.zip
+deploy/
+HubInterface/hub/volview-client/
+HubInterface/hub/worklist-client/
+HubInterface/hub/reporting-client/
+HubInterface/hub/classroom-client/
+HubInterface/hub/slicerlive/
+HubInterface/hub/hub-mirror/
+HubInterface/hub/vtkjs-worklist-client/
+HubInterface/hub/hub-worklist-example/
+HubInterface/hub/slim/
+HubInterface/hub/OHIF-client/
+
+# Python lib/ at repo root (not image_display/lib)
+/lib/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Secrets / local env
+.env
+HubInterface/hub/.env
+
+# OS
+.DS_Store
+Thumbs.db

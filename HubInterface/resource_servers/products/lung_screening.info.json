@@ -1,0 +1,11 @@
+{
+  "id": "lung",
+  "product": "LUNGSCREENING",
+  "title": "Lung Screening",
+  "location": "Toronto, Canada",
+  "summary": "CT lung screening.",
+  "githubUrl": "https://github.com/rphellan/slicerW45",
+  "websiteUrl": "https://projectweek.na-mic.org/PW45_2026_Boston/Projects/ExtractingDeepLearningFeaturesFromCtImagesOfTheThoracicRegionForLungCancerApplications/",
+  "hubEvent": "dicom-send",
+  "enabled": false
+}

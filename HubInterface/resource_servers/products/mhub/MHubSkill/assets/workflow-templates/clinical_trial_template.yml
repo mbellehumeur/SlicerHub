@@ -1,0 +1,44 @@
+# Clinical Trial Workflow Template
+#
+# For data with metadata encoded in filenames:
+#   input_data/
+#   ├── SITE01_PAT001_BL_CT.nii.gz   (Site 01, Patient 001, Baseline, CT)
+#   ├── SITE01_PAT001_FU_CT.nii.gz   (Site 01, Patient 001, Follow-up, CT)
+#   ├── SITE01_PAT002_BL_CT.nii.gz
+#   └── SITE02_PAT001_BL_CT.nii.gz
+#
+# Extracts: site, patient, timepoint, modality from filename
+# Organizes output by site/patient/timepoint hierarchy
+
+general:
+  data_base_dir: /app/data
+  version: 1.0
+  description: "Clinical trial workflow with metadata extraction"
+
+execute:
+- FileStructureImporter
+- NiftiConverter
+- MODEL_RUNNER  # <-- Replace with actual runner
+- DataOrganizer
+
+modules:
+  FileStructureImporter:
+    # Composite ID ensures unique instance per site+patient+timepoint
+    import_id: site/patient/timepoint
+    structures:
+      # Pattern: SITE_PATIENT_TIMEPOINT_MODALITY.nii.gz
+      # Regex groups:  (site)   (patient) (timepoint)(modality)
+      - re:([A-Z]+\d*)_([A-Z0-9]+)_([A-Z]+)_(\w+)\.nii(\.gz)?$::$site::$patient::$timepoint::$scan_modality@instance@nifti:mod=ct
+      
+    # Alternative: Folder-based organization
+    # - $site/$patient/$timepoint/re:.*\.nii(\.gz)?$@instance@nifti:mod=ct
+
+  DataOrganizer:
+    targets:
+    # Hierarchical output by site/patient/timepoint
+    - nifti:mod=seg-->[i:site]/[i:patient]/[i:timepoint]/segmentations/[d:roi].nii.gz
+    - nifti:mod=ct-->[i:site]/[i:patient]/[i:timepoint]/input/[basename]
+    - log-->[i:site]/[i:patient]/[i:timepoint]/logs/[basename]
+    
+    # Flat summary for cross-site analysis
+    - nifti:mod=seg-->all_segmentations/[i:site]_[i:patient]_[i:timepoint]_[d:roi].nii.gz

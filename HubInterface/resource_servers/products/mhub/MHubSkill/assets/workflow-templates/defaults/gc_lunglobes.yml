@@ -1,0 +1,30 @@
+general:
+  data_base_dir: /app/data
+  version: 1.0
+  description: Lung-Lobe segmentation default (dicom to dicom)
+  
+execute:
+- DicomImporter
+- MhaConverter
+- LobeSegmentationRunner
+- DsegConverter
+- DataOrganizer
+
+modules:
+  DicomImporter:
+    source_dir: input_data
+    import_dir: sorted_data
+    sort_data: True
+    meta: 
+      mod: '%Modality'
+
+  MhaConverter:
+    engine: panimg
+
+  DsegConverter:
+    model_name: GCLungLobes
+    skip_empty_slices: True
+
+  DataOrganizer:
+    targets:
+      - dicomseg:mod=seg-->[i:sid]/gc_lunglobes.seg.dcm

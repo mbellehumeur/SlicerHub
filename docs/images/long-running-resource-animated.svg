@@ -1,0 +1,228 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" role="img" aria-labelledby="lrrTitle lrrDesc">
+  <title id="lrrTitle">Long running resource integration (animated)</title>
+  <desc id="lrrDesc">Image Display sends dicom-send to a resource server; the server publishes status-update progress lines while working; then sends results back with another dicom-send.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0b1b5f" flood-opacity="0.14"/>
+    </filter>
+    <style>
+      .title { font: 700 38px Arial, Helvetica, sans-serif; fill: #06146b; }
+      .heading { font: 700 24px Arial, Helvetica, sans-serif; fill: #06146b; }
+      .label { font: 700 20px Arial, Helvetica, sans-serif; fill: #06146b; }
+      .small { font: 16px Arial, Helvetica, sans-serif; fill: #334155; }
+      .panel { fill: #fff; stroke: #cfe0ff; stroke-width: 2; filter: url(#shadow); }
+      .captionBox { fill: #06146b; opacity: 0.9; }
+      .captionText { font: 700 13px Arial, Helvetica, sans-serif; fill: #fff; }
+      .packetDicom { font: 700 10px Arial, Helvetica, sans-serif; fill: #fff; }
+      .packetStatus { font: 700 9px Arial, Helvetica, sans-serif; fill: #fff; }
+      .conn { fill: none; stroke: #cbd5e1; stroke-width: 4; stroke-linecap: round; }
+      .jobBar { fill: #e2e8f0; }
+
+      #step1Caption { opacity: 0; animation: step1Caption 32s infinite; }
+      @keyframes step1Caption {
+        0%, 3% { opacity: 0; }
+        5%, 20% { opacity: 1; }
+        22%, 100% { opacity: 0; }
+      }
+      #step2Caption { opacity: 0; animation: step2Caption 32s infinite; }
+      @keyframes step2Caption {
+        0%, 20% { opacity: 0; }
+        22%, 58% { opacity: 1; }
+        60%, 100% { opacity: 0; }
+      }
+      #step3Caption { opacity: 0; animation: step3Caption 32s infinite; }
+      @keyframes step3Caption {
+        0%, 58% { opacity: 0; }
+        60%, 84% { opacity: 1; }
+        86%, 100% { opacity: 0; }
+      }
+      #step4Caption { opacity: 0; animation: step4Caption 32s infinite; }
+      @keyframes step4Caption {
+        0%, 84% { opacity: 0; }
+        86%, 96% { opacity: 1; }
+        98%, 100% { opacity: 0; }
+      }
+
+      #lineIn, #lineOut { animation: linePulse 32s infinite; }
+      @keyframes linePulse {
+        0%, 18% { stroke: #cbd5e1; opacity: 0.45; }
+        20%, 24% { stroke: #2457d6; opacity: 1; }
+        26%, 58% { stroke: #cbd5e1; opacity: 0.45; }
+        60%, 64% { stroke: #d97706; opacity: 1; }
+        66%, 68% { stroke: #cbd5e1; opacity: 0.45; }
+        70%, 82% { stroke: #2457d6; opacity: 1; }
+        84%, 100% { stroke: #cbd5e1; opacity: 0.45; }
+      }
+
+      .packetDicomIn { opacity: 0; animation: packetDicomIn 32s infinite; }
+      @keyframes packetDicomIn {
+        0%, 4% { opacity: 0; transform: translate(220px, 350px); }
+        6% { opacity: 1; transform: translate(220px, 350px); }
+        12% { opacity: 1; transform: translate(600px, 350px); }
+        18% { opacity: 1; transform: translate(980px, 350px); }
+        20%, 100% { opacity: 0; transform: translate(980px, 350px); }
+      }
+
+      .packetStatus1 { opacity: 0; animation: packetStatus1 32s infinite; }
+      @keyframes packetStatus1 {
+        0%, 24% { opacity: 0; transform: translate(980px, 350px); }
+        26% { opacity: 1; transform: translate(980px, 350px); }
+        32% { opacity: 1; transform: translate(600px, 350px); }
+        38% { opacity: 1; transform: translate(220px, 350px); }
+        40%, 100% { opacity: 0; transform: translate(220px, 350px); }
+      }
+      .packetStatus2 { opacity: 0; animation: packetStatus2 32s infinite; }
+      @keyframes packetStatus2 {
+        0%, 32% { opacity: 0; transform: translate(980px, 350px); }
+        34% { opacity: 1; transform: translate(980px, 350px); }
+        40% { opacity: 1; transform: translate(600px, 350px); }
+        46% { opacity: 1; transform: translate(220px, 350px); }
+        48%, 100% { opacity: 0; transform: translate(220px, 350px); }
+      }
+      .packetStatus3 { opacity: 0; animation: packetStatus3 32s infinite; }
+      @keyframes packetStatus3 {
+        0%, 40% { opacity: 0; transform: translate(980px, 350px); }
+        42% { opacity: 1; transform: translate(980px, 350px); }
+        48% { opacity: 1; transform: translate(600px, 350px); }
+        54% { opacity: 1; transform: translate(220px, 350px); }
+        56%, 100% { opacity: 0; transform: translate(220px, 350px); }
+      }
+
+      .packetDicomOut { opacity: 0; animation: packetDicomOut 32s infinite; }
+      @keyframes packetDicomOut {
+        0%, 62% { opacity: 0; transform: translate(980px, 350px); }
+        64% { opacity: 1; transform: translate(980px, 350px); }
+        70% { opacity: 1; transform: translate(600px, 350px); }
+        76% { opacity: 1; transform: translate(220px, 350px); }
+        78%, 100% { opacity: 0; transform: translate(220px, 350px); }
+      }
+
+      #rsJobPanel { opacity: 0; animation: rsJobPanel 32s infinite; }
+      @keyframes rsJobPanel {
+        0%, 20% { opacity: 0; }
+        22%, 58% { opacity: 1; }
+        60%, 100% { opacity: 0; }
+      }
+      #jobFill { opacity: 0; transform-origin: 0px 5px; animation: jobFill 32s infinite; }
+      @keyframes jobFill {
+        0%, 22% { opacity: 0; transform: scaleX(0); }
+        28%, 56% { opacity: 1; transform: scaleX(1); }
+        58%, 100% { opacity: 0; transform: scaleX(1); }
+      }
+      #idResultStudy { opacity: 0; animation: idResultStudy 32s infinite; }
+      @keyframes idResultStudy {
+        0%, 78% { opacity: 0; }
+        80%, 96% { opacity: 0.95; }
+        100% { opacity: 0; }
+      }
+
+      #castHubGraphic { transform-origin: 0px 0px; animation: hubPulse 32s infinite; }
+      @keyframes hubPulse {
+        0%, 4% { transform: scale(1); }
+        6%, 18% { transform: scale(1.06); }
+        20%, 24% { transform: scale(1); }
+        26%, 54% { transform: scale(1.03); }
+        56%, 62% { transform: scale(1); }
+        64%, 76% { transform: scale(1.06); }
+        78%, 100% { transform: scale(1); }
+      }
+      #hubBroadcastArcs { opacity: 0.4; animation: hubBroadcastArcs 32s infinite; }
+      @keyframes hubBroadcastArcs {
+        0%, 4% { opacity: 0.4; }
+        6%, 78% { opacity: 1; }
+        80%, 100% { opacity: 0.4; }
+      }
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" fill="#ffffff"/>
+
+  <text x="600" y="52" text-anchor="middle" class="title">Long Running Resources</text>
+  <text x="600" y="84" text-anchor="middle" class="small">dicom-send, status-update, then dicom-send with results</text>
+
+  <g id="step1Caption">
+    <rect class="captionBox" x="170" y="108" width="860" height="44" rx="8"/>
+    <text x="600" y="136" text-anchor="middle" class="captionText">Step 1: Image Display sends the study to the resource server with dicom-send</text>
+  </g>
+  <g id="step2Caption">
+    <rect class="captionBox" x="150" y="108" width="900" height="44" rx="8"/>
+    <text x="600" y="136" text-anchor="middle" class="captionText">Step 2: While the job runs, the server publishes status-update lines to the viewer</text>
+  </g>
+  <g id="step3Caption">
+    <rect class="captionBox" x="160" y="108" width="880" height="44" rx="8"/>
+    <text x="600" y="136" text-anchor="middle" class="captionText">Step 3: When finished, results return with another dicom-send</text>
+  </g>
+  <g id="step4Caption">
+    <rect class="captionBox" x="220" y="108" width="760" height="44" rx="8"/>
+    <text x="600" y="136" text-anchor="middle" class="captionText">Step 4: Image Display loads the segmentation overlay</text>
+  </g>
+
+  <path id="lineIn" class="conn" d="M345 350 L545 350"/>
+  <path id="lineMid" class="conn" d="M655 350 L835 350"/>
+  <path id="lineOut" class="conn" d="M835 350 L655 350 L345 350"/>
+
+  <g id="imageDisplay">
+    <rect class="panel" x="95" y="255" width="250" height="190" rx="18"/>
+    <rect x="185" y="278" width="70" height="58" rx="12" fill="#6528e0"/>
+    <path d="M200 322 L215 304 L227 317 L236 309 L248 322 Z" fill="#fff"/>
+    <circle cx="236" cy="296" r="5" fill="#fff"/>
+    <rect x="130" y="300" width="90" height="50" rx="6" fill="#0f172a"/>
+    <rect id="idResultStudy" x="138" y="308" width="74" height="34" rx="4" fill="#16a34a"/>
+    <text x="220" y="364" text-anchor="middle" class="label">Image Display</text>
+    <text x="220" y="390" text-anchor="middle" class="small">VolView / OHIF / 3D Slicer</text>
+    <text x="220" y="412" text-anchor="middle" class="small">Job Status log</text>
+  </g>
+
+  <g id="castHub">
+    <text x="648" y="328" text-anchor="start" class="heading">Hub</text>
+  </g>
+  <g transform="translate(600, 350)">
+    <g id="castHubGraphic">
+      <g transform="rotate(-42)">
+        <g id="hubBroadcastArcs" fill="none" stroke="#38bdf8" stroke-linecap="round">
+          <path d="M30 -12 A 14 14 0 0 1 30 12" stroke-width="3"/>
+          <path d="M38 -20 A 22 22 0 0 1 38 20" stroke-width="2.5" opacity="0.8"/>
+          <path d="M46 -28 A 30 30 0 0 1 46 28" stroke-width="2" opacity="0.55"/>
+        </g>
+        <g id="hubDish">
+          <circle cx="0" cy="0" r="20" fill="#e0f2fe" stroke="#1e40af" stroke-width="4"/>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <g id="resourceServer">
+    <rect class="panel" x="835" y="255" width="270" height="190" rx="18"/>
+    <rect x="900" y="285" width="140" height="80" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+    <text x="970" y="312" text-anchor="middle" class="small">TotalSegmentator</text>
+    <text x="970" y="332" text-anchor="middle" class="small">resource server</text>
+    <g id="rsJobPanel">
+      <rect class="jobBar" x="890" y="348" width="160" height="10" rx="5"/>
+      <rect id="jobFill" x="890" y="348" width="160" height="10" rx="5" fill="#f59e0b"/>
+      <text x="970" y="372" text-anchor="middle" class="small" fill="#b45309">running...</text>
+    </g>
+    <text x="970" y="410" text-anchor="middle" class="label">Resource Server</text>
+    <text x="970" y="432" text-anchor="middle" class="small">long-running job</text>
+  </g>
+
+  <g class="packetDicomIn">
+    <rect x="-52" y="-14" width="104" height="28" rx="14" fill="#2457d6" stroke="#1e40af" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetDicom">dicom-send</text>
+  </g>
+  <g class="packetStatus1">
+    <rect x="-58" y="-12" width="116" height="24" rx="12" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetStatus">status-update</text>
+  </g>
+  <g class="packetStatus2">
+    <rect x="-58" y="-12" width="116" height="24" rx="12" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetStatus">status-update</text>
+  </g>
+  <g class="packetStatus3">
+    <rect x="-58" y="-12" width="116" height="24" rx="12" fill="#d97706" stroke="#b45309" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetStatus">status-update</text>
+  </g>
+  <g class="packetDicomOut">
+    <rect x="-52" y="-14" width="104" height="28" rx="14" fill="#2457d6" stroke="#1e40af" stroke-width="1.5"/>
+    <text x="0" y="4" text-anchor="middle" class="packetDicom">dicom-send</text>
+  </g>
+</svg>

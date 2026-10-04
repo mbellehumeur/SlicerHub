@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hub description</title>
+  <script>
+    (function () {
+      var k = 'hub-pages-mode';
+      var s = localStorage.getItem(k);
+      var m =
+        s === 'light' || s === 'dark'
+          ? s
+          : window.matchMedia('(prefers-color-scheme: dark)').matches
+            ? 'dark'
+            : 'light';
+      document.documentElement.dataset.mode = m;
+    })();
+  </script>
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+  <main>
+    <div class="page-toolbar">
+      <p class="back-link"><a href="index.html">← Slicer Hub documentation</a></p>
+      <button type="button" id="theme-toggle" class="theme-toggle">Dark mode</button>
+    </div>
+    <h1 id="hub-description">Hub description</h1>
+    <p>
+      Hub is focused on desktop integration of all healthcare applications. It
+      is not restricted to a specific data format and does not mandate the
+      development of authorization scoping features.
+    </p>
+    <p>In addition to distributing FHIRcast events, hub allows the following:</p>
+    <ul>
+      <li>Request data from applications.</li>
+      <li>File transfer.</li>
+      <li>Resource servers with long running jobs.</li>
+      <li>Conferencing.</li>
+      <li>IHE actor naming for advanced message routing.</li>
+      <li>
+        Three additional subscription fields:
+        <ul>
+          <li><code>subscriber.product.name</code></li>
+          <li><code>subscriber.product.version</code></li>
+          <li><code>subscriber.actors</code></li>
+        </ul>
+      </li>
+      <li>
+        Four additional event fields:
+        <ul>
+          <li><code>subscriber.name</code></li>
+          <li><code>subscriber.actor</code></li>
+          <li><code>target.actor</code></li>
+          <li><code>target.product.name</code></li>
+        </ul>
+      </li>
+      <li>
+        Additional hub-generated <code>subscription-removed</code> event when an
+        application disconnects from the WebSocket.
+      </li>
+    </ul>
+
+    <h2>How does the request work?</h2>
+    <p>
+      There is value to being able to obtain real-time information from other
+      applications in the workflow. For example, knowing the &ldquo;sceneview&rdquo;
+      status of an Image Display application or the current content of the report
+      editor. This is different than what a FHIRcast hub would know since it
+      relies on getting events to maintain its context which are not generated
+      for each user action.
+    </p>
+    <p>
+      The hub request is technically a POST to the hub, same as a normal event
+      publish. The only difference for the client is that the hub does not
+      immediately respond with status code OK but forwards the request through
+      the WebSocket connections to the relevant subscribers, collates their
+      responses and sends the information back to the client in the POST
+      response.
+    </p>
+    <p>
+      In practice, each application supports responding to a status-request
+      event in less than 2 seconds. On start-up the application publishes a
+      status-request that is forwarded to all applications in the user workflow.
+      The hub collates the responses and then the application makes the best use
+      of that information to display relevant information at launch.
+    </p>
+    <p>
+      The following animation shows the added resilience and data exchange that
+      this feature provides.
+    </p>
+    <p class="figure-caption">
+      <em>Animation description:</em> The user is reviewing a report on his
+      tablet and walks over to the workstation to view the images. The
+      application is launched without context. The application sends a request
+      event to find which study to load from the worklist client and then
+      queries the reporting client to get the measurements in the template. The
+      measurements are used to populate annotation labeling drop-down in the
+      image display tools.
+    </p>
+    <p>
+      <strong><a href="images/request-event-flow-interactive.svg">Interactive step-by-step version</a></strong>
+      — click to play each step.
+    </p>
+    <div class="diagram">
+      <object
+        data="images/request-event-flow-interactive.svg"
+        type="image/svg+xml"
+        width="1200"
+        height="700"
+        aria-label="Interactive status-request event flow diagram">
+        <p>
+          Your browser cannot display this interactive SVG.
+          <a href="images/request-event-flow-interactive.svg">Open the SVG directly</a>.
+        </p>
+      </object>
+    </div>
+    <p class="diagram-caption">
+      Click to play each step: walk to workstation, launch viewer, status-request
+      poll, CT and report load, measurements, celebrate.
+    </p>
+
+    <h2>How does file transfer work?</h2>
+    <p>
+      Hub uses a <strong>notify then download</strong> model: the WebSocket
+      carries JSON and a <code>payloadId</code> per file; file bytes live in the
+      hub&rsquo;s short-lived HTTP store and subscribers call
+      <code>GET /api/hub/payloads/&#123;payloadId&#125;</code> to get the files.
+    </p>
+    <p>
+      All binary uploads use <strong>one binary batch</strong> per publish —
+      <code>multipart/related</code> with a JSON manifest
+      (<code>event.context.files[]</code>) plus one HTTP part per file. That
+      covers DICOM slices, NIfTI volumes, and other binary-family events.
+    </p>
+    <p>
+      Before forwarding the JSON file metadata to the recipients over WebSocket,
+      the hub adds the short-lived payloadId to each file metadata so that they
+      can be downloaded. For DICOM files, the DICOM metadata of each file is
+      therefore available before the download. Recipients can select which file
+      they actually need and download those in the order they want. This
+      provides something similar to DICOM association but at file level and
+      with all info available instead of only SOP class UID and transfer
+      syntaxes. For example, if a complete study is sent to TotalSegmentator, the
+      handler script can choose to only download one series of thin slices;
+      saving time and bandwidth.
+    </p>
+    <p>
+      The file and DICOM metadata information has to be created by the client
+      publishing the event since the hub does not parse context data.
+    </p>
+    <p>
+      When the resource server has the same data access as the image display,
+      like in the vtk-js worklist example where all data is online, the image
+      display does not have to send the binary files. Only the JSON message is
+      sent and the resource server downloads the input data itself and sends the
+      result binaries back to the image display as shown below.
+    </p>
+    <p>
+      Resource servers (e.g. TotalSegmentator) receive metadata on the socket,
+      then <code>fetch_all_payloads</code> fills <code>files[].data</code> before
+      your <code>onMessage</code> script runs.
+    </p>
+    <p>
+      Full description:
+      <a href="binary-file-transfer.html">binary file transfer</a>.
+    </p>
+    <p>
+      <strong><a href="binary-file-transfer.html">Interactive step-by-step diagram</a></strong>
+    </p>
+    <div class="diagram">
+      <object
+        data="images/binary-file-transfer-rs-to-id-interactive.svg"
+        type="image/svg+xml"
+        width="1200"
+        height="700"
+        aria-label="Interactive binary file transfer diagram (Resource Server to Image Display)">
+        <p>
+          Your browser cannot display this interactive SVG.
+          <a href="images/binary-file-transfer-rs-to-id-interactive.svg">Open the SVG directly</a>
+          or see <a href="binary-file-transfer.html">binary file transfer</a>.
+        </p>
+      </object>
+    </div>
+    <p class="diagram-caption">
+      Click to play each step: multipart POST, hub stores payloadIds, WebSocket
+      notify, GET file bytes, payload TTL expires.
+    </p>
+    <p>
+      The hub filename policy is
+      <a href="https://github.com/mbellehumeur/SlicerHub/blob/main/HubInterface/docs/filename-policy.md">documented here</a>.
+    </p>
+
+    <h2>How does conferencing work?</h2>
+    <p>
+      Normally each clinician&rsquo;s viewer stays on its own session.
+      Conferencing lets a <strong>host</strong> start a shared meeting — from
+      the worklist, OHIF, VolView, Slim, or 3D Slicer — and invite colleagues
+      who are already connected to the hub. For the duration of the meeting,
+      when anyone in the group opens a study, changes slices, or shares
+      annotations, the others see the same updates in real time.
+    </p>
+    <p>
+      Typical uses include tumor boards, case discussions, ultrasound review
+      with a remote physician, and teaching sessions where the group should
+      follow one presenter without logging into the same account.
+    </p>
+    <p>
+      The following animation shows the idea at a glance. For setup, APIs, and
+      UI details, see
+      <a href="https://github.com/mbellehumeur/SlicerHub/blob/main/HubInterface/docs/conference-readme.md">conference-readme.md</a>.
+    </p>
+    <p class="figure-caption">
+      <em>Animation description:</em> The host starts a conference from the
+      worklist and invites colleagues on OHIF, VolView, Slim, and 3D Slicer.
+      The hub links their sessions. When the host opens a study, the same case
+      appears on every participant&rsquo;s screen and stays in sync as the group
+      works together.
+    </p>
+    <p>
+      <strong><a href="images/conference-animated-interactive.svg">Interactive step-by-step version</a></strong>
+      — click to play each step.
+    </p>
+    <div class="diagram">
+      <object
+        data="images/conference-animated-interactive.svg"
+        type="image/svg+xml"
+        width="1200"
+        height="700"
+        aria-label="Interactive Hub conferencing diagram">
+        <p>
+          Your browser cannot display this interactive SVG.
+          <a href="images/conference-animated-interactive.svg">Open the SVG directly</a>.
+        </p>
+      </object>
+    </div>
+    <p class="diagram-caption">
+      Click to play each step: separate sessions, host invites, hub links,
+      shared study open, synchronized navigation.
+    </p>
+
+    <h2>How do long running resources integrate?</h2>
+    <p>
+      Resource servers such as TotalSegmentator connect to the hub like any
+      other hub client, but their work takes seconds or minutes instead of a
+      single instant response. The viewer sends the input study with
+      <strong>dicom-send</strong> (binary batch upload through the hub). While
+      the server runs, it publishes <strong>status-update</strong> lines to the
+      viewer&rsquo;s job log so the user sees progress. When the job finishes,
+      the server sends the result segmentation with another
+      <strong>dicom-send</strong> and the viewer loads the overlay.
+    </p>
+    <p>
+      The following animation shows that three-step pattern. For job-status
+      event details see
+      <a href="https://github.com/mbellehumeur/SlicerHub/blob/main/HubInterface/docs/status-readme.md">status-readme.md</a>;
+      for file transfer mechanics see
+      <a href="binary-file-transfer.html">binary file transfer</a>.
+    </p>
+    <p class="figure-caption">
+      <em>Animation description:</em> VolView sends a study to TotalSegmentator
+      with dicom-send. The resource server runs segmentation and publishes
+      several status-update messages. It then returns the SEG result with a
+      second dicom-send, which the image display loads.
+    </p>
+    <p class="figure-center">
+      <img src="images/long-running-resource-animated.svg"
+        alt="Long running resource — dicom-send, status-update, dicom-send result (animated)">
+    </p>
+  </main>
+  <script src="theme.js"></script>
+</body>
+</html>

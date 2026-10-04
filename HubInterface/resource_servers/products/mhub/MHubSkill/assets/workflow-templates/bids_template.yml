@@ -1,0 +1,48 @@
+# BIDS-Compatible Workflow Template
+#
+# For data organized according to Brain Imaging Data Structure:
+#   input_data/
+#   ├── sub-001/
+#   │   └── anat/
+#   │       └── sub-001_T1w.nii.gz
+#   └── sub-002/
+#       └── anat/
+#           └── sub-002_T1w.nii.gz
+#
+# Output follows BIDS derivatives convention
+
+general:
+  data_base_dir: /app/data
+  version: 1.0
+  description: "BIDS-compatible workflow"
+
+execute:
+- FileStructureImporter
+- NiftiConverter
+- MODEL_RUNNER  # <-- Replace with actual runner
+- DataOrganizer
+
+modules:
+  FileStructureImporter:
+    import_id: subject
+    structures:
+      # Standard BIDS T1w
+      - sub-$subject@instance/anat/re:.*_T1w\.nii(\.gz)?$@nifti:mod=mr
+      
+      # With session level (uncomment if needed)
+      # - sub-$subject@instance/ses-$session/anat/re:.*_T1w\.nii(\.gz)?$@nifti:mod=mr
+      
+    excludes:
+      - derivatives/
+      - sourcedata/
+      - code/
+      - .bidsignore
+
+  DataOrganizer:
+    targets:
+    # BIDS derivatives structure
+    - nifti:mod=seg-->derivatives/segmentations/sub-[i:subject]/sub-[i:subject]_[d:roi].nii.gz
+    # JSON sidecar for segments
+    - json:mod=seg-->derivatives/segmentations/sub-[i:subject]/sub-[i:subject]_segmentation.json
+    # Logs
+    - log-->derivatives/logs/sub-[i:subject]/[basename]

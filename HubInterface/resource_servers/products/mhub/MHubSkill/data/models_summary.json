@@ -1,0 +1,1997 @@
+{
+  "cache_date": "2025-01-29",
+  "source": "https://mhub.ai/api/v2/models/detailed",
+  "model_count": 30,
+  "models": {
+    "totalsegmentator": {
+      "label": "TotalSegmentator",
+      "description": "TotalSegmentator is an AI-based pipeline for the segmentation of 104 anatomical structures in CT images (with and without contrast).",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "SPLEEN",
+        "RIGHT_KIDNEY",
+        "LEFT_KIDNEY",
+        "GALLBLADDER",
+        "LIVER",
+        "STOMACH",
+        "AORTA",
+        "INFERIOR_VENA_CAVA",
+        "PORTAL_AND_SPLENIC_VEIN",
+        "PANCREAS",
+        "RIGHT_ADRENAL_GLAND",
+        "LEFT_ADRENAL_GLAND",
+        "LEFT_UPPER_LUNG_LOBE",
+        "LEFT_LOWER_LUNG_LOBE",
+        "RIGHT_UPPER_LUNG_LOBE",
+        "RIGHT_MIDDLE_LUNG_LOBE",
+        "RIGHT_LOWER_LUNG_LOBE",
+        "VERTEBRAE_L5",
+        "VERTEBRAE_L4",
+        "VERTEBRAE_L3",
+        "VERTEBRAE_L2",
+        "VERTEBRAE_L1",
+        "VERTEBRAE_T12",
+        "VERTEBRAE_T11",
+        "VERTEBRAE_T10",
+        "VERTEBRAE_T9",
+        "VERTEBRAE_T8",
+        "VERTEBRAE_T7",
+        "VERTEBRAE_T6",
+        "VERTEBRAE_T5",
+        "VERTEBRAE_T4",
+        "VERTEBRAE_T3",
+        "VERTEBRAE_T2",
+        "VERTEBRAE_T1",
+        "VERTEBRAE_C7",
+        "VERTEBRAE_C6",
+        "VERTEBRAE_C5",
+        "VERTEBRAE_C4",
+        "VERTEBRAE_C3",
+        "VERTEBRAE_C2",
+        "VERTEBRAE_C1",
+        "ESOPHAGUS",
+        "TRACHEA",
+        "MYOCARDIUM",
+        "LEFT_ATRIUM",
+        "LEFT_VENTRICLE",
+        "RIGHT_ATRIUM",
+        "RIGHT_VENTRICLE",
+        "PULMONARY_ARTERY",
+        "BRAIN",
+        "LEFT_ILIAC_ARTERY",
+        "RIGHT_ILIAC_ARTERY",
+        "LEFT_ILIAC_VEIN",
+        "RIGHT_ILIAC_VEIN",
+        "SMALL_INTESTINE",
+        "DUODENUM",
+        "COLON",
+        "LEFT_RIB_1",
+        "LEFT_RIB_2",
+        "LEFT_RIB_3",
+        "LEFT_RIB_4",
+        "LEFT_RIB_5",
+        "LEFT_RIB_6",
+        "LEFT_RIB_7",
+        "LEFT_RIB_8",
+        "LEFT_RIB_9",
+        "LEFT_RIB_10",
+        "LEFT_RIB_11",
+        "LEFT_RIB_12",
+        "RIGHT_RIB_1",
+        "RIGHT_RIB_2",
+        "RIGHT_RIB_3",
+        "RIGHT_RIB_4",
+        "RIGHT_RIB_5",
+        "RIGHT_RIB_6",
+        "RIGHT_RIB_7",
+        "RIGHT_RIB_8",
+        "RIGHT_RIB_9",
+        "RIGHT_RIB_10",
+        "RIGHT_RIB_11",
+        "RIGHT_RIB_12",
+        "LEFT_HUMERUS",
+        "RIGHT_HUMERUS",
+        "LEFT_SCAPULA",
+        "RIGHT_SCAPULA",
+        "LEFT_CLAVICLE",
+        "RIGHT_CLAVICLE",
+        "LEFT_FEMUR",
+        "RIGHT_FEMUR",
+        "LEFT_HIP",
+        "RIGHT_HIP",
+        "SACRUM",
+        "FACE",
+        "LEFT_GLUTEUS_MAXIMUS",
+        "RIGHT_GLUTEUS_MAXIMUS",
+        "LEFT_GLUTEUS_MEDIUS",
+        "RIGHT_GLUTEUS_MEDIUS",
+        "LEFT_GLUTEUS_MINIMUS",
+        "RIGHT_GLUTEUS_MINIMUS",
+        "LEFT_AUTOCHTHONOUS_BACK_MUSCLE",
+        "RIGHT_AUTOCHTHONOUS_BACK_MUSCLE",
+        "LEFT_ILIOPSOAS",
+        "RIGHT_ILIOPSOAS",
+        "URINARY_BLADDER"
+      ],
+      "segment_count": 104,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Jakob Wasserthal, Hanns-Christian Breit, Manfred T. Meyer, Maurice Pradella, Daniel Hinck, Alexander W. Sauter, Tobias Heye, Daniel T. Boll, Joshy Cyriac, Shan Yang, Michael Bach, and Martin Segeroth (2023). TotalSegmentator: Robust Segmentation of 104 Anatomic Structures in CT Images. Radiology Artificial Intelligence, 5:5",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The CT scan of a patient (any part of the body).",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "WHOLEBODY",
+          "slicethickness": "1.5 mm",
+          "non-contrast": true,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/totalsegmentator:latest"
+    },
+    "platipy": {
+      "label": "Platipy",
+      "description": "Platipy's cardiac substructures segmentation model is a hybrid pipeline (AI- and atlas-based) for the automated segmentation of 16 cardiac substructures in CT scans (with and without contrast).",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "HEART",
+        "AORTA",
+        "LEFT_ATRIUM",
+        "LEFT_VENTRICLE",
+        "RIGHT_ATRIUM",
+        "RIGHT_VENTRICLE",
+        "CORONARY_ARTERY_LAD",
+        "CORONARY_ARTERY_CFLX",
+        "CORONARY_ARTERY_RIGHT",
+        "PULMONARY_ARTERY",
+        "SINOTRIAL_NODE",
+        "TRICUSPID_VALVE",
+        "PULMONARY_VALVE",
+        "MITRAL_VALVE",
+        "SUPERIOR_VENA_CAVA",
+        "AORTIC_VALVE",
+        "ATRIOVENTRICULAR_NODE"
+      ],
+      "segment_count": 17,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Finnegan, R.N., Chin, V., Chlap, P. et al. Open-source, fully-automated hybrid cardiac substructure segmentation: development and optimisation. Phys Eng Sci Med 46, 377\u2013393 (2023).",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The chest CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Chest",
+          "slicethickness": "2.5 mm",
+          "non-contrast": true,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/platipy:latest"
+    },
+    "bamf_nnunet_mr_prostate": {
+      "label": "BAMF MR Prostate Seg (nnU-Net)",
+      "description": "bamf_nnunet_mr_prostate model is a semantic segmentation model where an NNUnet model is finetuned for MR images",
+      "modalities": [
+        "MR"
+      ],
+      "segments": [
+        "PROSTATE"
+      ],
+      "segment_count": 1,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "MIT",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023).",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The MR scan of a patient",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "Prostate",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/bamf_nnunet_mr_prostate:latest"
+    },
+    "bamf_nnunet_ct_kidney": {
+      "label": "BAMF CT Kidney Seg (nnU-Net)",
+      "description": "An nnU-Net based model to segment kidney from CT scans",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "KIDNEY",
+        "KIDNEY+NEOPLASM_MALIGNANT_PRIMARY",
+        "KIDNEY+CYST"
+      ],
+      "segment_count": 3,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "MIT",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023).",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Kidney",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/bamf_nnunet_ct_kidney:latest"
+    },
+    "nnunet_liver": {
+      "label": "CT Liver Seg (nnU-Net)",
+      "description": "nnU-Net's liver segmentation model is an AI-based pipeline for the automated segmentation of the liver and liver cancer in portal venous phase CT scans.",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "LIVER",
+        "LIVER+NEOPLASM_MALIGNANT_PRIMARY"
+      ],
+      "segment_count": 2,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9.",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The abdominal CE-CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Abdomen",
+          "slicethickness": "2.5 mm",
+          "non-contrast": false,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/nnunet_liver:latest"
+    },
+    "bamf_nnunet_ct_liver": {
+      "label": "BAMF CT Liver Seg (nnU-Net)",
+      "description": "An nnU-Net based model to segment liver from CT scans",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "LIVER"
+      ],
+      "segment_count": 1,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "MIT",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023).",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "LIVER",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/bamf_nnunet_ct_liver:latest"
+    },
+    "lungmask": {
+      "label": "LungMask",
+      "description": "LungMask is an AI-based pipeline for the automated lungs and pulmonary lobes segmentation in CT (robust to the presence of severe pathologies).",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "RIGHT_LUNG",
+        "LEFT_LUNG",
+        "LEFT_UPPER_LUNG_LOBE",
+        "LEFT_LOWER_LUNG_LOBE",
+        "RIGHT_UPPER_LUNG_LOBE",
+        "RIGHT_MIDDLE_LUNG_LOBE",
+        "RIGHT_LOWER_LUNG_LOBE"
+      ],
+      "segment_count": 7,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "Apache 2.0",
+      "cite": "Hofmanninger, J., Prayer, F., Pan, J. et al. Automatic lung segmentation in routine imaging is primarily a data diversity problem, not a methodology problem. Eur Radiol Exp 4, 50 (2020). https://doi.org/10.1186/s41747-020-00173-2",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The chest CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Chest",
+          "slicethickness": "n/a",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/lungmask:latest"
+    },
+    "nnunet_prostate_zonal_task05": {
+      "label": "Prostate Transitional and Peripheral Zone Seg (nnU-Net)",
+      "description": "nnU-Net's zonal prostate segmentation model is a multi-modality input AI-based pipeline for the automated segmentation of the peripheral and transition zone of the prostate on MRI scans.",
+      "modalities": [
+        "MR"
+      ],
+      "segments": [
+        "PROSTATE_PERIPHERAL_ZONE",
+        "PROSTATE_TRANSITION_ZONE"
+      ],
+      "segment_count": 2,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9.",
+      "inputs": [
+        {
+          "label": "T2 input image",
+          "description": "The T2 axial sequence being one of the two input image",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "Prostate",
+          "slicethickness": "3.6 mm",
+          "non-contrast": true,
+          "contrast": false
+        },
+        {
+          "label": "ADC Input Image",
+          "description": "The ADC axial sequence being one of the two input image",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "Prostate",
+          "slicethickness": "3.6 mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/nnunet_prostate_zonal_task05:latest"
+    },
+    "nnunet_prostate_task24": {
+      "label": "Whole Prostate Seg (nnU-Net)",
+      "description": "nnU-Net's whole prostate segmentation model is a single-modality (i.e. T2) input AI-based pipeline for the automated segmentation of the whole prostate on MRI scans.",
+      "modalities": [
+        "MR"
+      ],
+      "segments": [
+        "PROSTATE"
+      ],
+      "segment_count": 1,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9.",
+      "inputs": [
+        {
+          "label": "T2 input image",
+          "description": "The T2 axial-acquired sequence being the input image",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "Prostate",
+          "slicethickness": "3.6 mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/nnunet_prostate_task24:latest"
+    },
+    "nnunet_pancreas": {
+      "label": "Pancreas Seg (nnU-Net)",
+      "description": "nnU-Net's pancreas segmentation model is an AI-based pipeline for the automated segmentation of the pancreas and pancreatic cancer in portal venous phase CT scans.",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "PANCREAS",
+        "PANCREAS+NEOPLASM_MALIGNANT_PRIMARY"
+      ],
+      "segment_count": 2,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9.",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The abdominal CE-CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Abdomen",
+          "slicethickness": "2.5 mm",
+          "non-contrast": false,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/nnunet_pancreas:latest"
+    },
+    "gc_picai_baseline": {
+      "label": "PI-CAI challenge baseline",
+      "description": "This algorithm predicts a detection map for the likelihood of clinically significant prostate cancer (csPCa) using biparametric MRI (bpMRI). The algorithm ensembles 5-fold cross-validation models that were trained on the PI-CAI: Public Training and Development Dataset v2.0. The detection map is at the same spatial resolution and physical dimensions as the input axial T2-weighted image. This model algorithm was used as a baseline for the PI-CAI challenge hosted on Grand Challenge.",
+      "modalities": [
+        "MR"
+      ],
+      "segments": [],
+      "segment_count": 0,
+      "predictions": [
+        "Prostate cancer likelihood",
+        "Transverse cancer detection map"
+      ],
+      "category": "Prediction",
+      "license_code": "Apache 2.0",
+      "license_weights": "CC-BY-NC-SA-4.0",
+      "cite": "J. S. Bosma, A. Saha, M. Hosseinzadeh, I. Slootweg, M. de Rooij, and H. Huisman, \"Semisupervised Learning with Report-guided Pseudo Labels for Deep Learning\u2013based Prostate Cancer Detection Using Biparametric MRI\", Radiology: Artificial Intelligence, 230031, 2023. DOI: 10.1148/ryai.230031",
+      "inputs": [
+        {
+          "label": "Transverse T2-weighted prostate biparametric MRI",
+          "description": "Transverse T2-weighted prostate biparametric MRI exam.",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "Prostate",
+          "slicethickness": "0.5 x 0.5 x 3.0 mm",
+          "non-contrast": false,
+          "contrast": false
+        },
+        {
+          "label": "Transverse high b-value diffusion-weighted maps of the prostate",
+          "description": "Transverse high b-value diffusion-weighted (DWI) maps, with b-value of 1400 or 2000, either acquired or vendor-calculated.",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "Prostate",
+          "slicethickness": "0.5 x 0.5 x 3.0 mm",
+          "non-contrast": false,
+          "contrast": false
+        },
+        {
+          "label": "Transverse apparent diffusion coefficient map of the prostate",
+          "description": "Transverse apparent diffusion coefficient (ADC) prostate MRI map.",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "Prostate",
+          "slicethickness": "0.5 x 0.5 x 3.0 mm",
+          "non-contrast": false,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/gc_picai_baseline:latest"
+    },
+    "casust": {
+      "label": "CaSuSt",
+      "description": "A deep learning model for cardiac sub-structure delineation on planning CT scans. The model delineates the heart contours and seven cardiac substructures based on individually trained binary models.",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "HEART",
+        "LEFT_VENTRICLE",
+        "RIGHT_VENTRICLE",
+        "LEFT_ATRIUM",
+        "RIGHT_ATRIUM",
+        "CORONARY_ARTERY_LAD",
+        "CORONARY_ARTERY_CFLX",
+        "CORONARY_ARTERY_RIGHT"
+      ],
+      "segment_count": 8,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "Apache 2.0",
+      "cite": "N\u00fcrnberg, L, Bontempi, D, De Ruysscher, D, et al. Deep learning segmentation of heart substructures in radiotherapy treatment planning. Physica Medica: European journal of medical physics, 2022",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The planning chest CT scan of a RT patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Chest",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/casust:latest"
+    },
+    "gc_lunglobes": {
+      "label": "Pulmonary Lobes Seg (RTSU-Net)",
+      "description": "RTSU-Net is an AI-based pipeline for the automated pulmonary lobes segmentation in CT (robust to the presence of severe pathologies).",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "LEFT_UPPER_LUNG_LOBE",
+        "LEFT_LOWER_LUNG_LOBE",
+        "RIGHT_UPPER_LUNG_LOBE",
+        "RIGHT_MIDDLE_LUNG_LOBE",
+        "RIGHT_LOWER_LUNG_LOBE"
+      ],
+      "segment_count": 5,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "Apache 2.0",
+      "cite": "W. Xie, C. Jacobs, J. -P. Charbonnier and B. van Ginneken, 'Relational Modeling for Robust and Efficient Pulmonary Lobe Segmentation in CT Scans,' in IEEE Transactions on Medical Imaging, vol. 39, no. 8, pp. 2664-2675, Aug. 2020, doi: 10.1109/TMI.2020.2995108.",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The chest CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Chest",
+          "slicethickness": "0.75mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/gc_lunglobes:latest"
+    },
+    "bamf_nnunet_mr_liver": {
+      "label": "BAMF MR Liver Seg (nnU-Net)",
+      "description": "An nnU-Net based model to segment liver from T1 weighted MRI scans",
+      "modalities": [
+        "MR"
+      ],
+      "segments": [
+        "LIVER"
+      ],
+      "segment_count": 1,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "MIT",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023).",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The abdominal T1 weighted  MRI scan of a patient.",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "LIVER",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/bamf_nnunet_mr_liver:latest"
+    },
+    "gc_wsi_bgseg": {
+      "label": "Tissue-Background segmentation in histopathological whole-slide images",
+      "description": "This algorithm segments the background and tissue in histopathological whole-slide images.",
+      "modalities": [
+        "SM"
+      ],
+      "segments": [],
+      "segment_count": 0,
+      "predictions": [
+        "WSI background and tissue segmentation mask"
+      ],
+      "category": "Prediction",
+      "license_code": "AGPL v3.0",
+      "license_weights": "AGPL v3.0",
+      "cite": "B\u00e1ndi P, Balkenhol M, van Ginneken B, van der Laak J, Litjens G. 2019. Resolution-agnostic tissue segmentation in whole-slide histopathology images with convolutional neural networks. PeerJ 7:e8242",
+      "inputs": [
+        {
+          "label": "Whole-slide image",
+          "description": "Whole-slide histopathology image",
+          "format": "DICOM",
+          "modality": "SM",
+          "bodypartexamined": "WHOLEBODY",
+          "slicethickness": "",
+          "non-contrast": false,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/gc_wsi_bgseg:latest"
+    },
+    "gc_grt123_lung_cancer": {
+      "label": "CT Lung cancer risk prediction",
+      "description": "This algorithm analyzes non-contrast CT scans of the thorax and predicts the lung cancer risk. The model consists of two modules. The first one is a 3D region proposal network for nodule detection, which outputs all suspicious nodules for a subject. The second one selects the top five nodules based on the detection confidence, evaluates their cancer probabilities and combines them with a leaky noisy-or gate to obtain the probability of lung cancer for the subject. This model was the winner of the Data Science Bowl 2017 competition hosted on Kaggle.",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [],
+      "segment_count": 0,
+      "predictions": [
+        "Lung thorax cancer nodule probability score"
+      ],
+      "category": "Prediction",
+      "license_code": "MIT",
+      "license_weights": "MIT",
+      "cite": "F. Liao, M. Liang, Z. Li, X. Hu and S. Song, 'Evaluate the Malignancy of Pulmonary Nodules Using the 3D Deep Leaky Noisy-or Network', in IEEE Transactions on Neural Networks and Learning Systems, vol. 30, no. 11, pp. 3484-3495, Nov. 2019, doi: 10.1109/TNNLS.2019.2892409.",
+      "inputs": [
+        {
+          "label": "CT",
+          "description": "Chest CT",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Chest",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/gc_grt123_lung_cancer:latest"
+    },
+    "monai_prostate158": {
+      "label": "Prostate Transitional and Peripheral Zone Seg (Prostate158)",
+      "description": "Prostate158 is a zonal prostate segmentation model, a multi-modality input AI-based pipeline for the automated segmentation of the peripheral and central gland of the prostate on MRI T2 axial scans.",
+      "modalities": [
+        "MR"
+      ],
+      "segments": [
+        "PROSTATE_TRANSITION_ZONE",
+        "PROSTATE_PERIPHERAL_ZONE"
+      ],
+      "segment_count": 2,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "MIT",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Lisa C. Adams and Marcus R. Makowski and G\u00fcnther Engel and Maximilian Rattunde and Felix Busch and Patrick Asbach and Stefan M. Niehues and Shankeeth Vinayahalingam and Bram {van Ginneken} and Geert Litjens and Keno K. Bressem, Prostate158 - An expert-annotated 3T MRI dataset and algorithm for prostate cancer detection",
+      "inputs": [
+        {
+          "label": "T2 input image",
+          "description": "The T2 axial sequence being one of the two input image",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "Prostate",
+          "slicethickness": "3 mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/monai_prostate158:latest"
+    },
+    "gc_node21_baseline": {
+      "label": "Chest Radiograph Nodule Locator (NODE21 Baseline)",
+      "description": "This model detects the location of nodules in Chest radiographs, and generates bounding boxes around these nodules.",
+      "modalities": [
+        "CR"
+      ],
+      "segments": [],
+      "segment_count": 0,
+      "predictions": [
+        "Nodule bounding boxes"
+      ],
+      "category": "Prediction",
+      "license_code": "Apache 2.0",
+      "license_weights": "Apache 2.0",
+      "cite": "E. Sogancioglu et al., Nodule detection and generation on chest X-rays: NODE21 Challenge, in IEEE Transactions on Medical Imaging, doi: 10.1109/TMI.2024.3382042.",
+      "inputs": [
+        {
+          "label": "Chest radiograph",
+          "description": "Chest radiograph",
+          "format": "DICOM",
+          "modality": "CR",
+          "bodypartexamined": "Chest",
+          "slicethickness": "",
+          "non-contrast": false,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/gc_node21_baseline:latest"
+    },
+    "mrsegmentator": {
+      "label": "MRSegmentator",
+      "description": "MRSegmentator is an AI-based pipeline for the segmentation of 40 anatomical structures in MR images (with and without contrast).",
+      "modalities": [
+        "MRI|CT"
+      ],
+      "segments": [
+        "SPLEEN",
+        "RIGHT_KIDNEY",
+        "LEFT_KIDNEY",
+        "GALLBLADDER",
+        "LIVER",
+        "STOMACH",
+        "PANCREAS",
+        "RIGHT_ADRENAL_GLAND",
+        "LEFT_ADRENAL_GLAND",
+        "LEFT_LUNG",
+        "RIGHT_LUNG",
+        "HEART",
+        "AORTA",
+        "INFERIOR_VENA_CAVA",
+        "PORTAL_AND_SPLENIC_VEIN",
+        "LEFT_ILIAC_ARTERY",
+        "RIGHT_ILIAC_ARTERY",
+        "ESOPHAGUS",
+        "SMALL_INTESTINE",
+        "DUODENUM",
+        "COLON",
+        "URINARY_BLADDER",
+        "SPINE",
+        "SACRUM",
+        "LEFT_HIP",
+        "RIGHT_HIP",
+        "LEFT_FEMUR",
+        "RIGHT_FEMUR",
+        "LEFT_AUTOCHTHONOUS_BACK_MUSCLE",
+        "RIGHT_AUTOCHTHONOUS_BACK_MUSCLE",
+        "LEFT_ILIOPSOAS",
+        "RIGHT_ILIOPSOAS",
+        "LEFT_GLUTEUS_MAXIMUS",
+        "RIGHT_GLUTEUS_MAXIMUS",
+        "LEFT_GLUTEUS_MEDIUS",
+        "RIGHT_GLUTEUS_MEDIUS",
+        "LEFT_GLUTEUS_MINIMUS",
+        "RIGHT_GLUTEUS_MINIMUS"
+      ],
+      "segment_count": 38,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "Apache 2.0",
+      "cite": "Hartmut H\u00e4ntze, Lina Xu, Felix J. Dorfner, Leonhard Donle, Daniel Truhn, Hugo Aerts, Mathias Prokop, Bram van Ginneken, Alessa Hering, Lisa C. Adams, and Keno K. Bressem. MRSegmentator: Robust multi-modality segmentation of 40 classes in MRI and CT sequences. arXiv, 2024.",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The MR or CT scan of a patient (Thorax, Abdomen and Pelvis).",
+          "format": "DICOM",
+          "modality": "MRI|CT",
+          "bodypartexamined": "WHOLEBODY",
+          "slicethickness": "n/a",
+          "non-contrast": true,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/mrsegmentator:latest"
+    },
+    "nnunet_segthor": {
+      "label": "Thoracic OAR (nnU-Net)",
+      "description": "nnU-Net's thoracic OAR segmentation model is an AI-based pipeline for the automated segmentation of the heart, the aorta, the esophagus and the trachea in CT scans (with and without contrast).",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "ESOPHAGUS",
+        "HEART",
+        "TRACHEA",
+        "AORTA"
+      ],
+      "segment_count": 4,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9.",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Chest",
+          "slicethickness": "2.5 mm",
+          "non-contrast": true,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/nnunet_segthor:latest"
+    },
+    "gc_autopet_fpr": {
+      "label": "Second place in AutoPET challenge: False Positive Reduction Network",
+      "description": "This algorithm segments tumor lesions in whole-body FDG-PET/CT. To prevent over-segmenting tumor regions due to high-uptake organs or inflammations, the model uses a false positive reduction network. First a self-supervised pre-trained global segmentation module coarsely delineates the candidate tumor regions using a self-supervised pre-trained encoder. The candidate tumor regions are then refined by removing false positives via a local refinement module.",
+      "modalities": [
+        "PT",
+        "CT"
+      ],
+      "segments": [
+        "BACKGROUND",
+        "NEOPLASM_MALIGNANT_PRIMARY"
+      ],
+      "segment_count": 2,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "MIT",
+      "license_weights": "MIT",
+      "cite": "Y. Peng, J. Kim, D. Feng and L. Bi, 'Automatic Tumor Segmentation via False Positive Reduction Network for Whole-Body Multi-Modal PET/CT Images', In arXiv:2209.07705, doi: 10.48550/arXiv:2209.07705.",
+      "inputs": [
+        {
+          "label": "FDG-PET image",
+          "description": "Positron Emission Tomography (PET) image with fluorodeoxyglucose (FDG) tracer",
+          "format": "DICOM",
+          "modality": "PT",
+          "bodypartexamined": "WHOLEBODY",
+          "slicethickness": "3mm",
+          "non-contrast": false,
+          "contrast": false
+        },
+        {
+          "label": "CT image",
+          "description": "Computed Tomography (CT) image after contrast administration",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "WHOLEBODY",
+          "slicethickness": "3mm",
+          "non-contrast": false,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/gc_autopet_fpr:latest"
+    },
+    "gc_spider_baseline": {
+      "label": "Spine Seg (SPIDER Baseline)",
+      "description": "This model segments three anatomical structures in lumbar spine MRI: vertebrae, intervertebral discs (IVDs), and spinal canal. Each vertebrae and IVD is labeled according to standard naming convention.",
+      "modalities": [
+        "MR"
+      ],
+      "segments": [
+        "VERTEBRAE_L5",
+        "VERTEBRAE_L4",
+        "VERTEBRAE_L3",
+        "VERTEBRAE_L2",
+        "VERTEBRAE_L1",
+        "VERTEBRAE_T12",
+        "VERTEBRAE_T11",
+        "VERTEBRAE_T10",
+        "VERTEBRAE_T9",
+        "VERTEBRAE_T8",
+        "VERTEBRAE_T7",
+        "VERTEBRAE_T6",
+        "VERTEBRAE_T5",
+        "VERTEBRAE_T4",
+        "VERTEBRAE_T3",
+        "VERTEBRAE_T2",
+        "VERTEBRAE_T1",
+        "VERTEBRAE_C7",
+        "VERTEBRAE_C6",
+        "VERTEBRAE_C5",
+        "VERTEBRAE_C4",
+        "VERTEBRAE_C3",
+        "VERTEBRAE_C2",
+        "VERTEBRAE_C1",
+        "VERTEBRAE_DISK_L5S1",
+        "VERTEBRAE_DISK_L4L5",
+        "VERTEBRAE_DISK_L3L4",
+        "VERTEBRAE_DISK_L2L3",
+        "VERTEBRAE_DISK_L1L2",
+        "VERTEBRAE_DISK_T12L1",
+        "VERTEBRAE_DISK_T11T12",
+        "VERTEBRAE_DISK_T10T11",
+        "VERTEBRAE_DISK_T9T10",
+        "VERTEBRAE_DISK_T8T9",
+        "VERTEBRAE_DISK_T7T8",
+        "VERTEBRAE_DISK_T6T7",
+        "VERTEBRAE_DISK_T5T6",
+        "VERTEBRAE_DISK_T4T5",
+        "VERTEBRAE_DISK_T3T4",
+        "VERTEBRAE_DISK_T2T3",
+        "VERTEBRAE_DISK_T1T2",
+        "VERTEBRAE_DISK_C7T1",
+        "VERTEBRAE_DISK_C6C7",
+        "VERTEBRAE_DISK_C5C6",
+        "VERTEBRAE_DISK_C4C5",
+        "VERTEBRAE_DISK_C3C4",
+        "VERTEBRAE_DISK_C2C3",
+        "SPINAL_CANAL"
+      ],
+      "segment_count": 48,
+      "predictions": [
+        "Raw Sagittal Spine Segmentation"
+      ],
+      "category": "Segmentation",
+      "license_code": "Apache 2.0",
+      "license_weights": "Apache 2.0",
+      "cite": "van der Graaf, J.W., van Hooff, M.L., Buckens, C.F.M. et al. Lumbar spine segmentation in MR images: a dataset and a public benchmark. Sci Data 11, 264 (2024). doi: 10.1038/s41597-024-03090-w",
+      "inputs": [
+        {
+          "label": "Sagittal Lumbar Spine T1 T2 MRI",
+          "description": "Sagittal T1 or T2 weighted MRI of the lumbar spine. It is important to provide the input image in sagittal orientation for proper functioning of the model.",
+          "format": "DICOM",
+          "modality": "MR",
+          "bodypartexamined": "Spine",
+          "slicethickness": "2.0mm",
+          "non-contrast": false,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/gc_spider_baseline:latest"
+    },
+    "fmcib_radiomics": {
+      "label": "Foundation Model for Cancer Imaging Biomarkers",
+      "description": "A foundation model for cancer imaging biomarker discovery trained through self-supervised learning using a dataset of 11,467 radiographic lesions. The model features can be used as a data-driven substitute for classical radiomic features",
+      "modalities": [
+        "CT",
+        "SEG"
+      ],
+      "segments": [],
+      "segment_count": 0,
+      "predictions": [
+        "Features"
+      ],
+      "category": "Prediction",
+      "license_code": "MIT",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Pai, S., Bontempi, D., Hadzic, I. et al. Foundation model for cancer imaging biomarkers. Nat Mach Intell (2024). https://doi.org/10.1038/s42256-024-00807-9",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The input image.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "WHOLEBODY",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": true
+        },
+        {
+          "label": "Input Segmentation",
+          "description": "The input segmentation to be analysed.",
+          "format": "DICOMSEG",
+          "modality": "SEG",
+          "bodypartexamined": "WHOLEBODY",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/fmcib_radiomics:latest"
+    },
+    "gc_nnunet_pancreas": {
+      "label": "Pancreatic Ductal Adenocarcinoma Detection in CT",
+      "description": "This algorithm produces a tumor likelihood heatmap for the presence of pancreatic ductal adenocarcinoma (PDAC) in an input venous-phase contrast-enhanced computed tomography scan (CECT). Additionally, the algorithm provides the segmentation of multiple surrounding anatomical structures such as the pancreatic duct, common bile duct, veins and arteries. The heatmap and segmentations are resampled to the same spatial resolution and physical dimensions as the input CECT image for easier visualisation.",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "VEIN",
+        "ARTERY",
+        "PANCREAS",
+        "PANCREATIC_DUCT",
+        "BILE_DUCT"
+      ],
+      "segment_count": 5,
+      "predictions": [
+        "Pancreatic tumor likelihood heatmap",
+        "Pancreatic tumor likelihood"
+      ],
+      "category": "Prediction",
+      "license_code": "Apache 2.0",
+      "license_weights": "Apache 2.0",
+      "cite": "Alves N, Schuurmans M, Litjens G, Bosma JS, Hermans J, Huisman H. Fully Automatic Deep Learning Framework for Pancreatic Ductal Adenocarcinoma Detection on Computed Tomography. Cancers (Basel). 2022 Jan 13;14(2):376. doi: 10.3390/cancers14020376. PMID: 35053538; PMCID: PMC8774174.",
+      "inputs": [
+        {
+          "label": "Venous phase CT scan",
+          "description": "A contrast-enhanced CT scan in the venous phase and axial reconstruction",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Abdomen",
+          "slicethickness": "2.5mm",
+          "non-contrast": false,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/gc_nnunet_pancreas:latest"
+    },
+    "gc_stoic_baseline": {
+      "label": "STOIC2021 baseline",
+      "description": "This model predicts the probability and severity of COVID-19 in lung-CT scans. Severe COVID-19 is defined as patient intubation or death within one month from the acquisition of the CT scan.",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [],
+      "segment_count": 0,
+      "predictions": [
+        "Probability of COVID-19",
+        "Probability Severe COVID-19"
+      ],
+      "category": "Prediction",
+      "license_code": "MIT license",
+      "license_weights": "MIT license",
+      "cite": "Luuk H. Boulogne, Julian Lorenz, Daniel Kienzle, Robin Schon, Katja Ludwig, Rainer Lienhart, Simon Jegou, Guang Li, Cong Chen, Qi Wang, Derik Shi, Mayug Maniparambil, Dominik Muller, Silvan Mertes, Niklas Schroter, Fabio Hellmann, Miriam Elia, Ine Dirks, Matias Nicolas Bossa, Abel Diaz Berenguer, Tanmoy Mukherjee, Jef Vandemeulebroucke, Hichem Sahli, Nikos Deligiannis, Panagiotis Gonidakis, Ngoc Dung Huynh, Imran Razzak, Reda Bouadjenek, Mario Verdicchio, Pasquale Borrelli, Marco Aiello, James A. Meakin, Alexander Lemm, Christoph Russ, Razvan Ionasec, Nikos Paragios, Bram van Ginneken, Marie-Pierre Revel Dubois, The STOIC2021 COVID-19 AI challenge: applying reusable training methodologies to private data, arXiv:2306.10484, 2023, https://arxiv.org/abs/2306.10484v2",
+      "inputs": [
+        {
+          "label": "CT image",
+          "description": "Any CT image",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Chest",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/gc_stoic_baseline:latest"
+    },
+    "pyradiomics": {
+      "label": "PyRadiomics",
+      "description": "Run PyRadiomics directly on DICOM files with MHub.",
+      "modalities": [
+        "CT",
+        "SEG"
+      ],
+      "segments": [],
+      "segment_count": 0,
+      "predictions": [
+        "Radiomic Features"
+      ],
+      "category": "Prediction",
+      "license_code": "Apache 2.0",
+      "license_weights": "N/A",
+      "cite": "van Griethuysen JJM, Fedorov A, Parmar C, Hosny A, Aucoin N, Narayan V, Beets-Tan RGH, Fillion-Robin JC, Pieper S, Aerts HJWL. Computational Radiomics System to Decode the Radiographic Phenotype. Cancer Res. 2017 Nov 1;77(21):e104-e107. doi: 10.1158/0008-5472.CAN-17-0339. PMID: 29092951; PMCID: PMC5672828.",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The input image.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "WHOLEBODY",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": true
+        },
+        {
+          "label": "Input Segmentation",
+          "description": "The input segmentation to be analysed.",
+          "format": "DICOMSEG",
+          "modality": "SEG",
+          "bodypartexamined": "WHOLEBODY",
+          "slicethickness": "2.5mm",
+          "non-contrast": true,
+          "contrast": true
+        }
+      ],
+      "docker_image": "mhubai/pyradiomics:latest"
+    },
+    "gc_tiger_lb2": {
+      "label": "TIGER challenge winner: Team VUNO",
+      "description": "This algorithm predicts the percentage of stromal area covered by tumour infiltrating lymphocytes (TIL) on H&E-stained whole-slide images of breast cancer histopathology. This algorithm first segments invasive tumor and tumor-associated stroma and subsequently detects lymphocytes and plasma cells, which are finally combined to estimate the relevant regions for TIL estimation. This model algorithm was the challenge winner of the TIGER challenge hosted on Grand Challenge.",
+      "modalities": [
+        "SM"
+      ],
+      "segments": [],
+      "segment_count": 0,
+      "predictions": [
+        "TIL score",
+        "WSI Tumor and stroma segmentation mask"
+      ],
+      "category": "Prediction",
+      "license_code": "Apache 2.0",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "",
+      "inputs": [
+        {
+          "label": "Whole-slide image",
+          "description": "H&E-stained whole-slide image of breast cancer histopathology",
+          "format": "DICOM",
+          "modality": "SM",
+          "bodypartexamined": "Breast",
+          "slicethickness": "",
+          "non-contrast": false,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/gc_tiger_lb2:latest"
+    },
+    "bamf_pet_ct_breast_tumor": {
+      "label": "BAMF PET CT Breast Seg (nnU-Net)",
+      "description": "This model used to detect FDG-avid lesions in breast from FDG PET/CT scans",
+      "modalities": [
+        "CT",
+        "PT"
+      ],
+      "segments": [
+        "BREAST+FDG_AVID_TUMOR"
+      ],
+      "segment_count": 1,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "MIT",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023).",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "BREAST",
+          "slicethickness": "5mm",
+          "non-contrast": true,
+          "contrast": false
+        },
+        {
+          "label": "Input Image",
+          "description": "The PET scan of a patient.",
+          "format": "DICOM",
+          "modality": "PT",
+          "bodypartexamined": "BREAST",
+          "slicethickness": "4mm",
+          "non-contrast": false,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/bamf_pet_ct_breast_tumor:latest"
+    },
+    "bamf_pet_ct_lung_tumor": {
+      "label": "FDG PET/CT Lung and Lung Tumor Annotation",
+      "description": "An nnU-Net based model to segment Lung and FDG-avid lesions in the lung from FDG PET/CT scans",
+      "modalities": [
+        "CT",
+        "PT"
+      ],
+      "segments": [
+        "LUNG",
+        "LUNG+FDG_AVID_TUMOR"
+      ],
+      "segment_count": 2,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "MIT",
+      "license_weights": "CC BY-NC 4.0",
+      "cite": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023).",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The CT scan of a patient.",
+          "format": "DICOM",
+          "modality": "CT",
+          "bodypartexamined": "Lung",
+          "slicethickness": "5mm",
+          "non-contrast": true,
+          "contrast": false
+        },
+        {
+          "label": "Input Image",
+          "description": "The PET scan of a patient.",
+          "format": "DICOM",
+          "modality": "PT",
+          "bodypartexamined": "Lung",
+          "slicethickness": "4mm",
+          "non-contrast": false,
+          "contrast": false
+        }
+      ],
+      "docker_image": "mhubai/bamf_pet_ct_lung_tumor:latest"
+    },
+    "msk_smit_lung_gtv": {
+      "label": "SMIT Self-supervised Lung GTV Segmentation",
+      "description": "A Lung GTV segmentation model, fine-tuned from a foundation model pretrained with 10K CT scans",
+      "modalities": [
+        "CT"
+      ],
+      "segments": [
+        "LUNG+NEOPLASM_MALIGNANT_PRIMARY"
+      ],
+      "segment_count": 1,
+      "predictions": [],
+      "category": "Segmentation",
+      "license_code": "GNU General Public License",
+      "license_weights": "GNU General Public License",
+      "cite": "Jiang, Jue, and Harini Veeraraghavan. Self-supervised pretraining in the wild imparts image acquisition robustness to medical image transformers: an application to lung cancer segmentation. Proceedings of machine learning research 250 (2024): 708.",
+      "inputs": [
+        {
+          "label": "Input Image",
+          "description": "The CT scan of a patient.",
+          "format": "NIFTI",
+          "modality": "CT",
+          "bodypartexamined": "Chest",
+          "slicethickness": "5mm",
+          "contrast": true,
+          "non-contrast": true
+        }
+      ],
+      "docker_image": "mhubai/msk_smit_lung_gtv:latest"
+    }
+  },
+  "by_modality": {
+    "CT": [
+      "totalsegmentator",
+      "platipy",
+      "bamf_nnunet_ct_kidney",
+      "nnunet_liver",
+      "bamf_nnunet_ct_liver",
+      "lungmask",
+      "nnunet_pancreas",
+      "casust",
+      "gc_lunglobes",
+      "gc_grt123_lung_cancer",
+      "nnunet_segthor",
+      "gc_autopet_fpr",
+      "fmcib_radiomics",
+      "gc_nnunet_pancreas",
+      "gc_stoic_baseline",
+      "pyradiomics",
+      "bamf_pet_ct_breast_tumor",
+      "bamf_pet_ct_lung_tumor",
+      "msk_smit_lung_gtv"
+    ],
+    "MR": [
+      "bamf_nnunet_mr_prostate",
+      "nnunet_prostate_zonal_task05",
+      "nnunet_prostate_task24",
+      "gc_picai_baseline",
+      "bamf_nnunet_mr_liver",
+      "monai_prostate158",
+      "gc_spider_baseline"
+    ],
+    "SM": [
+      "gc_wsi_bgseg",
+      "gc_tiger_lb2"
+    ],
+    "CR": [
+      "gc_node21_baseline"
+    ],
+    "MRI|CT": [
+      "mrsegmentator"
+    ],
+    "PT": [
+      "gc_autopet_fpr",
+      "bamf_pet_ct_breast_tumor",
+      "bamf_pet_ct_lung_tumor"
+    ],
+    "SEG": [
+      "fmcib_radiomics",
+      "pyradiomics"
+    ]
+  },
+  "by_segment": {
+    "SPLEEN": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "RIGHT_KIDNEY": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_KIDNEY": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "GALLBLADDER": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LIVER": [
+      "totalsegmentator",
+      "nnunet_liver",
+      "bamf_nnunet_ct_liver",
+      "bamf_nnunet_mr_liver",
+      "mrsegmentator"
+    ],
+    "STOMACH": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "AORTA": [
+      "totalsegmentator",
+      "platipy",
+      "mrsegmentator",
+      "nnunet_segthor"
+    ],
+    "INFERIOR_VENA_CAVA": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "PORTAL_AND_SPLENIC_VEIN": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "PANCREAS": [
+      "totalsegmentator",
+      "nnunet_pancreas",
+      "mrsegmentator",
+      "gc_nnunet_pancreas"
+    ],
+    "RIGHT_ADRENAL_GLAND": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_ADRENAL_GLAND": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_UPPER_LUNG_LOBE": [
+      "totalsegmentator",
+      "lungmask",
+      "gc_lunglobes"
+    ],
+    "LEFT_LOWER_LUNG_LOBE": [
+      "totalsegmentator",
+      "lungmask",
+      "gc_lunglobes"
+    ],
+    "RIGHT_UPPER_LUNG_LOBE": [
+      "totalsegmentator",
+      "lungmask",
+      "gc_lunglobes"
+    ],
+    "RIGHT_MIDDLE_LUNG_LOBE": [
+      "totalsegmentator",
+      "lungmask",
+      "gc_lunglobes"
+    ],
+    "RIGHT_LOWER_LUNG_LOBE": [
+      "totalsegmentator",
+      "lungmask",
+      "gc_lunglobes"
+    ],
+    "VERTEBRAE_L5": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_L4": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_L3": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_L2": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_L1": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T12": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T11": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T10": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T9": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T8": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T7": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T6": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T5": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T4": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T3": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T2": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_T1": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_C7": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_C6": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_C5": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_C4": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_C3": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_C2": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_C1": [
+      "totalsegmentator",
+      "gc_spider_baseline"
+    ],
+    "ESOPHAGUS": [
+      "totalsegmentator",
+      "mrsegmentator",
+      "nnunet_segthor"
+    ],
+    "TRACHEA": [
+      "totalsegmentator",
+      "nnunet_segthor"
+    ],
+    "MYOCARDIUM": [
+      "totalsegmentator"
+    ],
+    "LEFT_ATRIUM": [
+      "totalsegmentator",
+      "platipy",
+      "casust"
+    ],
+    "LEFT_VENTRICLE": [
+      "totalsegmentator",
+      "platipy",
+      "casust"
+    ],
+    "RIGHT_ATRIUM": [
+      "totalsegmentator",
+      "platipy",
+      "casust"
+    ],
+    "RIGHT_VENTRICLE": [
+      "totalsegmentator",
+      "platipy",
+      "casust"
+    ],
+    "PULMONARY_ARTERY": [
+      "totalsegmentator",
+      "platipy"
+    ],
+    "BRAIN": [
+      "totalsegmentator"
+    ],
+    "LEFT_ILIAC_ARTERY": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "RIGHT_ILIAC_ARTERY": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_ILIAC_VEIN": [
+      "totalsegmentator"
+    ],
+    "RIGHT_ILIAC_VEIN": [
+      "totalsegmentator"
+    ],
+    "SMALL_INTESTINE": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "DUODENUM": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "COLON": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_RIB_1": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_2": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_3": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_4": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_5": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_6": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_7": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_8": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_9": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_10": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_11": [
+      "totalsegmentator"
+    ],
+    "LEFT_RIB_12": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_1": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_2": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_3": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_4": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_5": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_6": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_7": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_8": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_9": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_10": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_11": [
+      "totalsegmentator"
+    ],
+    "RIGHT_RIB_12": [
+      "totalsegmentator"
+    ],
+    "LEFT_HUMERUS": [
+      "totalsegmentator"
+    ],
+    "RIGHT_HUMERUS": [
+      "totalsegmentator"
+    ],
+    "LEFT_SCAPULA": [
+      "totalsegmentator"
+    ],
+    "RIGHT_SCAPULA": [
+      "totalsegmentator"
+    ],
+    "LEFT_CLAVICLE": [
+      "totalsegmentator"
+    ],
+    "RIGHT_CLAVICLE": [
+      "totalsegmentator"
+    ],
+    "LEFT_FEMUR": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "RIGHT_FEMUR": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_HIP": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "RIGHT_HIP": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "SACRUM": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "FACE": [
+      "totalsegmentator"
+    ],
+    "LEFT_GLUTEUS_MAXIMUS": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "RIGHT_GLUTEUS_MAXIMUS": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_GLUTEUS_MEDIUS": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "RIGHT_GLUTEUS_MEDIUS": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_GLUTEUS_MINIMUS": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "RIGHT_GLUTEUS_MINIMUS": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_AUTOCHTHONOUS_BACK_MUSCLE": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "RIGHT_AUTOCHTHONOUS_BACK_MUSCLE": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "LEFT_ILIOPSOAS": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "RIGHT_ILIOPSOAS": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "URINARY_BLADDER": [
+      "totalsegmentator",
+      "mrsegmentator"
+    ],
+    "HEART": [
+      "platipy",
+      "casust",
+      "mrsegmentator",
+      "nnunet_segthor"
+    ],
+    "CORONARY_ARTERY_LAD": [
+      "platipy",
+      "casust"
+    ],
+    "CORONARY_ARTERY_CFLX": [
+      "platipy",
+      "casust"
+    ],
+    "CORONARY_ARTERY_RIGHT": [
+      "platipy",
+      "casust"
+    ],
+    "SINOTRIAL_NODE": [
+      "platipy"
+    ],
+    "TRICUSPID_VALVE": [
+      "platipy"
+    ],
+    "PULMONARY_VALVE": [
+      "platipy"
+    ],
+    "MITRAL_VALVE": [
+      "platipy"
+    ],
+    "SUPERIOR_VENA_CAVA": [
+      "platipy"
+    ],
+    "AORTIC_VALVE": [
+      "platipy"
+    ],
+    "ATRIOVENTRICULAR_NODE": [
+      "platipy"
+    ],
+    "PROSTATE": [
+      "bamf_nnunet_mr_prostate",
+      "nnunet_prostate_task24"
+    ],
+    "KIDNEY": [
+      "bamf_nnunet_ct_kidney"
+    ],
+    "KIDNEY+NEOPLASM_MALIGNANT_PRIMARY": [
+      "bamf_nnunet_ct_kidney"
+    ],
+    "KIDNEY+CYST": [
+      "bamf_nnunet_ct_kidney"
+    ],
+    "LIVER+NEOPLASM_MALIGNANT_PRIMARY": [
+      "nnunet_liver"
+    ],
+    "RIGHT_LUNG": [
+      "lungmask",
+      "mrsegmentator"
+    ],
+    "LEFT_LUNG": [
+      "lungmask",
+      "mrsegmentator"
+    ],
+    "PROSTATE_PERIPHERAL_ZONE": [
+      "nnunet_prostate_zonal_task05",
+      "monai_prostate158"
+    ],
+    "PROSTATE_TRANSITION_ZONE": [
+      "nnunet_prostate_zonal_task05",
+      "monai_prostate158"
+    ],
+    "PANCREAS+NEOPLASM_MALIGNANT_PRIMARY": [
+      "nnunet_pancreas"
+    ],
+    "SPINE": [
+      "mrsegmentator"
+    ],
+    "BACKGROUND": [
+      "gc_autopet_fpr"
+    ],
+    "NEOPLASM_MALIGNANT_PRIMARY": [
+      "gc_autopet_fpr"
+    ],
+    "VERTEBRAE_DISK_L5S1": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_L4L5": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_L3L4": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_L2L3": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_L1L2": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T12L1": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T11T12": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T10T11": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T9T10": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T8T9": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T7T8": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T6T7": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T5T6": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T4T5": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T3T4": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T2T3": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_T1T2": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_C7T1": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_C6C7": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_C5C6": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_C4C5": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_C3C4": [
+      "gc_spider_baseline"
+    ],
+    "VERTEBRAE_DISK_C2C3": [
+      "gc_spider_baseline"
+    ],
+    "SPINAL_CANAL": [
+      "gc_spider_baseline"
+    ],
+    "VEIN": [
+      "gc_nnunet_pancreas"
+    ],
+    "ARTERY": [
+      "gc_nnunet_pancreas"
+    ],
+    "PANCREATIC_DUCT": [
+      "gc_nnunet_pancreas"
+    ],
+    "BILE_DUCT": [
+      "gc_nnunet_pancreas"
+    ],
+    "BREAST+FDG_AVID_TUMOR": [
+      "bamf_pet_ct_breast_tumor"
+    ],
+    "LUNG": [
+      "bamf_pet_ct_lung_tumor"
+    ],
+    "LUNG+FDG_AVID_TUMOR": [
+      "bamf_pet_ct_lung_tumor"
+    ],
+    "LUNG+NEOPLASM_MALIGNANT_PRIMARY": [
+      "msk_smit_lung_gtv"
+    ]
+  },
+  "all_segments": [
+    "AORTA",
+    "AORTIC_VALVE",
+    "ARTERY",
+    "ATRIOVENTRICULAR_NODE",
+    "BACKGROUND",
+    "BILE_DUCT",
+    "BRAIN",
+    "BREAST+FDG_AVID_TUMOR",
+    "COLON",
+    "CORONARY_ARTERY_CFLX",
+    "CORONARY_ARTERY_LAD",
+    "CORONARY_ARTERY_RIGHT",
+    "DUODENUM",
+    "ESOPHAGUS",
+    "FACE",
+    "GALLBLADDER",
+    "HEART",
+    "INFERIOR_VENA_CAVA",
+    "KIDNEY",
+    "KIDNEY+CYST",
+    "KIDNEY+NEOPLASM_MALIGNANT_PRIMARY",
+    "LEFT_ADRENAL_GLAND",
+    "LEFT_ATRIUM",
+    "LEFT_AUTOCHTHONOUS_BACK_MUSCLE",
+    "LEFT_CLAVICLE",
+    "LEFT_FEMUR",
+    "LEFT_GLUTEUS_MAXIMUS",
+    "LEFT_GLUTEUS_MEDIUS",
+    "LEFT_GLUTEUS_MINIMUS",
+    "LEFT_HIP",
+    "LEFT_HUMERUS",
+    "LEFT_ILIAC_ARTERY",
+    "LEFT_ILIAC_VEIN",
+    "LEFT_ILIOPSOAS",
+    "LEFT_KIDNEY",
+    "LEFT_LOWER_LUNG_LOBE",
+    "LEFT_LUNG",
+    "LEFT_RIB_1",
+    "LEFT_RIB_10",
+    "LEFT_RIB_11",
+    "LEFT_RIB_12",
+    "LEFT_RIB_2",
+    "LEFT_RIB_3",
+    "LEFT_RIB_4",
+    "LEFT_RIB_5",
+    "LEFT_RIB_6",
+    "LEFT_RIB_7",
+    "LEFT_RIB_8",
+    "LEFT_RIB_9",
+    "LEFT_SCAPULA",
+    "LEFT_UPPER_LUNG_LOBE",
+    "LEFT_VENTRICLE",
+    "LIVER",
+    "LIVER+NEOPLASM_MALIGNANT_PRIMARY",
+    "LUNG",
+    "LUNG+FDG_AVID_TUMOR",
+    "LUNG+NEOPLASM_MALIGNANT_PRIMARY",
+    "MITRAL_VALVE",
+    "MYOCARDIUM",
+    "NEOPLASM_MALIGNANT_PRIMARY",
+    "PANCREAS",
+    "PANCREAS+NEOPLASM_MALIGNANT_PRIMARY",
+    "PANCREATIC_DUCT",
+    "PORTAL_AND_SPLENIC_VEIN",
+    "PROSTATE",
+    "PROSTATE_PERIPHERAL_ZONE",
+    "PROSTATE_TRANSITION_ZONE",
+    "PULMONARY_ARTERY",
+    "PULMONARY_VALVE",
+    "RIGHT_ADRENAL_GLAND",
+    "RIGHT_ATRIUM",
+    "RIGHT_AUTOCHTHONOUS_BACK_MUSCLE",
+    "RIGHT_CLAVICLE",
+    "RIGHT_FEMUR",
+    "RIGHT_GLUTEUS_MAXIMUS",
+    "RIGHT_GLUTEUS_MEDIUS",
+    "RIGHT_GLUTEUS_MINIMUS",
+    "RIGHT_HIP",
+    "RIGHT_HUMERUS",
+    "RIGHT_ILIAC_ARTERY",
+    "RIGHT_ILIAC_VEIN",
+    "RIGHT_ILIOPSOAS",
+    "RIGHT_KIDNEY",
+    "RIGHT_LOWER_LUNG_LOBE",
+    "RIGHT_LUNG",
+    "RIGHT_MIDDLE_LUNG_LOBE",
+    "RIGHT_RIB_1",
+    "RIGHT_RIB_10",
+    "RIGHT_RIB_11",
+    "RIGHT_RIB_12",
+    "RIGHT_RIB_2",
+    "RIGHT_RIB_3",
+    "RIGHT_RIB_4",
+    "RIGHT_RIB_5",
+    "RIGHT_RIB_6",
+    "RIGHT_RIB_7",
+    "RIGHT_RIB_8",
+    "RIGHT_RIB_9",
+    "RIGHT_SCAPULA",
+    "RIGHT_UPPER_LUNG_LOBE",
+    "RIGHT_VENTRICLE",
+    "SACRUM",
+    "SINOTRIAL_NODE",
+    "SMALL_INTESTINE",
+    "SPINAL_CANAL",
+    "SPINE",
+    "SPLEEN",
+    "STOMACH",
+    "SUPERIOR_VENA_CAVA",
+    "TRACHEA",
+    "TRICUSPID_VALVE",
+    "URINARY_BLADDER",
+    "VEIN",
+    "VERTEBRAE_C1",
+    "VERTEBRAE_C2",
+    "VERTEBRAE_C3",
+    "VERTEBRAE_C4",
+    "VERTEBRAE_C5",
+    "VERTEBRAE_C6",
+    "VERTEBRAE_C7",
+    "VERTEBRAE_DISK_C2C3",
+    "VERTEBRAE_DISK_C3C4",
+    "VERTEBRAE_DISK_C4C5",
+    "VERTEBRAE_DISK_C5C6",
+    "VERTEBRAE_DISK_C6C7",
+    "VERTEBRAE_DISK_C7T1",
+    "VERTEBRAE_DISK_L1L2",
+    "VERTEBRAE_DISK_L2L3",
+    "VERTEBRAE_DISK_L3L4",
+    "VERTEBRAE_DISK_L4L5",
+    "VERTEBRAE_DISK_L5S1",
+    "VERTEBRAE_DISK_T10T11",
+    "VERTEBRAE_DISK_T11T12",
+    "VERTEBRAE_DISK_T12L1",
+    "VERTEBRAE_DISK_T1T2",
+    "VERTEBRAE_DISK_T2T3",
+    "VERTEBRAE_DISK_T3T4",
+    "VERTEBRAE_DISK_T4T5",
+    "VERTEBRAE_DISK_T5T6",
+    "VERTEBRAE_DISK_T6T7",
+    "VERTEBRAE_DISK_T7T8",
+    "VERTEBRAE_DISK_T8T9",
+    "VERTEBRAE_DISK_T9T10",
+    "VERTEBRAE_L1",
+    "VERTEBRAE_L2",
+    "VERTEBRAE_L3",
+    "VERTEBRAE_L4",
+    "VERTEBRAE_L5",
+    "VERTEBRAE_T1",
+    "VERTEBRAE_T10",
+    "VERTEBRAE_T11",
+    "VERTEBRAE_T12",
+    "VERTEBRAE_T2",
+    "VERTEBRAE_T3",
+    "VERTEBRAE_T4",
+    "VERTEBRAE_T5",
+    "VERTEBRAE_T6",
+    "VERTEBRAE_T7",
+    "VERTEBRAE_T8",
+    "VERTEBRAE_T9"
+  ]
+}

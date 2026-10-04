@@ -1,0 +1,26 @@
+general:
+  data_base_dir: /app/data
+  version: 1.0
+  description: "$description"
+
+execute:
+- FileStructureImporter
+- NiftiConverter
+- $runner_class
+- DataOrganizer
+
+modules:
+  FileStructureImporter:
+    import_id: sid
+    structures:
+      - re:(.+)\.nii(\.gz)?$::$sid@instance@nifti:mod=$input_modality
+
+  $runner_class:
+    # TODO: tune module parameters for your model
+    threshold: 150.0
+
+  DataOrganizer:
+    targets:
+      - nifti:mod=seg-->[i:sid]/segmentations/$model_id.nii.gz
+
+# Refer to references/nifti-workflows.md for structure details

@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conferencing</title>
+    <link rel="icon" id="app-favicon" type="image/png" href="/static/images/3DSlicer-DesktopIcon.png">
+    <style>
+        :root {
+            --bg-page: #f5f5f5;
+            --bg-surface: #ffffff;
+            --bg-muted: #f5f5f5;
+            --bg-input: #ffffff;
+            --bg-btn: #f5f5f5;
+            --bg-btn-hover: #e8e8e8;
+            --bg-btn-disabled: #fafafa;
+            --bg-btn-primary: #0068c7;
+            --bg-btn-primary-hover: #005bb5;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --text-muted: #9e9e9e;
+            --text-disabled: #bdbdbd;
+            --text-on-primary: #ffffff;
+            --border: #e0e0e0;
+            --border-btn: #c8c8c8;
+            --accent: #0068c7;
+            --accent-hover: #005bb5;
+            --shadow-surface: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --success-bg: #e8f5e9;
+            --success-color: #2e7d32;
+            --success-border: #4caf50;
+            --error-bg: #fff3e0;
+            --error-color: #e65100;
+            --error-border: #ff9800;
+            --info-border: #0068c7;
+        }
+        html[data-mode='light'] {
+            --bg-page: #e8e8e8;
+            --bg-surface: #ffffff;
+            --bg-muted: #f0f0f0;
+            --bg-input: #ffffff;
+            --bg-btn: #eeeeee;
+            --bg-btn-hover: #e0e0e0;
+            --bg-btn-disabled: #f5f5f5;
+            --bg-btn-primary: #0068c7;
+            --bg-btn-primary-hover: #005bb5;
+            --text-primary: #212121;
+            --text-secondary: #555555;
+            --text-muted: #757575;
+            --border: #cccccc;
+            --accent: #0068c7;
+        }
+        html[data-theme='volview'][data-mode='light'] {
+            --bg-btn-primary: #3eae2b;
+            --bg-btn-primary-hover: #358f24;
+            --accent: #3eae2b;
+            --accent-hover: #358f24;
+            --info-border: #3eae2b;
+        }
+        html[data-mode='dark'],
+        html:not([data-mode]) {
+            --bg-page: #1a1a22;
+            --bg-surface: #242c40;
+            --bg-muted: #1e2434;
+            --bg-input: #56678d;
+            --bg-btn: #3a4560;
+            --bg-btn-hover: #4a5670;
+            --bg-btn-disabled: #2e3448;
+            --bg-btn-primary: #4a7c59;
+            --bg-btn-primary-hover: #5a9a6a;
+            --text-primary: #e8e8f4;
+            --text-secondary: #b0b8c8;
+            --text-muted: #8890a8;
+            --text-disabled: #6a7288;
+            --text-on-primary: #ffffff;
+            --border: #3a4560;
+            --border-btn: #4a5670;
+            --accent: #6eb5ff;
+            --accent-hover: #8fc4ff;
+            --shadow-surface: 0 2px 12px rgba(0, 0, 0, 0.35);
+            --success-bg: #1b3d24;
+            --success-color: #a5d6a7;
+            --success-border: #4caf50;
+            --error-bg: #4a3520;
+            --error-color: #ffb74d;
+            --error-border: #ff9800;
+            --info-border: #6eb5ff;
+        }
+        html[data-theme='volview'][data-mode='dark'],
+        html[data-theme='volview']:not([data-mode]) {
+            --bg-btn-primary: #4a7c59;
+            --bg-btn-primary-hover: #5a9a6a;
+            --accent: #6eb5ff;
+            --info-border: #6eb5ff;
+        }
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 4px;
+            background-color: var(--bg-page);
+            color: var(--text-primary);
+            line-height: 1.35;
+            font-size: 12px;
+        }
+        .page {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        .surface {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            box-shadow: var(--shadow-surface);
+            padding: 8px 10px;
+        }
+        .page-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .page-header-brand h1 {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--accent);
+        }
+        .page-header-brand .subtitle {
+            margin: 1px 0 0;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .context-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 10px;
+            padding: 6px 8px;
+            margin-bottom: 6px;
+            background: var(--bg-muted);
+            border-radius: 6px;
+            border-left: 3px solid var(--info-border);
+            font-size: 12px;
+        }
+        .context-bar strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        .context-bar .muted {
+            color: var(--text-muted);
+        }
+        .context-bar.warn {
+            border-left-color: var(--error-border);
+            background: var(--error-bg);
+            color: var(--error-color);
+        }
+        #statusMessage {
+            margin-bottom: 10px;
+        }
+        #statusMessage:empty {
+            display: none;
+        }
+        .status {
+            padding: 12px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        .status.success {
+            border-left: 3px solid var(--success-border);
+            background-color: var(--success-bg);
+            color: var(--success-color);
+        }
+        .status.error {
+            border-left: 3px solid var(--error-border);
+            background-color: var(--error-bg);
+            color: var(--error-color);
+        }
+        .grid-two {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 6px;
+            margin-bottom: 6px;
+        }
+        .card {
+            background: var(--bg-muted);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 10px;
+        }
+        .card h2 {
+            margin: 0 0 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .form-group {
+            margin-bottom: 10px;
+        }
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 500;
+        }
+        input, textarea, select {
+            width: 100%;
+            padding: 7px 9px;
+            border: 1px solid var(--border-btn);
+            border-radius: 6px;
+            background-color: var(--bg-input);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
+            border-color: var(--accent);
+        }
+        input:disabled, select:disabled {
+            background-color: var(--bg-btn-disabled);
+            color: var(--text-disabled);
+            cursor: not-allowed;
+        }
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-top: 4px;
+        }
+        button {
+            padding: 6px 12px;
+            border: 1px solid var(--border-btn);
+            border-radius: 6px;
+            background-color: var(--bg-btn);
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 14px;
+            margin: 0;
+            transition: background-color 0.15s, border-color 0.15s;
+        }
+        button:hover:not(:disabled) {
+            background-color: var(--bg-btn-hover);
+        }
+        button:disabled {
+            background-color: var(--bg-btn-disabled);
+            color: var(--text-disabled);
+            cursor: not-allowed;
+        }
+        button.primary {
+            background-color: var(--bg-btn-primary);
+            color: var(--text-on-primary);
+            border-color: var(--bg-btn-primary-hover);
+        }
+        button.primary:hover:not(:disabled) {
+            background-color: var(--bg-btn-primary-hover);
+        }
+        .info-box {
+            background-color: var(--bg-surface);
+            padding: 6px 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            border: 1px solid var(--border);
+            font-size: 12px;
+        }
+        .info-box p {
+            margin: 0 0 4px;
+        }
+        .info-box p:last-child {
+            margin-bottom: 0;
+        }
+        .topics-panel {
+            max-height: 88px;
+            overflow-y: auto;
+            border: 1px solid var(--border-btn);
+            border-radius: 6px;
+            padding: 8px 10px;
+            background-color: var(--bg-input);
+        }
+        .topics-panel .muted {
+            color: var(--text-muted);
+            font-style: italic;
+            margin: 0;
+        }
+        .topic-checkbox {
+            margin: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .topic-checkbox input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        .topic-checkbox label {
+            margin: 0;
+            cursor: pointer;
+            color: var(--text-primary);
+            font-weight: normal;
+        }
+        .section-card {
+            margin-bottom: 0;
+        }
+        .section-card h2 {
+            margin: 0 0 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .table-wrap {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            background: var(--bg-muted);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 0;
+        }
+        th, td {
+            padding: 5px 8px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-primary);
+        }
+        th {
+            background-color: var(--bg-surface);
+            font-weight: 600;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: var(--text-secondary);
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tbody tr:hover {
+            background-color: var(--bg-btn-hover);
+        }
+        .topic {
+            font-weight: 500;
+            color: var(--accent);
+        }
+        .empty-state {
+            margin: 0;
+            padding: 10px;
+            color: var(--text-muted);
+            font-style: italic;
+            text-align: center;
+        }
+    </style>
+    <script>
+        (function () {
+            const p = new URLSearchParams(location.search);
+            const t = (p.get('theme') || '3dslicer').toLowerCase();
+            const theme =
+                t === '3dslicer' || t === 'slicer' ? '3dslicer' : 'volview';
+            document.documentElement.dataset.theme = theme;
+            const modeParam = (p.get('mode') || '').toLowerCase();
+            const mode = modeParam === 'light' ? 'light' : 'dark';
+            document.documentElement.dataset.mode = mode;
+            const isSlicer = theme === '3dslicer';
+            document.title = isSlicer ? '3D Slicer Conferencing' : 'Conferencing';
+            const favicon = document.getElementById('app-favicon');
+            if (favicon) {
+                if (isSlicer) {
+                    favicon.href = '/static/images/3DSlicer-DesktopIcon.png';
+                    favicon.type = 'image/png';
+                } else {
+                    favicon.href = '/static/images/volview-logo.svg';
+                    favicon.type = 'image/svg+xml';
+                }
+            }
+        })();
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div class="surface">
+            <header class="page-header">
+                <div class="page-header-brand">
+                    <h1>Conferencing</h1>
+                </div>
+            </header>
+
+            <div id="statusMessage"></div>
+
+            <div class="grid-two">
+                <div id="createConferenceSection" class="card">
+                    <h2>Create conference</h2>
+                    <form id="conferenceForm" onsubmit="createConference(event)">
+                        <div class="form-group">
+                            <label for="title">Conference title</label>
+                            <select id="title" required onchange="handleTitleChange()">
+                                <option value="">Select a conference title</option>
+                                <option value="Test conference">Test conference</option>
+                                <option value="US annotations" selected>US annotations</option>
+                                <option value="Tumor Board">Tumor Board</option>
+                                <option value="Case discussion">Case discussion</option>
+                                <option value="Pedicle screw">Pedicle screw</option>
+                                <option value="other">Other…</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="otherTitleGroup" style="display: none;">
+                            <label for="otherTitle">Custom title</label>
+                            <input type="text" id="otherTitle" placeholder="Enter conference title">
+                        </div>
+                        <div class="form-group">
+                            <label>Users</label>
+                            <div id="topicsList" class="topics-panel">
+                                <p class="muted">Loading users…</p>
+                            </div>
+                        </div>
+                        <div class="btn-row">
+                            <button type="submit" id="createButton" class="primary">Create conference</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="manageConferenceSection" class="card" style="display: none;">
+                    <h2>Manage conference</h2>
+                    <div id="conferenceInfo" class="info-box">
+                        <p><strong>Title:</strong> <span id="conferenceTitleDisplay">—</span></p>
+                        <p><strong>Host topic:</strong> <span id="conferenceHostDisplay">—</span></p>
+                        <p><strong>Users:</strong> <span id="conferenceTopicsDisplay">—</span></p>
+                    </div>
+                    <div class="btn-row">
+                        <button type="button" id="exitConferenceButton" class="primary" onclick="exitConference()">Leave conference</button>
+                    </div>
+                </div>
+            </div>
+
+            <section id="activeConferencesSection" class="section-card">
+                <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 6px;">
+                    <h2 style="margin: 0;">Active conferences</h2>
+                    <button type="button" class="primary" onclick="loadConferences()">Refresh</button>
+                </div>
+                <div id="conferencesList">
+                    <p class="empty-state">Loading conferences…</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        const CONFERENCE_API = '/api/hub/conference';
+        const CONFERENCE_TOPICS_API = '/api/hub/conference-topics';
+
+        let subscriberName = null;
+        let topicName = null;
+        let allTopics = [];
+        let currentConference = null;
+
+        function conferenceHostTopic(conf) {
+            if (!conf) {
+                return '';
+            }
+            return String(conf.hostTopic || conf.user || '').trim();
+        }
+
+        function isConferenceHost(conf) {
+            const hostTopic = conferenceHostTopic(conf);
+            return Boolean(
+                topicName &&
+                    hostTopic &&
+                    (topicName === hostTopic ||
+                        topicName.toLowerCase() === hostTopic.toLowerCase())
+            );
+        }
+
+        function isConferenceParticipant(conf) {
+            if (!conf) {
+                return false;
+            }
+            const hostTopic = conferenceHostTopic(conf);
+            const topics = Array.isArray(conf.topics) ? conf.topics : [conf.topics];
+            if (
+                topicName &&
+                topics.some(
+                    (t) => t === topicName || t.toLowerCase() === topicName.toLowerCase()
+                )
+            ) {
+                return true;
+            }
+            return isConferenceHost(conf);
+        }
+
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            subscriberName = urlParams.get('subscriberName') || urlParams.get('user');
+            topicName = urlParams.get('topic');
+        }
+
+        async function loadTopics() {
+            const topicsDiv = document.getElementById('topicsList');
+
+            try {
+                const response = await fetch(CONFERENCE_TOPICS_API);
+                if (!response.ok) {
+                    throw new Error('HTTP error! status: ' + response.status);
+                }
+                const topics = await response.json();
+                allTopics = (topics || [])
+                    .map((entry) => {
+                        if (entry && typeof entry === 'object') {
+                            return {
+                                topic: String(entry.topic || '').trim(),
+                                timezone: String(entry.timezone || '').trim(),
+                            };
+                        }
+                        return {
+                            topic: String(entry || '').trim(),
+                            timezone: '',
+                        };
+                    })
+                    .filter((entry) => entry.topic && entry.topic !== '*');
+
+                if (allTopics.length > 0) {
+                    let html = '';
+                    allTopics.forEach((entry) => {
+                        const topic = entry.topic;
+                        const isChecked =
+                            topicName &&
+                            (topic === topicName ||
+                                topic.toLowerCase() === topicName.toLowerCase())
+                                ? ' checked'
+                                : '';
+                        const safeId = 'topic-' + topic.replace(/[^a-zA-Z0-9_-]/g, '_');
+                        let label = escapeHtml(topic);
+                        if (entry.timezone) {
+                            label +=
+                                ' <span class="muted">(' +
+                                escapeHtml(entry.timezone) +
+                                ')</span>';
+                        }
+                        html +=
+                            '<div class="topic-checkbox">' +
+                            '<input type="checkbox" id="' +
+                            escapeHtml(safeId) +
+                            '" name="topics" value="' +
+                            escapeHtml(topic) +
+                            '"' +
+                            isChecked +
+                            '>' +
+                            '<label for="' +
+                            escapeHtml(safeId) +
+                            '">' +
+                            label +
+                            '</label></div>';
+                    });
+                    topicsDiv.innerHTML = html;
+                } else {
+                    topicsDiv.innerHTML = '<p class="muted">No users available</p>';
+                }
+            } catch (error) {
+                console.error('Error loading topics:', error);
+                topicsDiv.innerHTML =
+                    '<p class="muted">Error loading users: ' +
+                    escapeHtml(error.message) +
+                    '</p>';
+            }
+        }
+
+        function getSelectedTopics() {
+            const checkboxes = document.querySelectorAll('input[name="topics"]:checked');
+            return Array.from(checkboxes).map((cb) => cb.value);
+        }
+
+        function handleTitleChange() {
+            const titleSelect = document.getElementById('title');
+            const otherTitleGroup = document.getElementById('otherTitleGroup');
+            if (titleSelect.value === 'other') {
+                otherTitleGroup.style.display = 'block';
+            } else {
+                otherTitleGroup.style.display = 'none';
+                document.getElementById('otherTitle').value = '';
+            }
+        }
+
+        async function createConference(event) {
+            event.preventDefault();
+
+            const statusDiv = document.getElementById('statusMessage');
+            const createButton = document.getElementById('createButton');
+            const titleSelect = document.getElementById('title');
+            let title = titleSelect.value.trim();
+
+            if (!subscriberName) {
+                statusDiv.innerHTML =
+                    '<div class="status error">Subscriber must be provided in URL parameters (e.g. ?subscriberName=user1)</div>';
+                return;
+            }
+
+            if (!topicName) {
+                statusDiv.innerHTML =
+                    '<div class="status error">Hub topic must be provided in URL parameters (e.g. ?topic=USER-1)</div>';
+                return;
+            }
+
+            if (!title) {
+                statusDiv.innerHTML =
+                    '<div class="status error">Conference title is required</div>';
+                return;
+            }
+
+            if (title === 'other') {
+                const otherTitle = document.getElementById('otherTitle').value.trim();
+                if (!otherTitle) {
+                    statusDiv.innerHTML =
+                        '<div class="status error">Please enter a custom conference title</div>';
+                    return;
+                }
+                title = otherTitle;
+            }
+
+            const selectedTopics = getSelectedTopics();
+            if (selectedTopics.length === 0) {
+                statusDiv.innerHTML =
+                    '<div class="status error">Please select at least one user</div>';
+                return;
+            }
+
+            createButton.disabled = true;
+            createButton.textContent = 'Creating…';
+            statusDiv.innerHTML = '';
+
+            try {
+                const response = await fetch(CONFERENCE_API, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        hostTopic: topicName,
+                        title: title,
+                        topics: selectedTopics,
+                    }),
+                });
+
+                if (response.ok) {
+                    statusDiv.innerHTML =
+                        '<div class="status success">Conference created successfully.</div>';
+                    titleSelect.value = '';
+                    document.getElementById('otherTitle').value = '';
+                    document.getElementById('otherTitleGroup').style.display = 'none';
+                    await loadConferences();
+                    setTimeout(() => {
+                        statusDiv.innerHTML = '';
+                    }, 3000);
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(
+                        'Failed to create conference: ' + response.status + ' - ' + errorText
+                    );
+                }
+            } catch (error) {
+                console.error('Error creating conference:', error);
+                statusDiv.innerHTML =
+                    '<div class="status error">Error: ' + escapeHtml(error.message) + '</div>';
+            } finally {
+                createButton.disabled = false;
+                createButton.textContent = 'Create conference';
+            }
+        }
+
+        function checkTopicInConference(conferences) {
+            if (!conferences) {
+                return null;
+            }
+
+            for (const conf of conferences) {
+                if (isConferenceParticipant(conf)) {
+                    return conf;
+                }
+            }
+            return null;
+        }
+
+        function updateConferenceSections(conferences) {
+            currentConference = checkTopicInConference(conferences);
+            const createSection = document.getElementById('createConferenceSection');
+            const manageSection = document.getElementById('manageConferenceSection');
+            const activeSection = document.getElementById('activeConferencesSection');
+            const exitButton = document.getElementById('exitConferenceButton');
+
+            if (currentConference) {
+                createSection.style.display = 'none';
+                manageSection.style.display = 'block';
+                if (activeSection) {
+                    activeSection.style.display = 'none';
+                }
+
+                const topics = Array.isArray(currentConference.topics)
+                    ? currentConference.topics.join(', ')
+                    : currentConference.topics;
+                document.getElementById('conferenceTitleDisplay').textContent =
+                    currentConference.title || 'N/A';
+                document.getElementById('conferenceHostDisplay').textContent =
+                    conferenceHostTopic(currentConference) || 'N/A';
+                document.getElementById('conferenceTopicsDisplay').textContent =
+                    topics || 'None';
+                if (exitButton) {
+                    exitButton.textContent = isConferenceHost(currentConference)
+                        ? 'End conference'
+                        : 'Leave conference';
+                }
+            } else {
+                createSection.style.display = 'block';
+                manageSection.style.display = 'none';
+                if (activeSection) {
+                    activeSection.style.display = '';
+                }
+                if (exitButton) {
+                    exitButton.textContent = 'Leave conference';
+                }
+            }
+        }
+
+        async function loadConferences() {
+            const conferencesDiv = document.getElementById('conferencesList');
+
+            try {
+                const response = await fetch(CONFERENCE_API);
+                if (!response.ok) {
+                    throw new Error('HTTP error! status: ' + response.status);
+                }
+                const conferences = await response.json();
+
+                updateConferenceSections(conferences);
+
+                if (conferences && conferences.length > 0) {
+                    let html =
+                        '<div class="table-wrap"><table><thead><tr>' +
+                        '<th>Title</th><th>Host</th><th>Users</th>' +
+                        '</tr></thead><tbody>';
+
+                    conferences.forEach((conf) => {
+                        const topics = Array.isArray(conf.topics)
+                            ? conf.topics.join(', ')
+                            : conf.topics;
+                        html +=
+                            '<tr><td>' +
+                            escapeHtml(conf.title || 'N/A') +
+                            '</td><td>' +
+                            escapeHtml(conferenceHostTopic(conf) || 'N/A') +
+                            '</td><td class="topic">' +
+                            escapeHtml(topics || 'None') +
+                            '</td></tr>';
+                    });
+
+                    html += '</tbody></table></div>';
+                    conferencesDiv.innerHTML = html;
+                } else {
+                    conferencesDiv.innerHTML =
+                        '<p class="empty-state">No active conferences</p>';
+                }
+            } catch (error) {
+                console.error('Error loading conferences:', error);
+                conferencesDiv.innerHTML =
+                    '<p class="empty-state">Error loading conferences: ' +
+                    escapeHtml(error.message) +
+                    '</p>';
+            }
+        }
+
+        async function exitConference() {
+            if (!currentConference || !topicName) {
+                alert('Cannot leave conference: missing topic information');
+                return;
+            }
+
+            const statusDiv = document.getElementById('statusMessage');
+            const exitButton = document.getElementById('exitConferenceButton');
+            const hostTopic = conferenceHostTopic(currentConference);
+            const hostAction = isConferenceHost(currentConference);
+
+            exitButton.disabled = true;
+            exitButton.textContent = hostAction ? 'Ending…' : 'Leaving…';
+            statusDiv.innerHTML = '';
+
+            const body = { hostTopic: hostTopic };
+            if (!hostAction) {
+                body.leaveTopic = topicName;
+            }
+
+            try {
+                const response = await fetch(CONFERENCE_API, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(body),
+                });
+
+                if (response.ok) {
+                    statusDiv.innerHTML =
+                        '<div class="status success">' +
+                        (hostAction ? 'Conference ended.' : 'Left conference.') +
+                        '</div>';
+                    await loadConferences();
+                    await loadTopics();
+                    if (window.opener) {
+                        setTimeout(() => window.close(), 1200);
+                        return;
+                    }
+                    setTimeout(() => {
+                        statusDiv.innerHTML = '';
+                    }, 1200);
+                } else {
+                    const errorText = await response.text();
+                    throw new Error(
+                        'Failed to update conference: ' + response.status + ' - ' + errorText
+                    );
+                }
+            } catch (error) {
+                console.error('Error leaving conference:', error);
+                statusDiv.innerHTML =
+                    '<div class="status error">Error: ' + escapeHtml(error.message) + '</div>';
+            } finally {
+                exitButton.disabled = false;
+                exitButton.textContent = hostAction
+                    ? 'End conference'
+                    : 'Leave conference';
+            }
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text == null ? '' : String(text);
+            return div.innerHTML;
+        }
+
+        window.addEventListener('load', function () {
+            getUrlParams();
+            loadTopics();
+            loadConferences();
+        });
+    </script>
+</body>
+</html>

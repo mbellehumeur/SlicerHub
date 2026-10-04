@@ -1,0 +1,53 @@
+# Generic NIfTI Workflow Template
+#
+# Instructions:
+# 1. Replace MODEL_RUNNER with the actual runner module name
+# 2. Adjust the FileStructureImporter pattern to match your files
+# 3. Customize DataOrganizer targets as needed
+#
+# Usage:
+#   docker run --rm --gpus all \
+#     -v /path/to/input:/app/data/input_data:ro \
+#     -v /path/to/output:/app/data/output_data \
+#     -v ./custom.yml:/app/config/custom.yml:ro \
+#     mhubai/MODEL_NAME:latest \
+#     --config /app/config/custom.yml
+
+general:
+  data_base_dir: /app/data
+  version: 1.0
+  description: "Custom NIfTI workflow"
+
+execute:
+- FileStructureImporter
+- NiftiConverter
+- MODEL_RUNNER  # <-- Replace with actual runner (e.g., TotalSegmentatorMLRunner)
+- DataOrganizer
+
+modules:
+  FileStructureImporter:
+    import_id: sid
+    structures:
+      # Option 1: Flat directory (all .nii.gz files in input_data/)
+      - re:(.+)\.nii(\.gz)?$::$sid@instance@nifti:mod=ct
+      
+      # Option 2: Subject folders (input_data/subject_id/*.nii.gz)
+      # - $sid@instance/re:.*\.nii(\.gz)?$@nifti:mod=ct
+      
+      # Option 3: BIDS-like (input_data/sub-XX/anat/*_T1w.nii.gz)
+      # - sub-$sid@instance/anat/re:.*_T1w\.nii(\.gz)?$@nifti:mod=mr
+
+  # Most models have sensible defaults; add config here if needed
+  # MODEL_RUNNER:
+  #   some_option: value
+
+  DataOrganizer:
+    targets:
+    # Segmentations named by ROI
+    - nifti:mod=seg-->[i:sid]/segmentations/[d:roi].nii.gz
+    # Raw model output (original filenames)
+    - nifti:mod=seg-->[i:sid]/raw/[basename]
+    # Copy of input for reference
+    - nifti:mod=ct-->[i:sid]/input/[basename]
+    # Log files
+    - log-->[i:sid]/logs/[basename]

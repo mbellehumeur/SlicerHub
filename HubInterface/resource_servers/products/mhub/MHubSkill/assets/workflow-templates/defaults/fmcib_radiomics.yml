@@ -1,0 +1,43 @@
+general:
+  data_base_dir: /app/data
+  version: 1.0
+  description: Run fmcib radiomics pipeline on dicom data
+
+execute:
+- DicomImporter
+- DsegExtractor
+- NiftiConverter
+- CentroidExtractor
+- FMCIBRunner
+- DataOrganizer
+
+modules:
+  DicomImporter:
+    source_dir: input_data
+    import_dir: sorted_data
+    sort_data: true
+    merge: true
+    meta: 
+      mod: '%Modality'
+      desc: '%SeriesDescription'
+
+  # roi can be specified manually but will otherwise extracted form the dicomseg via the meta.json 
+  # DsegExtractor:
+  #   roi: 
+  #   - LIVER
+  #   - LIVER+NEOPLASM_MALIGNANT_PRIMARY
+
+  DataOrganizer:
+    targets:
+    - csv-->[i:sid]/features.csv
+  # - nifit:mod=seg:origin=dicomseg-->[i:sid]/masks/[basename]
+  # - nifti-->[i:sid]/nifti/[d:mod]/[basename]
+
+sample:
+  input:
+    dicom/: Dicom files of the CT scan and the DICOMSEG file containing the segmentations.
+    dicom/1.3.6.1.4.1.14519.5.2.1.4334.1501.312037286778380630549945195741/1-1.dcm: DICOMSEG file (arbitrary file name)
+    dicom/1.3.6.1.4.1.14519.5.2.1.4334.1501.312037286778380630549945195741/0.dcm: CT slice (arbitrary file name)
+    dicom/1.3.6.1.4.1.14519.5.2.1.4334.1501.312037286778380630549945195741/1.dcm: CT slice (arbitrary file name)
+  output:
+    1.3.6.1.4.1.14519.5.2.1.4334.1501.312037286778380630549945195741/features.csv: The CSV file containing a set of features extracted from the input CT image

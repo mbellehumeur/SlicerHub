@@ -1,0 +1,12 @@
+{
+  "id": "mhub",
+  "product": "MHUB",
+  "title": "MHub models",
+  "location": "Boston, USA",
+  "summary": "Medical Imaging Model Hub — peer-reviewed deep learning models via standardized Docker I/O.",
+  "githubUrl": "https://github.com/MHubAI/",
+  "websiteUrl": "https://mhub.ai",
+  "hubEvent": "dicom-send",
+  "enabled": true,
+  "iconUrl": "https://github.com/MHubAI.png"
+}

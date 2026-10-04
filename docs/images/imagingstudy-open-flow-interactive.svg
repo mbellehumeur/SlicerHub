@@ -1,0 +1,482 @@
+<svg id="isoFlow" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" width="1200" height="700" data-step="0" role="img" aria-labelledby="isoTitle isoDesc" style="cursor: pointer; max-width: 100%; height: auto;">
+  <title id="isoTitle">ImagingStudy-open event flow</title>
+  <desc id="isoDesc">Click to play each step: worklist selection, HTTPS publish, hub fan-out, and synchronized app updates.</desc>
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#0b1b5f" flood-opacity="0.14"/>
+    </filter>
+    <clipPath id="ctClip">
+      <rect x="500" y="138" width="200" height="150" rx="10"/>
+    </clipPath>
+    <radialGradient id="ctVignette" cx="50%" cy="50%" r="65%">
+      <stop offset="55%" stop-color="#000" stop-opacity="0"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="1"/>
+    </radialGradient>
+    <style>
+      .title { font: 700 32px Arial, Helvetica, sans-serif; fill: #06146b; }
+      .heading { font: 700 24px Arial, Helvetica, sans-serif; fill: #06146b; }
+      .label { font: 700 20px Arial, Helvetica, sans-serif; fill: #06146b; }
+      .small { font: 16px Arial, Helvetica, sans-serif; fill: #06146b; }
+      .panel { fill: #fff; stroke: #cfe0ff; stroke-width: 2; filter: url(#shadow); }
+      .connPost { fill: none; stroke: #cbd5e1; stroke-width: 4; stroke-linecap: round; }
+      .connWs { fill: none; stroke: #2457d6; stroke-width: 4; stroke-linecap: round; opacity: 1; }
+      .packetText { font: 700 10px Arial, Helvetica, sans-serif; fill: #fff; }
+      .packetSub { font: 600 9px Arial, Helvetica, sans-serif; fill: #ecfdf5; }
+      .packetSubWs { font: 600 9px Arial, Helvetica, sans-serif; fill: #dbeafe; }
+      .captionBox { fill: #06146b; opacity: 0.9; }
+      .captionText { font: 700 13px Arial, Helvetica, sans-serif; fill: #fff; }
+      .wlField { font: 600 9px Arial, Helvetica, sans-serif; fill: #14532d; }
+      .wlValue { font: 9px Arial, Helvetica, sans-serif; fill: #06146b; }
+      .wlUserNoteText { font: 700 16px Arial, Helvetica, sans-serif; fill: #06146b; }
+      .wlUserNoteSub { font: 600 12px Arial, Helvetica, sans-serif; fill: #334155; }
+      .clickHint { font: 600 14px Arial, Helvetica, sans-serif; fill: #64748b; }
+      .stepDot { fill: #cbd5e1; }
+      .hint { display: none; }
+
+      #castHubGraphic { transform-origin: 0px 0px; }
+      #hubBroadcastArcs { opacity: 0.4; }
+      #step1Caption, #step2Caption, #step3Caption,
+      #worklistOrder, #wlUserCelebratePose,
+      #linePost, .packetPublish,
+      .packetFanoutImg, .packetFanoutReport, .packetFanoutEhr,
+      #ctResult, #reportResult, #ehrChartResult { opacity: 0; }
+      .packetPublish,
+      .packetFanoutImg, .packetFanoutReport, .packetFanoutEhr {
+        transform: translate(600px, 390px);
+      }
+
+      @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+      @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+      @keyframes selectPulse {
+        0%, 100% { opacity: 0; }
+        40%, 60% { opacity: 1; }
+      }
+      @keyframes animPostPacket {
+        0% { opacity: 0; transform: translate(600px, 520px); }
+        8% { opacity: 1; transform: translate(600px, 520px); }
+        75% { opacity: 1; transform: translate(600px, 390px); }
+        100% { opacity: 1; transform: translate(600px, 390px); }
+      }
+      @keyframes animFanoutImg {
+        0% { opacity: 0; transform: translate(600px, 390px); }
+        8% { opacity: 1; transform: translate(600px, 390px); }
+        100% { opacity: 1; transform: translate(600px, 212px); }
+      }
+      @keyframes animFanoutReport {
+        0% { opacity: 0; transform: translate(600px, 390px); }
+        8% { opacity: 1; transform: translate(600px, 390px); }
+        100% { opacity: 1; transform: translate(985px, 402px); }
+      }
+      @keyframes animFanoutEhr {
+        0% { opacity: 0; transform: translate(600px, 390px); }
+        8% { opacity: 1; transform: translate(600px, 390px); }
+        100% { opacity: 1; transform: translate(215px, 402px); }
+      }
+      @keyframes animHubPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.06); }
+      }
+      @keyframes animHubArcsBright {
+        from { opacity: 0.4; }
+        to { opacity: 1; }
+      }
+
+      #isoFlow[data-step="0"]:not([data-anim]) #wlUserCallout { animation: fadeIn 0.6s ease; }
+      #isoFlow[data-step="0"]:not([data-anim]) #wlSelectHighlight {
+        animation: selectPulse 2.5s ease-in-out infinite;
+      }
+      #isoFlow[data-step="0"] .hint0,
+      #isoFlow[data-step="1"] .hint1,
+      #isoFlow[data-step="2"] .hint2,
+      #isoFlow[data-step="3"] .hint3 { display: block; }
+      #isoFlow[data-step="0"] .stepDot0,
+      #isoFlow[data-step="1"] .stepDot1,
+      #isoFlow[data-step="2"] .stepDot2,
+      #isoFlow[data-step="3"] .stepDot3 { fill: #2457d6; }
+
+      #isoFlow[data-step="1"][data-anim] #step0Caption { animation: fadeOut 0.35s forwards; }
+      #isoFlow[data-step="1"][data-anim] #step1Caption { animation: fadeIn 0.35s 0.15s forwards; }
+      #isoFlow[data-step="1"][data-anim] #worklistShell { animation: fadeOut 0.45s forwards; }
+      #isoFlow[data-step="1"][data-anim] #worklistOrder { animation: fadeIn 0.45s 0.2s forwards; }
+      #isoFlow[data-step="1"][data-anim] #wlUserOpeningLabels { animation: fadeOut 0.3s forwards; }
+      #isoFlow[data-step="1"][data-anim] #wlSelectHighlight { animation: fadeOut 0.2s forwards; }
+      #isoFlow[data-step="1"][data-anim] #linePost {
+        animation: fadeIn 0.3s 0.1s forwards;
+        stroke: #1f9d55;
+      }
+      #isoFlow[data-step="1"][data-anim] .packetPublish { animation: animPostPacket 1.75s ease forwards; }
+      #isoFlow[data-step="1"][data-anim] #castHubGraphic { animation: animHubPulse 1.75s ease forwards; }
+
+      #isoFlow[data-step="1"]:not([data-anim]) #step1Caption,
+      #isoFlow[data-step="1"]:not([data-anim]) #worklistOrder,
+      #isoFlow[data-step="1"]:not([data-anim]) #wlUserCallout,
+      #isoFlow[data-step="1"]:not([data-anim]) #wlUserOpeningFigure,
+      #isoFlow[data-step="1"]:not([data-anim]) #linePost,
+      #isoFlow[data-step="1"]:not([data-anim]) .packetPublish { opacity: 1; }
+      #isoFlow[data-step="1"]:not([data-anim]) #step0Caption,
+      #isoFlow[data-step="1"]:not([data-anim]) #worklistShell,
+      #isoFlow[data-step="1"]:not([data-anim]) #wlUserOpeningLabels,
+      #isoFlow[data-step="1"]:not([data-anim]) #wlSelectHighlight { opacity: 0; }
+      #isoFlow[data-step="1"]:not([data-anim]) #linePost { stroke: #1f9d55; }
+      #isoFlow[data-step="1"]:not([data-anim]) #castHubGraphic { transform: scale(1.06); }
+      #isoFlow[data-step="1"]:not([data-anim]) .packetPublish { transform: translate(600px, 390px); }
+
+      #isoFlow[data-step="2"][data-anim] #step1Caption { animation: fadeOut 0.3s forwards; }
+      #isoFlow[data-step="2"][data-anim] #step2Caption { animation: fadeIn 0.3s 0.12s forwards; }
+      #isoFlow[data-step="2"][data-anim] .packetPublish { animation: fadeOut 0.25s forwards; }
+      #isoFlow[data-step="2"][data-anim] #linePost { animation: fadeOut 0.25s forwards; }
+      #isoFlow[data-step="2"][data-anim] #castHubGraphic { animation: animHubPulse 1.4s ease forwards; }
+      #isoFlow[data-step="2"][data-anim] #hubBroadcastArcs { animation: animHubArcsBright 0.6s ease forwards; }
+      #isoFlow[data-step="2"][data-anim] .packetFanoutImg { animation: animFanoutImg 1.35s ease forwards; }
+      #isoFlow[data-step="2"][data-anim] .packetFanoutReport { animation: animFanoutReport 1.35s ease forwards; }
+      #isoFlow[data-step="2"][data-anim] .packetFanoutEhr { animation: animFanoutEhr 1.35s ease forwards; }
+
+      #isoFlow[data-step="2"]:not([data-anim]) #step2Caption,
+      #isoFlow[data-step="2"]:not([data-anim]) #worklistOrder,
+      #isoFlow[data-step="2"]:not([data-anim]) #wlUserCallout,
+      #isoFlow[data-step="2"]:not([data-anim]) #wlUserOpeningFigure,
+      #isoFlow[data-step="2"]:not([data-anim]) .packetFanoutImg,
+      #isoFlow[data-step="2"]:not([data-anim]) .packetFanoutReport,
+      #isoFlow[data-step="2"]:not([data-anim]) .packetFanoutEhr { opacity: 1; }
+      #isoFlow[data-step="2"]:not([data-anim]) #hubBroadcastArcs { opacity: 1; }
+      #isoFlow[data-step="2"]:not([data-anim]) #step0Caption,
+      #isoFlow[data-step="2"]:not([data-anim]) #step1Caption,
+      #isoFlow[data-step="2"]:not([data-anim]) #worklistShell,
+      #isoFlow[data-step="2"]:not([data-anim]) #wlUserOpeningLabels,
+      #isoFlow[data-step="2"]:not([data-anim]) #wlSelectHighlight,
+      #isoFlow[data-step="2"]:not([data-anim]) #linePost,
+      #isoFlow[data-step="2"]:not([data-anim]) .packetPublish { opacity: 0; }
+      #isoFlow[data-step="2"]:not([data-anim]) .packetFanoutImg { transform: translate(600px, 212px); }
+      #isoFlow[data-step="2"]:not([data-anim]) .packetFanoutReport { transform: translate(985px, 402px); }
+      #isoFlow[data-step="2"]:not([data-anim]) .packetFanoutEhr { transform: translate(215px, 402px); }
+
+      #isoFlow[data-step="3"][data-anim] #step2Caption { animation: fadeOut 0.3s forwards; }
+      #isoFlow[data-step="3"][data-anim] #step3Caption { animation: fadeIn 0.3s 0.12s forwards; }
+      #isoFlow[data-step="3"][data-anim] .packetFanoutImg,
+      #isoFlow[data-step="3"][data-anim] .packetFanoutReport,
+      #isoFlow[data-step="3"][data-anim] .packetFanoutEhr { animation: fadeOut 0.35s forwards; }
+      #isoFlow[data-step="3"][data-anim] #wlUserOpeningFigure { animation: fadeOut 0.35s forwards; }
+      #isoFlow[data-step="3"][data-anim] #wlUserCelebratePose { animation: fadeIn 0.45s 0.35s forwards; }
+      #isoFlow[data-step="3"][data-anim] #appShellImg,
+      #isoFlow[data-step="3"][data-anim] #appShellReport,
+      #isoFlow[data-step="3"][data-anim] #appShellEhr { animation: fadeOut 0.4s 0.55s forwards; }
+      #isoFlow[data-step="3"][data-anim] #ctResult,
+      #isoFlow[data-step="3"][data-anim] #reportResult,
+      #isoFlow[data-step="3"][data-anim] #ehrChartResult { animation: fadeIn 0.45s 0.6s forwards; }
+
+      #isoFlow[data-step="3"]:not([data-anim]) #step3Caption,
+      #isoFlow[data-step="3"]:not([data-anim]) #worklistOrder,
+      #isoFlow[data-step="3"]:not([data-anim]) #wlUserCallout,
+      #isoFlow[data-step="3"]:not([data-anim]) #wlUserCelebratePose,
+      #isoFlow[data-step="3"]:not([data-anim]) #ctResult,
+      #isoFlow[data-step="3"]:not([data-anim]) #reportResult,
+      #isoFlow[data-step="3"]:not([data-anim]) #ehrChartResult { opacity: 1; }
+      #isoFlow[data-step="3"]:not([data-anim]) #hubBroadcastArcs { opacity: 1; }
+      #isoFlow[data-step="3"]:not([data-anim]) #step0Caption,
+      #isoFlow[data-step="3"]:not([data-anim]) #step1Caption,
+      #isoFlow[data-step="3"]:not([data-anim]) #step2Caption,
+      #isoFlow[data-step="3"]:not([data-anim]) #worklistShell,
+      #isoFlow[data-step="3"]:not([data-anim]) #wlUserOpeningFigure,
+      #isoFlow[data-step="3"]:not([data-anim]) #wlUserOpeningLabels,
+      #isoFlow[data-step="3"]:not([data-anim]) #wlSelectHighlight,
+      #isoFlow[data-step="3"]:not([data-anim]) #linePost,
+      #isoFlow[data-step="3"]:not([data-anim]) .packetPublish,
+      #isoFlow[data-step="3"]:not([data-anim]) .packetFanoutImg,
+      #isoFlow[data-step="3"]:not([data-anim]) .packetFanoutReport,
+      #isoFlow[data-step="3"]:not([data-anim]) .packetFanoutEhr,
+      #isoFlow[data-step="3"]:not([data-anim]) #appShellImg,
+      #isoFlow[data-step="3"]:not([data-anim]) #appShellReport,
+      #isoFlow[data-step="3"]:not([data-anim]) #appShellEhr { opacity: 0; }
+
+      #isoFlow[data-step="0"][data-anim] #step3Caption,
+      #isoFlow[data-step="0"][data-anim] #worklistOrder,
+      #isoFlow[data-step="0"][data-anim] #wlUserCelebratePose,
+      #isoFlow[data-step="0"][data-anim] #ctResult,
+      #isoFlow[data-step="0"][data-anim] #reportResult,
+      #isoFlow[data-step="0"][data-anim] #ehrChartResult,
+      #isoFlow[data-step="0"][data-anim] .packetFanoutImg,
+      #isoFlow[data-step="0"][data-anim] .packetFanoutReport,
+      #isoFlow[data-step="0"][data-anim] .packetFanoutEhr { animation: fadeOut 0.5s forwards; }
+      #isoFlow[data-step="0"][data-anim] #step0Caption,
+      #isoFlow[data-step="0"][data-anim] #worklistShell,
+      #isoFlow[data-step="0"][data-anim] #wlUserCallout,
+      #isoFlow[data-step="0"][data-anim] #wlUserOpeningFigure,
+      #isoFlow[data-step="0"][data-anim] #wlUserOpeningLabels,
+      #isoFlow[data-step="0"][data-anim] #appShellImg,
+      #isoFlow[data-step="0"][data-anim] #appShellReport,
+      #isoFlow[data-step="0"][data-anim] #appShellEhr { animation: fadeIn 0.5s 0.25s forwards; }
+      #isoFlow[data-step="0"][data-anim] #hubBroadcastArcs { animation: fadeOut 0.4s forwards; opacity: 1; }
+
+      #isoFlow[data-anim] { cursor: wait; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" fill="#ffffff"/>
+  <text x="600" y="52" text-anchor="middle" class="title">ImagingStudy-open event flow</text>
+
+  <g id="step0Caption">
+    <rect class="captionBox" x="200" y="78" width="800" height="44" rx="8"/>
+    <text x="600" y="98" text-anchor="middle" class="captionText">Step 1: User selects an exam from the worklist</text>
+  </g>
+  <g id="step1Caption">
+    <rect class="captionBox" x="220" y="78" width="760" height="44" rx="8"/>
+    <text x="600" y="98" text-anchor="middle" class="captionText">Step 2: Worklist publishes imagingstudy-open (HTTPS POST, green)</text>
+  </g>
+  <g id="step2Caption">
+    <rect class="captionBox" x="200" y="78" width="800" height="44" rx="8"/>
+    <text x="600" y="98" text-anchor="middle" class="captionText">Step 3: Hub fans out over WebSocket (blue) to every subscriber</text>
+  </g>
+  <g id="step3Caption">
+    <rect class="captionBox" x="180" y="78" width="840" height="44" rx="8"/>
+    <text x="600" y="98" text-anchor="middle" class="captionText">Step 4: Each application updates its UI from the shared context</text>
+  </g>
+
+  <!-- Connector lines (behind panels) -->
+  <path id="lineWsWorklist" class="connWs" d="M600 480 L600 420"/>
+  <path id="linePost" class="connPost" d="M600 480 L600 420"/>
+  <path id="lineWsImg" class="connWs" d="M600 390 L600 212"/>
+  <path id="lineWsReport" class="connWs" d="M600 390 L985 402"/>
+  <path id="lineWsEhr" class="connWs" d="M600 390 L215 402"/>
+
+  <g id="wlUserCallout">
+    <rect class="panel" x="268" y="508" width="214" height="118" rx="12"/>
+    <g id="wlUserOpeningFigure">
+      <g transform="translate(288, 528)">
+        <circle cx="26" cy="20" r="14" fill="#e8c4a0" stroke="#b8956e" stroke-width="1.5"/>
+        <path d="M13 15 Q26 7 39 15 Q39 10 26 5 Q13 10 13 15" fill="#2c1810"/>
+        <rect x="22" y="32" width="8" height="6" fill="#e8c4a0"/>
+        <path d="M17 36 Q26 46 35 36" fill="none" stroke="#475569" stroke-width="2"/>
+        <circle cx="26" cy="47" r="4.5" fill="#94a3b8" stroke="#475569" stroke-width="1.2"/>
+        <circle cx="26" cy="47" r="1.8" fill="#64748b"/>
+        <path d="M7 38 L7 76 L45 76 L45 38 L33 38 L30 49 L22 49 L19 38 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round"/>
+        <path d="M22 49 L30 49 L28 58 L24 58 Z" fill="#0e7490"/>
+        <path d="M7 42 L1 58" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="0" cy="60" r="4" fill="#e8c4a0" stroke="#b8956e" stroke-width="1"/>
+        <path d="M45 42 L58 54" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="60" cy="56" r="4" fill="#e8c4a0" stroke="#b8956e" stroke-width="1"/>
+        <path d="M60 56 L69 53" fill="none" stroke="#e8c4a0" stroke-width="2.5" stroke-linecap="round"/>
+        <rect x="14" y="74" width="24" height="8" rx="2" fill="#1e3a5f"/>
+      </g>
+    </g>
+    <g id="wlUserOpeningLabels">
+      <text x="378" y="562" text-anchor="middle" class="wlUserNoteText">User opens</text>
+      <text x="378" y="582" text-anchor="middle" class="wlUserNoteText">from worklist</text>
+      <text x="378" y="602" text-anchor="middle" class="wlUserNoteSub">clinician action</text>
+      <path d="M482 562 L490 562" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round"/>
+      <polygon points="490,562 483,557 483,567" fill="#64748b"/>
+    </g>
+    <g id="wlUserCelebratePose" transform="translate(332, 520)">
+      <circle cx="26" cy="20" r="14" fill="#e8c4a0" stroke="#b8956e" stroke-width="1.5"/>
+      <path d="M13 15 Q26 7 39 15 Q39 10 26 5 Q13 10 13 15" fill="#2c1810"/>
+      <rect x="22" y="32" width="8" height="6" fill="#e8c4a0"/>
+      <path d="M17 36 Q26 46 35 36" fill="none" stroke="#475569" stroke-width="2"/>
+      <circle cx="26" cy="47" r="4.5" fill="#94a3b8" stroke="#475569" stroke-width="1.2"/>
+      <circle cx="26" cy="47" r="1.8" fill="#64748b"/>
+      <path d="M7 38 L7 76 L45 76 L45 38 L33 38 L30 49 L22 49 L19 38 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5" stroke-linejoin="round"/>
+      <path d="M22 49 L30 49 L28 58 L24 58 Z" fill="#0e7490"/>
+      <path d="M7 42 L2 20" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="1" cy="18" r="4" fill="#e8c4a0" stroke="#b8956e" stroke-width="1"/>
+      <path d="M45 42 L50 20" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="51" cy="18" r="4" fill="#e8c4a0" stroke="#b8956e" stroke-width="1"/>
+      <rect x="14" y="74" width="24" height="8" rx="2" fill="#1e3a5f"/>
+    </g>
+  </g>
+
+  <g id="castHub">
+    <text x="648" y="368" text-anchor="start" class="heading">Hub</text>
+  </g>
+
+  <!-- Worklist (bottom, star spoke) -->
+  <g id="worklistShell">
+    <rect class="panel" x="490" y="480" width="220" height="175" rx="18"/>
+    <rect x="502" y="498" width="196" height="88" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="2"/>
+    <rect id="wlSelectHighlight" x="504" y="522" width="192" height="24" rx="4" fill="#dcfce7" stroke="#159447" stroke-width="2"/>
+    <text x="600" y="516" text-anchor="middle" font-family="Arial" font-size="9" font-weight="700" fill="#14532d">Worklist</text>
+    <text x="512" y="538" font-family="Arial" font-size="10" fill="#06146b">CT Chest w/ contrast</text>
+    <text x="688" y="538" text-anchor="end" font-family="Arial" font-size="9" font-weight="700" fill="#b45309">STAT</text>
+    <text x="512" y="554" font-family="Arial" font-size="10" fill="#64748b">MR Brain</text>
+    <text x="512" y="570" font-family="Arial" font-size="10" fill="#64748b">US Abdomen</text>
+    <text x="600" y="600" text-anchor="middle" class="label">Worklist</text>
+    <text x="600" y="624" text-anchor="middle" class="small">Select exam to open</text>
+  </g>
+  <g id="worklistOrder">
+    <rect class="panel" x="490" y="480" width="220" height="175" rx="18"/>
+    <rect x="502" y="494" width="196" height="118" rx="8" fill="#f0fdf4" stroke="#86efac" stroke-width="2"/>
+    <rect x="502" y="494" width="196" height="22" rx="8" fill="#159447"/>
+    <rect x="502" y="508" width="196" height="8" fill="#159447"/>
+    <text x="600" y="509" text-anchor="middle" font-family="Arial" font-size="10" font-weight="700" fill="#fff">Radiology order</text>
+    <text x="512" y="528" class="wlField">ORG ID</text>
+    <text x="688" y="528" text-anchor="end" class="wlValue">RAD-20481</text>
+    <line x1="568" y1="528" x2="682" y2="528" stroke="#bbf7d0" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="512" y="542" class="wlField">Ref physician</text>
+    <text x="688" y="542" text-anchor="end" class="wlValue">Dr. Chen</text>
+    <line x1="592" y1="542" x2="682" y2="542" stroke="#bbf7d0" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="512" y="556" class="wlField">Reason for exam</text>
+    <text x="688" y="556" text-anchor="end" class="wlValue">Chest pain, r/o PE</text>
+    <line x1="608" y1="556" x2="682" y2="556" stroke="#bbf7d0" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="512" y="570" class="wlField">Modality / exam</text>
+    <text x="688" y="570" text-anchor="end" class="wlValue">CT Chest w/ contrast</text>
+    <line x1="608" y1="570" x2="682" y2="570" stroke="#bbf7d0" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="512" y="584" class="wlField">Accession</text>
+    <text x="688" y="584" text-anchor="end" class="wlValue">ACC-2026-88412</text>
+    <line x1="568" y1="584" x2="682" y2="584" stroke="#bbf7d0" stroke-width="1.5" stroke-linecap="round"/>
+    <text x="512" y="598" class="wlField">Priority</text>
+    <text x="688" y="598" text-anchor="end" class="wlValue" font-weight="700" fill="#b45309">STAT</text>
+    <text x="600" y="632" text-anchor="middle" class="label">Worklist</text>
+    <text x="600" y="648" text-anchor="middle" class="small">Ready to open study on topic</text>
+  </g>
+
+  <!-- Image Display (top) -->
+  <g id="appShellImg">
+    <rect class="panel" x="490" y="125" width="220" height="175" rx="18"/>
+    <rect x="565" y="145" width="70" height="58" rx="12" fill="#6528e0"/>
+    <path d="M580 189 L595 171 L607 184 L616 176 L628 189 Z" fill="#fff"/>
+    <circle cx="616" cy="163" r="5" fill="#fff"/>
+    <text x="600" y="231" text-anchor="middle" class="label">Image Display</text>
+    <text x="600" y="257" text-anchor="middle" class="small">Waiting for study...</text>
+  </g>
+  <g id="ctResult">
+    <rect class="panel" x="490" y="125" width="220" height="175" rx="18"/>
+    <rect x="500" y="138" width="200" height="150" rx="10" fill="#0f1115" stroke="#2a3140" stroke-width="2"/>
+    <g clip-path="url(#ctClip)">
+      <rect x="500" y="138" width="200" height="150" fill="#101014"/>
+      <ellipse cx="600" cy="216" rx="78" ry="62" fill="#6f7074"/>
+      <ellipse cx="567" cy="212" rx="28" ry="38" fill="#1b1d22"/>
+      <ellipse cx="633" cy="212" rx="28" ry="38" fill="#1b1d22"/>
+      <ellipse cx="600" cy="226" rx="14" ry="18" fill="#8a8b90"/>
+      <ellipse cx="600" cy="258" rx="10" ry="8" fill="#d8d8dc"/>
+      <path d="M555 180 Q600 162 645 180" fill="none" stroke="#555860" stroke-width="3" opacity="0.7"/>
+      <path d="M547 198 Q600 178 653 198" fill="none" stroke="#555860" stroke-width="3" opacity="0.55"/>
+      <rect x="500" y="138" width="200" height="150" fill="url(#ctVignette)" opacity="0.35"/>
+    </g>
+    <text x="600" y="282" text-anchor="middle" class="small">CT Chest</text>
+    <text x="600" y="298" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#6528e0">Image Display</text>
+  </g>
+
+  <!-- Reporting (right) -->
+  <g id="appShellReport">
+    <rect class="panel" x="875" y="315" width="220" height="175" rx="18"/>
+    <rect x="950" y="335" width="70" height="58" rx="12" fill="#f97316"/>
+    <rect x="967" y="369" width="8" height="16" fill="#fff"/>
+    <rect x="981" y="357" width="8" height="28" fill="#fff"/>
+    <rect x="995" y="345" width="8" height="40" fill="#fff"/>
+    <text x="985" y="421" text-anchor="middle" class="label">Reporting</text>
+    <text x="985" y="447" text-anchor="middle" class="small">Waiting for study...</text>
+  </g>
+  <g id="reportResult">
+    <rect class="panel" x="875" y="315" width="220" height="175" rx="18"/>
+    <rect x="892" y="332" width="186" height="132" rx="8" fill="#fffaf5" stroke="#fed7aa" stroke-width="2"/>
+    <rect x="892" y="332" width="186" height="28" rx="8" fill="#f97316"/>
+    <rect x="892" y="348" width="186" height="12" fill="#f97316"/>
+    <text x="985" y="351" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="11" font-weight="700" fill="#fff">Draft report</text>
+    <text x="904" y="372" font-family="Arial" font-size="10" fill="#7c2d12">Clinical history</text>
+    <line x1="988" y1="372" x2="1066" y2="372" stroke="#fdba74" stroke-width="2" stroke-linecap="round"/>
+    <text x="904" y="390" font-family="Arial" font-size="10" fill="#7c2d12">Findings</text>
+    <line x1="988" y1="390" x2="1066" y2="390" stroke="#fdba74" stroke-width="2" stroke-linecap="round"/>
+    <text x="904" y="408" font-family="Arial" font-size="10" fill="#7c2d12">Impression</text>
+    <line x1="988" y1="408" x2="1066" y2="408" stroke="#fdba74" stroke-width="2" stroke-linecap="round"/>
+    <text x="985" y="488" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#f97316">Reporting</text>
+  </g>
+
+  <!-- EHR (left) -->
+  <g id="appShellEhr">
+    <rect class="panel" x="105" y="315" width="220" height="175" rx="18"/>
+    <rect x="180" y="335" width="70" height="58" rx="12" fill="#0d9488"/>
+    <rect x="195" y="348" width="40" height="48" rx="4" fill="#fff" opacity="0.95"/>
+    <line x1="202" y1="362" x2="228" y2="362" stroke="#0d9488" stroke-width="3" stroke-linecap="round"/>
+    <line x1="202" y1="374" x2="228" y2="374" stroke="#0d9488" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="222" cy="344" r="8" fill="#fff" stroke="#0d9488" stroke-width="2"/>
+    <text x="215" y="421" text-anchor="middle" class="label">EHR</text>
+    <text x="215" y="447" text-anchor="middle" class="small">Waiting for study...</text>
+  </g>
+  <g id="ehrChartResult">
+    <rect class="panel" x="105" y="315" width="220" height="175" rx="18"/>
+    <rect x="122" y="332" width="186" height="132" rx="8" fill="#f0fdfa" stroke="#99f6e4" stroke-width="2"/>
+    <rect x="122" y="332" width="186" height="28" rx="8" fill="#0d9488"/>
+    <rect x="122" y="348" width="186" height="12" fill="#0d9488"/>
+    <text x="215" y="351" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#fff">Patient chart</text>
+    <text x="134" y="372" font-family="Arial" font-size="10" fill="#134e4a">Name / MRN</text>
+    <line x1="218" y1="372" x2="296" y2="372" stroke="#5eead4" stroke-width="2" stroke-linecap="round"/>
+    <text x="134" y="390" font-family="Arial" font-size="10" fill="#134e4a">Problem list</text>
+    <line x1="218" y1="390" x2="296" y2="390" stroke="#5eead4" stroke-width="2" stroke-linecap="round"/>
+    <text x="134" y="408" font-family="Arial" font-size="10" fill="#134e4a">Allergies / Meds</text>
+    <line x1="218" y1="408" x2="296" y2="408" stroke="#5eead4" stroke-width="2" stroke-linecap="round"/>
+    <text x="215" y="488" text-anchor="middle" font-family="Arial" font-size="11" font-weight="700" fill="#0d9488">EHR</text>
+  </g>
+
+  <!-- Hub: iconic dish pointing top-right with broadcast waves -->
+  <g transform="translate(600, 390)">
+    <g id="castHubGraphic">
+      <g transform="rotate(-42)">
+        <g id="hubBroadcastArcs" fill="none" stroke="#38bdf8" stroke-linecap="round">
+          <path d="M30 -12 A 14 14 0 0 1 30 12" stroke-width="3"/>
+          <path d="M38 -20 A 22 22 0 0 1 38 20" stroke-width="2.5" opacity="0.8"/>
+          <path d="M46 -28 A 30 30 0 0 1 46 28" stroke-width="2" opacity="0.55"/>
+        </g>
+        <g id="hubDish">
+          <circle cx="0" cy="0" r="20" fill="#e0f2fe" stroke="#1e40af" stroke-width="4"/>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- Packets: green POST, blue WebSocket -->
+  <g class="packetPublish">
+    <rect x="-88" y="-18" width="176" height="36" rx="18" fill="#1f9d55"/>
+    <text x="0" y="-3" text-anchor="middle" class="packetSub">HTTPS POST</text>
+    <text x="0" y="10" text-anchor="middle" class="packetText">imagingstudy-open</text>
+  </g>
+  <g class="packetFanoutImg">
+    <rect x="-78" y="-14" width="156" height="28" rx="14" fill="#2457d6"/>
+    <text x="0" y="-2" text-anchor="middle" class="packetSubWs">WebSocket</text>
+    <text x="0" y="11" text-anchor="middle" class="packetText">imagingstudy-open</text>
+  </g>
+  <g class="packetFanoutReport">
+    <rect x="-78" y="-14" width="156" height="28" rx="14" fill="#2457d6"/>
+    <text x="0" y="-2" text-anchor="middle" class="packetSubWs">WebSocket</text>
+    <text x="0" y="11" text-anchor="middle" class="packetText">imagingstudy-open</text>
+  </g>
+  <g class="packetFanoutEhr">
+    <rect x="-78" y="-14" width="156" height="28" rx="14" fill="#2457d6"/>
+    <text x="0" y="-2" text-anchor="middle" class="packetSubWs">WebSocket</text>
+    <text x="0" y="11" text-anchor="middle" class="packetText">imagingstudy-open</text>
+  </g>
+
+  <g id="clickHint" pointer-events="none">
+    <text x="600" y="682" text-anchor="middle" class="clickHint hint hint0">Click to play · step 1 of 4</text>
+    <text x="600" y="682" text-anchor="middle" class="clickHint hint hint1">Click to play · step 2 of 4</text>
+    <text x="600" y="682" text-anchor="middle" class="clickHint hint hint2">Click to play · step 3 of 4</text>
+    <text x="600" y="682" text-anchor="middle" class="clickHint hint hint3">Click to restart · step 4 of 4</text>
+    <circle class="stepDot stepDot0" cx="520" cy="688" r="5"/>
+    <circle class="stepDot stepDot1" cx="540" cy="688" r="5"/>
+    <circle class="stepDot stepDot2" cx="560" cy="688" r="5"/>
+    <circle class="stepDot stepDot3" cx="580" cy="688" r="5"/>
+  </g>
+
+  <script><![CDATA[
+    (function () {
+      var root = document.getElementById('isoFlow');
+      var step = 0;
+      var busy = false;
+      var DURATION = { 0: 750, 1: 1750, 2: 1400, 3: 1100 };
+
+      function play(next) {
+        busy = true;
+        step = next;
+        root.setAttribute('data-step', String(next));
+        root.setAttribute('data-anim', '1');
+        window.setTimeout(function () {
+          root.removeAttribute('data-anim');
+          busy = false;
+        }, DURATION[next]);
+      }
+
+      root.addEventListener('click', function () {
+        if (busy) {
+          return;
+        }
+        play((step + 1) % 4);
+      });
+    })();
+  ]]></script>
+</svg>

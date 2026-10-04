@@ -1,0 +1,13 @@
+{
+  "id": "totalseg",
+  "product": "TOTALSEG",
+  "title": "Total Segmentator",
+  "location": "Basel, Switzerland",
+  "summary": "Whole-body CT/MR multi-organ segmentation.",
+  "githubUrl": "https://github.com/wasserth/TotalSegmentator",
+  "websiteUrl": "https://totalsegmentator.com/",
+  "buyMeACoffeeUrl": "https://www.buymeacoffee.com/totalsegmentator",
+  "hubEvent": "dicom-send",
+  "enabled": true,
+  "citeUrl": "https://pubs.rsna.org/doi/10.1148/ryai.230024"
+}

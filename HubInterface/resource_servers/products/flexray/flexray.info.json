@@ -1,0 +1,12 @@
+{
+  "id": "flexray",
+  "product": "FLEXRAY",
+  "title": "FleXray",
+  "location": "Cambridge, MA, USA",
+  "summary": "Foundation model for universal clinical X-ray anatomy segmentation (60 structures) across body regions, views, and acquisition settings. Designed for on-device / local inference.",
+  "websiteUrl": "https://flexray.csail.mit.edu/",
+  "cite": "Victor Ion Butoi, Vivek Gopalakrishnan, John V. Guttag, Adrian V. Dalca, and Neel Dey (2026). FleXray: Universal Clinical X-ray Segmentation. arXiv:2609.26756",
+  "citeUrl": "https://arxiv.org/abs/2609.26756",
+  "hubEvent": "dicom-send",
+  "enabled": true
+}

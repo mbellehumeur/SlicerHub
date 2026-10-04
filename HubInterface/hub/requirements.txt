@@ -1,0 +1,10 @@
+-e ../python_client
+fastapi>=0.109.0
+uvicorn[standard]>=0.22.0
+python-multipart>=0.0.6
+aiohttp>=3.12.0
+psutil>=5.9.0
+idc-index==0.12.3
+PyJWT[crypto]>=2.8.0
+anthropic>=0.49.0
+python-dotenv>=1.0.0

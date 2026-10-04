@@ -1,0 +1,13 @@
+{
+  "id": "txrv",
+  "product": "TORCHXRAYVISION",
+  "title": "TorchXRayVision",
+  "location": "Montreal, Canada",
+  "summary": "Chest X-ray pathology classification (18 findings) and lung/heart anatomy segmentation.",
+  "githubUrl": "https://github.com/mlmed/torchxrayvision",
+  "websiteUrl": "https://mlmed.org/torchxrayvision/",
+  "cite": "Cohen et al., TorchXRayVision: A library of chest X-ray datasets and models, MIDL 2022",
+  "citeUrl": "https://arxiv.org/abs/2111.00595",
+  "hubEvent": "dicom-send",
+  "enabled": true
+}

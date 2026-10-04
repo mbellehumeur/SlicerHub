@@ -1,0 +1,189 @@
+:root,
+html[data-mode='light'] {
+  color-scheme: light;
+  --bg-page: #f8fafc;
+  --bg-main: #ffffff;
+  --text: #1e293b;
+  --heading: #06146b;
+  --link: #2457d6;
+  --link-hover: #1d4ed8;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --diagram-shadow: rgba(11, 27, 95, 0.08);
+  --btn-bg: #e2e8f0;
+  --btn-bg-hover: #cbd5e1;
+  --btn-text: #1e293b;
+}
+
+html[data-mode='dark'] {
+  color-scheme: dark;
+  --bg-page: #0f172a;
+  --bg-main: #1e293b;
+  --text: #e2e8f0;
+  --heading: #bfdbfe;
+  --link: #93c5fd;
+  --link-hover: #bfdbfe;
+  --muted: #94a3b8;
+  --border: #334155;
+  --diagram-shadow: rgba(0, 0, 0, 0.4);
+  --btn-bg: #334155;
+  --btn-bg-hover: #475569;
+  --btn-text: #f1f5f9;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg-page);
+}
+
+a {
+  color: var(--link);
+}
+
+a:hover {
+  color: var(--link-hover);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+main {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 3rem;
+  background: var(--bg-main);
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--heading);
+  line-height: 1.25;
+}
+
+h1 {
+  font-size: 1.75rem;
+  margin-top: 0;
+}
+
+h2 {
+  font-size: 1.35rem;
+  margin-top: 2.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border);
+}
+
+h3 {
+  font-size: 1.1rem;
+  margin-top: 1.75rem;
+}
+
+h4 {
+  font-size: 1rem;
+  margin-top: 1.25rem;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 2rem 0;
+}
+
+ul,
+ol {
+  padding-left: 1.25rem;
+}
+
+li {
+  margin: 0.5rem 0;
+}
+
+li img {
+  display: block;
+  margin-top: 0.5rem;
+  width: 200px;
+}
+
+.banner {
+  display: block;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.page-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.repo-link {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+.theme-toggle {
+  font: 600 0.85rem Arial, Helvetica, sans-serif;
+  color: var(--btn-text);
+  background: var(--btn-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: var(--btn-bg-hover);
+}
+
+.diagram {
+  margin: 1.25rem 0;
+  line-height: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px var(--diagram-shadow);
+}
+
+.diagram object {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+}
+
+.diagram-caption,
+.figure-caption {
+  margin: 0.5rem 0 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.figure-center {
+  text-align: center;
+}
+
+.worklist-hero {
+  display: block;
+  margin: 1rem auto;
+  max-width: 100%;
+}
+
+.back-link {
+  margin: 0 0 1.25rem;
+}

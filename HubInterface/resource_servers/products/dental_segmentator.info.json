@@ -1,0 +1,11 @@
+{
+  "id": "dental",
+  "product": "DENTAL_SEG",
+  "title": "Dental Segmentator",
+  "location": "Paris, France",
+  "summary": "Fully automatic CT/CBCT dental segmentation (maxilla, mandible, upper/lower teeth, mandibular canal).",
+  "githubUrl": "https://github.com/gaudot/SlicerDentalSegmentator",
+  "websiteUrl": "https://www.kitware.com/dental-segmentator/",
+  "hubEvent": "dicom-send",
+  "enabled": true
+}
