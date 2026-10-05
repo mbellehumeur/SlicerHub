@@ -51,8 +51,7 @@
             --danger-bg: #d32f2f;
             --danger-border: #c62828;
         }
-        html[data-theme='3dslicer'][data-mode='light'],
-        html[data-theme='3dslicer']:not([data-mode]) {
+        html[data-theme='3dslicer'][data-mode='light'] {
             --bg-page: #e8e8e8;
             --bg-surface: #f5f5f5;
             --bg-muted: #eeeeee;
@@ -201,7 +200,8 @@
             --success-banner-text: #a5d6a7;
             --success-banner-border: #4caf50;
         }
-        html[data-theme='3dslicer'][data-mode='dark'] {
+        html[data-theme='3dslicer'][data-mode='dark'],
+        html[data-theme='3dslicer']:not([data-mode]) {
             --bg-page: #2a2a2a;
             --bg-surface: #353535;
             --bg-muted: #2e2e2e;
@@ -322,102 +322,6 @@
             display: flex;
             align-items: flex-start;
             gap: 6px;
-        }
-        .hub-hub-radio-wrap {
-            position: relative;
-        }
-        .hub-hub-radio {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 36px;
-            height: 36px;
-            color: var(--text-secondary);
-        }
-        .hub-hub-radio-btn {
-            padding: 0;
-            border: 1px solid transparent;
-            border-radius: 6px;
-            background: transparent;
-            cursor: pointer;
-        }
-        .hub-hub-radio-btn:hover,
-        .hub-hub-radio-btn[aria-expanded='true'] {
-            background: var(--bg-muted-hover);
-            border-color: var(--border);
-            color: var(--text-primary);
-        }
-        .hub-hub-menu {
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0;
-            min-width: 180px;
-            padding: 6px 0;
-            background: var(--bg-surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            box-shadow: var(--shadow-modal);
-            z-index: 1100;
-        }
-        .hub-hub-menu[hidden] {
-            display: none;
-        }
-        .hub-hub-menu-item {
-            display: block;
-            width: 100%;
-            padding: 8px 14px;
-            border: 0;
-            background: transparent;
-            color: var(--text-primary);
-            font-size: 14px;
-            text-align: left;
-            cursor: pointer;
-        }
-        .hub-hub-menu-item:hover,
-        .hub-hub-menu-item:focus-visible {
-            background: var(--bg-muted-hover);
-        }
-        .hub-hub-radio-icon {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-        }
-        .hub-hub-radio-svg {
-            display: block;
-            width: 20px;
-            height: 20px;
-        }
-        .hub-hub-radio-slash {
-            pointer-events: none;
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 2px;
-            height: 130%;
-            transform: translate(-50%, -50%) rotate(45deg);
-            border-radius: 999px;
-            background: currentColor;
-            opacity: 0.9;
-        }
-        .hub-hub-radio--connected {
-            color: #4ade80;
-        }
-        .hub-hub-radio--connecting {
-            color: #facc15;
-        }
-        .hub-hub-radio-icon--pulse {
-            animation: hub-hub-radio-pulse 1.5s ease-in-out infinite;
-        }
-        @keyframes hub-hub-radio-pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.45; }
-        }
-        .hub-hub-radio--disconnected {
-            color: #f87171;
-        }
-        .hub-hub-radio--disconnected .hub-hub-radio-svg {
-            opacity: 0.7;
         }
         .hub-settings-stack {
             display: flex;
@@ -557,33 +461,33 @@
         }
         .stats {
             display: flex;
-            gap: 20px;
-            margin: 20px 0;
+            gap: 10px;
+            margin: 12px 0;
             flex-wrap: wrap;
         }
         .stat-card {
             background: var(--bg-muted);
-            padding: 20px;
+            padding: 8px 12px;
             border-radius: 6px;
-            border-left: 4px solid var(--accent-stat);
+            border-left: 3px solid var(--accent-stat);
             box-shadow: var(--shadow-card);
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex: 1;
-            min-width: 200px;
+            min-width: 140px;
         }
         .stat-card h3 {
             margin: 0;
             color: var(--text-secondary);
-            font-size: 18px;
+            font-size: 13px;
             font-weight: normal;
         }
         .stat-card .value {
-            font-size: 32px;
+            font-size: 20px;
             font-weight: bold;
             color: var(--text-primary);
-            margin-left: 15px;
+            margin-left: 10px;
         }
         .metrics-row {
             display: flex;
@@ -597,18 +501,18 @@
         }
         .metric-card {
             background: var(--bg-muted);
-            padding: 6px 8px;
+            padding: 6px 12px;
             border-radius: 6px;
             border-left: 3px solid var(--accent);
             box-shadow: var(--shadow-card);
             flex: 0 0 auto;
-            min-width: 0;
+            min-width: 220px;
         }
         .metric-card-body {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 6px;
+            gap: 10px;
         }
         .metric-card-text {
             flex: 1;
@@ -633,14 +537,14 @@
             color: var(--text-muted);
             margin-top: 1px;
             line-height: 1.1;
-            max-width: 72px;
+            max-width: 110px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
         }
         .metric-card canvas {
             display: block;
-            width: 120px;
+            width: 160px;
             height: 24px;
             flex-shrink: 0;
         }
@@ -1034,7 +938,7 @@
             const COLOR_MODE_KEY = 'castHubAdminColorMode';
             const savedMode = localStorage.getItem(COLOR_MODE_KEY);
             const PERSISTED_COLOR_MODES = ['light', 'dark'];
-            let baseMode = PERSISTED_COLOR_MODES.includes(savedMode) ? savedMode : 'light';
+            let baseMode = PERSISTED_COLOR_MODES.includes(savedMode) ? savedMode : 'dark';
             if (savedMode === 'polka-dots') {
                 localStorage.setItem(COLOR_MODE_KEY, baseMode);
             }
@@ -1046,7 +950,7 @@
             }
 
             function applyColorMode(nextMode) {
-                baseMode = PERSISTED_COLOR_MODES.includes(nextMode) ? nextMode : 'light';
+                baseMode = PERSISTED_COLOR_MODES.includes(nextMode) ? nextMode : 'dark';
                 if (!shiftPolkaActive) {
                     setDisplayMode(baseMode);
                 }
@@ -1084,7 +988,6 @@
             const HUB_PRODUCT_NAME = isSlicer
                 ? '3D Slicer Hub'
                 : 'Server Hub API';
-            const HUB_HEADER_LABEL = 'Slicer Hub';
             document.title = isSlicer
                 ? '3D Slicer Hub'
                 : 'VolView Server Hub API';
@@ -1102,10 +1005,6 @@
                 const titleEl = document.querySelector('.header-title');
                 if (titleEl) {
                     titleEl.textContent = HUB_PRODUCT_NAME;
-                }
-                const radioEl = document.getElementById('hubCastRadioBtn');
-                if (radioEl) {
-                    radioEl.setAttribute('data-hub-product-name', HUB_PRODUCT_NAME);
                 }
                 const colorSelect = document.getElementById('colorModeSelect');
                 if (colorSelect) {
@@ -1126,9 +1025,6 @@
                     toggle.setAttribute('aria-expanded', 'false');
                 };
                 const openPanel = () => {
-                    if (typeof closeHubCastRadioMenu === 'function') {
-                        closeHubCastRadioMenu();
-                    }
                     panel.hidden = false;
                     toggle.setAttribute('aria-expanded', 'true');
                 };
@@ -1176,7 +1072,7 @@
                                 <span class="metric-value" id="metricMemoryValue">—</span>
                                 <div class="metric-sub" id="metricMemorySub"></div>
                             </div>
-                            <canvas id="metricMemoryChart" width="120" height="24" aria-hidden="true"></canvas>
+                            <canvas id="metricMemoryChart" width="160" height="24" aria-hidden="true"></canvas>
                         </div>
                     </div>
                     <div class="metric-card">
@@ -1185,7 +1081,7 @@
                                 <h3>CPU</h3>
                                 <span class="metric-value" id="metricCpuValue">—</span>
                             </div>
-                            <canvas id="metricCpuChart" width="120" height="24" aria-hidden="true"></canvas>
+                            <canvas id="metricCpuChart" width="160" height="24" aria-hidden="true"></canvas>
                         </div>
                     </div>
                     <div class="metric-card" id="metricNetworkCard"
@@ -1196,40 +1092,13 @@
                                 <span class="metric-value" id="metricNetworkValue">—</span>
                                 <div class="metric-sub" id="metricNetworkSub"></div>
                             </div>
-                            <canvas id="metricNetworkChart" width="120" height="24" aria-hidden="true"></canvas>
+                            <canvas id="metricNetworkChart" width="160" height="24" aria-hidden="true"></canvas>
                         </div>
                     </div>
                 </div>
                 <span id="singleUserBadge" class="single-user-badge" style="display:none;" title="Token endpoint returns SINGLE-USER in this mode">Single-user mode</span>
                 <div class="hub-settings">
                     <div class="hub-settings-header">
-                        <div class="hub-hub-radio-wrap">
-                        <button
-                            type="button"
-                            id="hubCastRadioBtn"
-                            class="hub-hub-radio hub-hub-radio-btn hub-hub-radio--connecting"
-                            aria-label="Slicer Hub"
-                            aria-haspopup="menu"
-                            aria-expanded="false"
-                            title="Slicer Hub"
-                        >
-                            <span class="hub-hub-radio-icon">
-                                <svg class="hub-hub-radio-svg" width="20" height="20" viewBox="0 0 24 24"
-                                     fill="none" stroke="currentColor" stroke-width="2"
-                                     stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/>
-                                    <path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/>
-                                    <circle cx="12" cy="12" r="2"/>
-                                    <path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/>
-                                    <path d="M19.1 4.9C23 8.8 23 15.1 19.1 19"/>
-                                </svg>
-                                <span id="hubCastRadioSlash" class="hub-hub-radio-slash" aria-hidden="true" hidden></span>
-                            </span>
-                        </button>
-                        <div id="hubCastRadioMenu" class="hub-hub-menu" role="menu" hidden>
-                            <button type="button" id="hubCastRadioSessionInfo" class="hub-hub-menu-item" role="menuitem">Session info</button>
-                        </div>
-                        </div>
                         <div class="hub-settings-stack">
                         <button type="button" class="hub-settings-toggle" id="hubSettingsToggle"
                                 aria-expanded="false" aria-controls="hubSettingsPanel" title="Settings">
@@ -1263,11 +1132,11 @@
                 <div class="value" id="totalAuthentications" title="OAuth/token user counter (USER-n assignments since last hub reset)">-</div>
             </div>
             <div class="stat-card">
-                <h3>Subscriptions</h3>
+                <h3>Application Subscriptions</h3>
                 <div class="value" id="totalSubscriptions">-</div>
             </div>
             <div class="stat-card">
-                <h3>Conferences</h3>
+                <h3>User Conferences</h3>
                 <div class="value" id="totalConferences">-</div>
             </div>
             <div class="stat-card">
@@ -1276,10 +1145,10 @@
             </div>
         </div>
 
-        <h2>Subscriptions</h2>
+        <h2>Application Subscriptions</h2>
         <div id="subscriptionsTable"></div>
 
-        <h2>Conferences</h2>
+        <h2>User Conferences</h2>
         <div id="conferencesTable"></div>
         <div class="audit-log">
             <h2 class="message-log-title">
@@ -1314,7 +1183,6 @@
         const METRICS_URL = '/api/hub/admin/metrics';
         const METRICS_POLL_MS = 2000;
         const METRICS_HISTORY_LEN = 60;
-        const HUB_HEADER_LABEL = 'Slicer Hub';
 
         const metricsHistory = {
             memory: [],
@@ -1322,175 +1190,6 @@
             network: [],
         };
         let metricsPollTimer = null;
-        let lastSnapshotUpdatedAt = null;
-
-        function closeHubCastRadioMenu() {
-            const menu = document.getElementById('hubCastRadioMenu');
-            const btn = document.getElementById('hubCastRadioBtn');
-            if (menu) {
-                menu.hidden = true;
-            }
-            if (btn) {
-                btn.setAttribute('aria-expanded', 'false');
-            }
-        }
-
-        function openHubCastRadioMenu() {
-            closeHubSettings();
-            const menu = document.getElementById('hubCastRadioMenu');
-            const btn = document.getElementById('hubCastRadioBtn');
-            if (menu) {
-                menu.hidden = false;
-            }
-            if (btn) {
-                btn.setAttribute('aria-expanded', 'true');
-            }
-        }
-
-        function initHubCastRadioMenu() {
-            const btn = document.getElementById('hubCastRadioBtn');
-            const menu = document.getElementById('hubCastRadioMenu');
-            const sessionInfoBtn = document.getElementById('hubCastRadioSessionInfo');
-            if (!btn || !menu) {
-                return;
-            }
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (menu.hidden) {
-                    openHubCastRadioMenu();
-                } else {
-                    closeHubCastRadioMenu();
-                }
-            });
-            sessionInfoBtn?.addEventListener('click', () => {
-                closeHubCastRadioMenu();
-                showHubSessionInfoDialog();
-            });
-            document.addEventListener('click', (e) => {
-                if (!menu.hidden && !menu.contains(e.target) && e.target !== btn) {
-                    closeHubCastRadioMenu();
-                }
-            });
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeHubCastRadioMenu();
-                }
-            });
-        }
-
-        function hubCastRadioBtn() {
-            return document.getElementById('hubCastRadioBtn');
-        }
-
-        function hubProductName() {
-            const fromRadio = hubCastRadioBtn()?.getAttribute('data-hub-product-name')?.trim();
-            if (fromRadio) {
-                return fromRadio;
-            }
-            const titleEl = document.querySelector('.header-title');
-            return titleEl?.textContent?.trim() || 'Slicer Hub';
-        }
-
-        function connectionStatusText(adminClientCount) {
-            if (adminClientCount === undefined && lastAdminClientCount !== undefined) {
-                adminClientCount = lastAdminClientCount;
-            }
-            if (adminWebSocket && adminWebSocket.readyState === WebSocket.OPEN) {
-                if (adminClientCount !== undefined && adminClientCount > 0) {
-                    return `Connected (${adminClientCount} admin client${adminClientCount !== 1 ? 's' : ''})`;
-                }
-                return 'Connected';
-            }
-            if (adminWebSocket && adminWebSocket.readyState === WebSocket.CONNECTING) {
-                return 'Connecting...';
-            }
-            return 'Disconnected';
-        }
-
-        const HUB_CAST_RADIO_STATUS_CLASSES = [
-            'hub-hub-radio--connected',
-            'hub-hub-radio--connecting',
-            'hub-hub-radio--disconnected',
-        ];
-
-        function hubCastRadioVisualState() {
-            if (adminWebSocket && adminWebSocket.readyState === WebSocket.OPEN) {
-                return {
-                    statusClass: 'hub-hub-radio--connected',
-                    showSlash: false,
-                    pulse: false,
-                };
-            }
-            if (adminWebSocket && adminWebSocket.readyState === WebSocket.CONNECTING) {
-                return {
-                    statusClass: 'hub-hub-radio--connecting',
-                    showSlash: false,
-                    pulse: true,
-                };
-            }
-            return {
-                statusClass: 'hub-hub-radio--disconnected',
-                showSlash: true,
-                pulse: false,
-            };
-        }
-
-        function hubSessionInfoLines(adminClientCount) {
-            const lines = [hubProductName(), connectionStatusText(adminClientCount)];
-            if (lastSnapshotUpdatedAt) {
-                lines.push(
-                    'Last updated: ' + lastSnapshotUpdatedAt.toLocaleTimeString()
-                );
-            }
-            return lines;
-        }
-
-        function updateHubCastRadioAppearance(adminClientCount) {
-            const radioEl = hubCastRadioBtn();
-            if (!radioEl) {
-                return;
-            }
-            const { statusClass, showSlash, pulse } = hubCastRadioVisualState();
-            radioEl.classList.remove(...HUB_CAST_RADIO_STATUS_CLASSES);
-            radioEl.classList.add(statusClass);
-            const iconEl = radioEl.querySelector('.hub-hub-radio-icon');
-            if (iconEl) {
-                iconEl.classList.toggle('hub-hub-radio-icon--pulse', pulse);
-            }
-            const slashEl = document.getElementById('hubCastRadioSlash');
-            if (slashEl) {
-                slashEl.hidden = !showSlash;
-            }
-            radioEl.setAttribute('aria-label', HUB_HEADER_LABEL);
-            radioEl.title = HUB_HEADER_LABEL;
-        }
-
-        function showHubSessionInfoDialog() {
-            const lines = hubSessionInfoLines(lastAdminClientCount);
-            const backdrop = document.createElement('div');
-            backdrop.className = 'modal-backdrop';
-            const dialog = document.createElement('div');
-            dialog.className = 'modal-dialog';
-            dialog.setAttribute('role', 'dialog');
-            dialog.setAttribute('aria-labelledby', 'hubSessionInfoTitle');
-            dialog.innerHTML = `
-                <h3 id="hubSessionInfoTitle">Session info</h3>
-                ${lines.map((line) => `<p>${escapeHtml(line)}</p>`).join('')}
-                <div class="modal-actions">
-                    <button type="button" id="closeHubSessionInfoBtn" class="btn-cancel">Close</button>
-                </div>
-            `;
-            document.body.appendChild(backdrop);
-            document.body.appendChild(dialog);
-
-            const closeDialog = () => {
-                document.body.removeChild(backdrop);
-                document.body.removeChild(dialog);
-            };
-
-            backdrop.onclick = closeDialog;
-            document.getElementById('closeHubSessionInfoBtn').onclick = closeDialog;
-        }
 
         /** IHE actor keywords and full names (aligned with Hub client ACTOR_PRESETS). */
         const IHE_ACTOR_REFERENCE = [
@@ -1504,7 +1203,6 @@
         ];
 
         let lastRevision = 0;
-        let lastAdminClientCount;
 
         function pushMetricSample(key, value) {
             const arr = metricsHistory[key];
@@ -1840,8 +1538,6 @@
                     badge.style.display = data.single_user_mode ? 'inline-block' : 'none';
                 }
 
-                lastAdminClientCount = stats.total_admin_clients;
-
                 renderSubscriptions(data.subscriptions);
                 renderConferences(data.conferences);
 
@@ -1852,8 +1548,6 @@
                     audit.unique_events || []
                 );
                 displayAuditLog(audit.entries || []);
-                lastSnapshotUpdatedAt = new Date();
-                updateHubCastRadioAppearance(lastAdminClientCount);
             } catch (error) {
                 errorDiv.innerHTML =
                     `<div class="error">Error loading dashboard: ${escapeHtml(error.message)}</div>`;
@@ -2503,14 +2197,13 @@
             </div>`;
 
         function aboutBannerSrc() {
-            const mode = document.documentElement.dataset.mode || 'light';
+            const mode = document.documentElement.dataset.mode || 'dark';
             return mode === 'dark'
                 ? '/static/images/banner_dark.png'
                 : '/static/images/banner.png';
         }
 
         async function showAboutHub() {
-            closeHubCastRadioMenu();
             closeHubSettings();
             let aboutName = 'Slicer Hub';
             let aboutDescription =
@@ -2646,10 +2339,6 @@
             });
         }
         
-        function updateConnectionStatus(adminClientCount) {
-            updateHubCastRadioAppearance(adminClientCount);
-        }
-        
         // Admin WebSocket connection
         let adminWebSocket = null;
         let reconnectAttempts = 0;
@@ -2660,13 +2349,10 @@
             
             try {
                 adminWebSocket = new WebSocket(wsUrl);
-                updateConnectionStatus();
                 
                 adminWebSocket.onopen = function(event) {
                     console.log('Admin WebSocket connected');
                     reconnectAttempts = 0;
-                    // Update status after getting admin client count
-                    updateConnectionStatus();
                 };
                 
                 adminWebSocket.onmessage = function(event) {
@@ -2692,7 +2378,6 @@
                             console.log('Admin connection established');
                             // Reload dashboard — do not bump lastRevision alone or
                             // changes while disconnected are skipped until the next event.
-                            updateConnectionStatus(lastAdminClientCount);
                             loadSnapshot();
                         } else if (message.type === 'ping') {
                             // Respond to ping with pong
@@ -2705,12 +2390,10 @@
                 
                 adminWebSocket.onerror = function(error) {
                     console.error('Admin WebSocket error:', error);
-                    updateConnectionStatus();
                 };
                 
                 adminWebSocket.onclose = function(event) {
                     console.log('Admin WebSocket closed');
-                    updateConnectionStatus();
                     
                     // Attempt to reconnect
                     if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
@@ -2719,18 +2402,15 @@
                         setTimeout(connectAdminWebSocket, RECONNECT_BASE_MS * reconnectAttempts);
                     } else {
                         console.error('Max reconnection attempts reached');
-                        updateConnectionStatus();
                     }
                 };
             } catch (e) {
                 console.error('Error creating admin WebSocket:', e);
-                updateConnectionStatus();
             }
         }
 
         // Connect on page load
         window.addEventListener('load', function() {
-            initHubCastRadioMenu();
             connectAdminWebSocket();
             loadSnapshot();
             startMetricsPolling();

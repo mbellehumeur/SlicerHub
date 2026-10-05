@@ -8,5 +8,6 @@
   "cite": "Victor Ion Butoi, Vivek Gopalakrishnan, John V. Guttag, Adrian V. Dalca, and Neel Dey (2026). FleXray: Universal Clinical X-ray Segmentation. arXiv:2609.26756",
   "citeUrl": "https://arxiv.org/abs/2609.26756",
   "hubEvent": "dicom-send",
-  "enabled": true
+  "enabled": true,
+  "localCapable": true
 }

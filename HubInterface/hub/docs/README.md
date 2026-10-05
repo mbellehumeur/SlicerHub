@@ -1,12 +1,14 @@
 # Slicer Hub (`hub`)
 
-FastAPI implementation of a [FHIRcast](https://fhircast.org/)-style hub for the ProjectWeek45 stack (VolView, vtk-js HubClient, OHIF hub extension). Subscribers connect over WebSocket (`/bind/{endpoint}`) or WebSub callbacks; the hub fans out events and collates typed request/response traffic.
+FastAPI implementation of a [FHIRcast](https://fhircast.org/)-style hub for the Slicer Hub stack (VolView, vtk-js HubClient, OHIF hub extension). Subscribers connect over WebSocket (`/bind/{endpoint}`) or WebSub callbacks; the hub fans out events and collates typed request/response traffic.
 
 Run standalone:
 
 ```bash
-cd VolView/server
-python hub/hub.py --port 2018
+cd HubInterface/hub
+pip install -e ../python_client
+pip install -r requirements.txt
+python hub.py --port 2018
 ```
 
 Or with VolView RPC:
@@ -266,11 +268,11 @@ For workspace-wide Hub protocol rules (event-name sync across Python/JS/TS, line
 Mock OAuth (`/oauth/authorize`, `/oauth/token`) returns tokens and **topic** only;
 the hub registers the subscriber name from the subscribe form body.
 
-**Standalone subscriber:** [`3dslicer-hub-ai-interface.py`](3dslicer-hub-ai-interface.py) connects to a remote hub over HTTP/WebSocket. Hub endpoints and OAuth credentials are hardcoded at the top of that file (copied from [`Viewers/platform/app/public/config/cast.js`](../../../Viewers/platform/app/public/config/cast.js) `hub.hubs`). Edit `HUB_NAME` and `TOPIC` before running.
+**Standalone subscriber:** [`3dslicer-hub-ai-interface.py`](3dslicer-hub-ai-interface.py) connects to a remote hub over HTTP/WebSocket. Hub endpoints and OAuth credentials are hardcoded at the top of that file (copied from [`Viewers/platform/app/public/config/hub.js`](../../../../Viewers/platform/app/public/config/hub.js) `hub.hubs`). Edit `HUB_NAME` and `TOPIC` before running.
 
 ```bash
-cd VolView/server
-poetry run python hub/3dslicer-hub-ai-interface.py
+cd HubInterface/hub
+python 3dslicer-hub-ai-interface.py
 ```
 
 | `HUB_NAME` | Hub |

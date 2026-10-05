@@ -15,9 +15,9 @@ anatomy segmentation (MIT CSAIL / MGH / HMS). Paper: [arXiv:2609.26756](https://
 | Info JSON | `resource_servers/products/flexray/flexray.info.json` |
 | Script | `resource_servers/products/flexray/flexray.py` |
 
-Sync the info JSON into `@cast-interface/client` with:
+Sync the info JSON into the hub JS client with:
 
 ```bash
-# from hub-js-client/
+# from SlicerHub-js-clients/ (or hub-js-client/)
 node tools/sync_inference_info.js
 ```

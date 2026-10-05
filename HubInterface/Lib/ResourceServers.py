@@ -23,7 +23,7 @@ from hub_client import HubClientOptions, HubConfig, SessionConfig, SlicerHubClie
 LOGGER = logging.getLogger("HubInterface.ResourceServers")
 LOGGER.setLevel(logging.INFO)
 
-# --- Hub config (align with Viewers/platform/app/public/config/cast.js) ---
+# --- Hub config (align with Viewers/platform/app/public/config/hub.js) ---
 
 DEFAULT_HUB_NAME = "SLICER-HUB"
 
