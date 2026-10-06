@@ -10,7 +10,7 @@ sibling repos into hub client folders, then packages everything under hub/:
 - classroom-client/  <- SlicerHub-js-clients/packages/classroom (/classroom-client/)
 - slicerlive/  <- pw46/SlicerLive/render/demos/ira (IRA; /slicerlive/)
 - slim/  <- slim/build  (/slim/)
-- OHIF-client/  <- Viewers/platform/app/dist  (/ohif/; sync only — build OHIF separately)
+- OHIF-client/  <- Viewers/platform/app/dist  (/ohif/; builds via pnpm run build:slicer-hub if needed)
 
 Run from any directory:
     python hub/make_zip.py
@@ -22,9 +22,12 @@ Optional:
 
 SlicerHub-js-clients: npm run build:apps (unless --skip-build)
 SlicerLive IRA: syncs prebuilt ira.js (+ idc-worker.js); build IRA separately if needed
+SlicerLive IRA: syncs prebuilt ira.js (+ idc-worker.js); build IRA separately if needed
 
-OHIF: not built by this script; syncs existing Viewers/platform/app/dist when present
-    (yarn build:slicer-hub with PUBLIC_URL=/ohif/, APP_CONFIG=config/cast.js)
+OHIF: syncs Viewers/platform/app/dist. If that dist was built for site root
+    (PUBLIC_URL=/ from local ``dev:slicer-hub``), this script runs
+    ``pnpm run build:slicer-hub`` (PUBLIC_URL=/ohif/) unless --skip-build.
+    Still refuses to zip a root build (breaks the cloud /ohif/ mount).
 
 Slim for hub: pnpm run build:cast
     (PUBLIC_URL=/slim/, REACT_APP_CONFIG=cast, config file public/config/cast.js)
@@ -160,14 +163,20 @@ def find_repo_root(script_dir: Path, key: str) -> Path | None:
             if direct.is_dir() and (direct / "package.json").is_file():
                 return direct.resolve()
             continue
+        if key == "ohif":
+            # Prefer current Viewers (Slicer Hub OHIF 3.14 + @slicer-hub/ohif-extension)
+            # over legacy ProjectWeek45/Viewers.
+            for candidate in (
+                base / "Viewers",
+                base / "hub-interface" / "Viewers",
+                base / "ProjectWeek45" / "Viewers",
+            ):
+                if candidate.is_dir() and (candidate / "package.json").is_file():
+                    return candidate.resolve()
+            continue
         under_pw = base / "ProjectWeek45" / repo_name
         if under_pw.is_dir():
             return under_pw.resolve()
-        # hub-interface monorepo Viewers/
-        if key == "ohif":
-            under_ci = base / "hub-interface" / "Viewers"
-            if under_ci.is_dir():
-                return under_ci.resolve()
         direct = base / repo_name
         if direct.is_dir():
             return direct.resolve()
@@ -206,13 +215,41 @@ def should_include(path: Path) -> bool:
     return True
 
 
-def sync_dist_tree(src: Path, dest: Path) -> int:
+def ohif_index_is_cloud_mount(index: Path, expected: str = "/ohif/") -> bool:
+    """True when index.html was built for the hub /ohif/ mount (not site root)."""
+    if not index.is_file():
+        return False
+    text = index.read_text(encoding="utf-8", errors="replace")
+    needle = f"window.PUBLIC_URL = '{expected}'"
+    if needle not in text:
+        return False
+    if 'src="/app.js"' in text or "src='/app.js'" in text:
+        return False
+    return True
+
+
+def assert_ohif_public_url(index: Path, expected: str = "/ohif/") -> None:
+    """Fail if OHIF was built for site root (PUBLIC_URL=/) instead of /ohif/."""
+    if ohif_index_is_cloud_mount(index, expected):
+        return
+    needle = f"window.PUBLIC_URL = '{expected}'"
+    raise FileNotFoundError(
+        f"OHIF index.html missing {needle!r} (got wrong PUBLIC_URL). "
+        f"Rebuild with: cd Viewers/platform/app && pnpm run build:slicer-hub "
+        f"(PUBLIC_URL=/ohif/). Refusing to package broken cloud mount. "
+        f"Index: {index}"
+    )
+
+
+def sync_dist_tree(src: Path, dest: Path, *, ohif_mount_check: bool = False) -> int:
     """Replace dest with a copy of src; require src/index.html. Returns file count."""
     index = src / "index.html"
     if not src.is_dir():
         raise FileNotFoundError(f"Source dist not found: {src}")
     if not index.is_file():
         raise FileNotFoundError(f"Source dist missing index.html: {index}")
+    if ohif_mount_check:
+        assert_ohif_public_url(index)
 
     if dest.exists():
         shutil.rmtree(dest)
@@ -397,6 +434,52 @@ def _npm_cmd() -> list[str]:
     return ["npm"]
 
 
+def _pnpm_cmd() -> list[str]:
+    if os.name == "nt":
+        return ["pnpm.cmd"]
+    return ["pnpm"]
+
+
+def build_ohif_slicer_hub(script_dir: Path) -> None:
+    """Production OHIF for the hub /ohif/ mount (PUBLIC_URL=/ohif/)."""
+    viewers = find_repo_root(script_dir, "ohif")
+    if viewers is None:
+        raise RuntimeError("Could not find Viewers repo (searched from hub/)")
+    app = viewers / "platform" / "app"
+    if not (app / "package.json").is_file():
+        raise RuntimeError(f"OHIF app package.json missing: {app}")
+    print(f"Building OHIF for /ohif/ ({app}) …")
+    try:
+        subprocess.run(
+            [*_pnpm_cmd(), "run", "build:slicer-hub"],
+            cwd=app,
+            check=True,
+        )
+    except FileNotFoundError as err:
+        raise RuntimeError("pnpm not found; install pnpm to build OHIF") from err
+    except subprocess.CalledProcessError as err:
+        raise RuntimeError(
+            f"pnpm run build:slicer-hub failed (exit {err.returncode})"
+        ) from err
+    index = app / "dist" / "index.html"
+    if not ohif_index_is_cloud_mount(index):
+        raise RuntimeError(
+            f"OHIF build finished but {index} still lacks PUBLIC_URL=/ohif/"
+        )
+    print("Built OHIF (PUBLIC_URL=/ohif/)")
+
+
+def ensure_ohif_cloud_dist(script_dir: Path, dist: Path) -> None:
+    """Rebuild OHIF when dist is missing or was built for PUBLIC_URL=/."""
+    if ohif_index_is_cloud_mount(dist / "index.html"):
+        return
+    print(
+        f"OHIF dist is not a /ohif/ build ({dist / 'index.html'}); "
+        "running pnpm run build:slicer-hub …"
+    )
+    build_ohif_slicer_hub(script_dir)
+
+
 def build_hub_js_clients(script_dir: Path) -> int:
     """Build worklist + reporting + classroom via SlicerHub-js-clients ``npm run build:apps``."""
     root = find_hub_js_clients_root(script_dir)
@@ -424,9 +507,12 @@ def build_hub_js_clients(script_dir: Path) -> int:
     return len(HUB_JS_CLIENT_KEYS)
 
 
-def build_deploy_clients(script_dir: Path) -> int:
-    """Build clients required for the Azure zip (SlicerHub-js-clients apps)."""
-    return build_hub_js_clients(script_dir)
+def build_deploy_clients(script_dir: Path, *, ohif_dist: Path | None = None) -> int:
+    """Build clients required for the Azure zip (JS apps + OHIF /ohif/ dist)."""
+    n = build_hub_js_clients(script_dir)
+    dist = ohif_dist if ohif_dist is not None else default_dist_path(script_dir, "ohif")
+    ensure_ohif_cloud_dist(script_dir, dist)
+    return n
 
 
 def main() -> int:
@@ -478,7 +564,7 @@ def main() -> int:
     parser.add_argument(
         "--skip-build",
         action="store_true",
-        help="Skip npm run build:apps for SlicerHub-js-clients",
+        help="Skip npm run build:apps and OHIF pnpm run build:slicer-hub",
     )
     parser.add_argument(
         "--skip-sync",
@@ -503,8 +589,11 @@ def main() -> int:
 
     if not args.skip_sync and not args.skip_build:
         try:
-            build_deploy_clients(script_dir)
-        except RuntimeError as err:
+            ohif_for_build = None
+            if args.ohif_dist:
+                ohif_for_build = resolve_dist_arg(script_dir, "ohif", args.ohif_dist)
+            build_deploy_clients(script_dir, ohif_dist=ohif_for_build)
+        except (RuntimeError, FileNotFoundError) as err:
             print(f"Error: {err}", file=sys.stderr)
             return 1
 
@@ -518,9 +607,14 @@ def main() -> int:
                 elif key == "hubmirror":
                     count = sync_hub_mirror(src, dest)
                 else:
-                    count = sync_dist_tree(src, dest)
+                    count = sync_dist_tree(
+                        src, dest, ohif_mount_check=(key == "ohif")
+                    )
                 print(f"Synced {src} -> {dest_name}/ ({count} files)")
             except FileNotFoundError as err:
+                if key == "ohif":
+                    print(f"Error: {err}", file=sys.stderr)
+                    return 1
                 print(f"Warning: {err}; skipping {dest_name}/", file=sys.stderr)
 
     if output_zip.exists():
@@ -535,6 +629,13 @@ def main() -> int:
                 f"hub will not serve {mount}",
                 file=sys.stderr,
             )
+            continue
+        if dest_name == "OHIF-client":
+            try:
+                assert_ohif_public_url(index)
+            except FileNotFoundError as err:
+                print(f"Error: {err}", file=sys.stderr)
+                return 1
 
     file_count, client_counts = build_zip(script_dir, output_zip)
     summary_parts = [

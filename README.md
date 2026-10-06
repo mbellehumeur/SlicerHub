@@ -10,7 +10,32 @@ Slicer Hub is a 3D Slicer extension focused on desktop integration workflows for
 
 ## Overview
 
-The extension provides a hub, resource servers, and an Image Display client for FHIRcast-style events over WebSockets — runnable from 3D Slicer or as standalone components under `HubInterface/`.
+Slicer Hub is an open-source system that provides a critical interoperability messaging infrastruture.  It aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original purpose is to support an [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow and [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results).
+ 
+This extension supplies the **HUB**, resource servers, and the Slicer Qt **Image Display** client (and related desktop pieces). Together with browser clients, the system includes:
+
+- a WebSub hub (**HUB** actor) for communication between applications and users
+- open-source medical imaging viewers (**IMAGE_DISPLAY** actors)
+- open-source medical imaging inference models (**EVIDENCE_CREATOR** actors)
+- a DICOM SR reporting example (**REPORT_CREATOR** actor)
+- the [Imaging Data Commons](https://imaging.datacommons.cancer.gov/) and the [3D Slicer](https://www.slicer.org/) DICOM DB as read-only image archives (**IMAGE_ARCHIVE** actor)
+- an authentication / identity provider with integration to the hub OIDC endpoints or built-in hub anonymous/mock authentication
+
+The system also includes features for education that are independent of the IHE Integrated Reporting workflow:
+
+- creating, saving, and uploading teaching files and cohorts for class preparation
+- conferencing for collaborative viewing and teaching
+- a vanishing brush tool for temporary annotations during conferencing
+- export to STL for 3D printing
+
+Research and 3D Slicer functionalities, also independent of IHE, are provided:
+
+- file transfer between applications
+- medical reality scenes
+- Slicer Qt Image Display client
+- Slicer DICOM DB access
+
+File transfer allows inference servers to send their results directly back to the viewers without storing them in PACS first. It also supports research file formats like NIfTI, NRRD, and Zarr.
 
 ## Background
 

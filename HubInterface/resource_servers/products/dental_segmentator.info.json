@@ -6,6 +6,8 @@
   "summary": "Fully automatic CT/CBCT dental segmentation (maxilla, mandible, upper/lower teeth, mandibular canal).",
   "githubUrl": "https://github.com/gaudot/SlicerDentalSegmentator",
   "websiteUrl": "https://www.kitware.com/dental-segmentator/",
+  "license": "Apache-2.0",
+  "licenseUrl": "https://www.apache.org/licenses/LICENSE-2.0",
   "hubEvent": "dicom-send",
   "enabled": true
 }
