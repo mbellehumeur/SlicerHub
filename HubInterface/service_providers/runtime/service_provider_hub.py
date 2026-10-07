@@ -22,7 +22,7 @@ from hub_client import (
     binary_batch_files_pending_stats,
 )
 
-LOGGER = logging.getLogger("HubInterface.ResourceServerHub")
+LOGGER = logging.getLogger("HubInterface.ServiceProviderHub")
 LOGGER.setLevel(logging.INFO)
 
 
@@ -38,7 +38,7 @@ def _short_caller_stack(skip: int = 2, depth: int = 6) -> str:
     return "\n".join(lines) if lines else "  (no caller frames)"
 
 
-_active_connections: List["ResourceServerHubConnection"] = []
+_active_connections: List["ServiceProviderHubConnection"] = []
 
 
 def format_connect_failure(exc: BaseException) -> str:
@@ -89,8 +89,8 @@ def disconnect_all_active_connections() -> None:
         conn.disconnectHub()
 
 
-class ResourceServerHubConnection:
-    """One resource-server row's hub session."""
+class ServiceProviderHubConnection:
+    """One service-provider row's hub session."""
 
     def __init__(self, post_ui: Callable[[Callable[[], None]], None]) -> None:
         self._post_ui = post_ui
@@ -108,7 +108,7 @@ class ResourceServerHubConnection:
         self._product_name: str = ""
         self._product_version: str = ""
         self._script_path: str = ""
-        self._resource_server_config: Any = None
+        self._service_provider_config: Any = None
         self._loop: Optional[asyncio.AbstractEventLoop] = None
         self._connect_failed = False
         self._message_count = 0
@@ -131,22 +131,22 @@ class ResourceServerHubConnection:
 
         future.add_done_callback(_log_result)
 
-    def _schedule_resource_server_warmup(self) -> None:
-        if self._resource_server_config is None or self._stop_event.is_set():
+    def _schedule_service_provider_warmup(self) -> None:
+        if self._service_provider_config is None or self._stop_event.is_set():
             return
-        cfg = self._resource_server_config
+        cfg = self._service_provider_config
 
         async def _run_warmup() -> None:
-            from .ResourceServers import run_resource_server_warmup_on_connect
+            from .ServiceProviders import run_service_provider_warmup_on_connect
 
-            await asyncio.to_thread(run_resource_server_warmup_on_connect, cfg)
+            await asyncio.to_thread(run_service_provider_warmup_on_connect, cfg)
 
         asyncio.create_task(_run_warmup())
 
     def get_connection_summary(self) -> str:
         if not self.isHubConnected():
             return ""
-        from .ResourceServers import TOPIC, _
+        from .ServiceProviders import TOPIC, _
 
         return _(
             f"Connected (hub={self._hub_name}, topic={TOPIC}, "
@@ -168,18 +168,18 @@ class ResourceServerHubConnection:
         product_name: str,
         product_version: str,
         script_path: str,
-        resource_server_config: Any,
+        service_provider_config: Any,
         status_callback: Callable[[str, Optional[Dict[str, Any]]], None],
     ) -> None:
         if self.isHubThreadRunning():
-            LOGGER.warning("Slicer hub thread already running for this resource server")
+            LOGGER.warning("Slicer hub thread already running for this service provider")
             return
 
         self._hub_name = hub_name
         self._product_name = product_name
         self._product_version = product_version
         self._script_path = script_path
-        self._resource_server_config = resource_server_config
+        self._service_provider_config = service_provider_config
         self._status_callback = status_callback
         self._want_hub_unsubscribe = False
         self._hub_subscribed = False
@@ -263,14 +263,14 @@ class ResourceServerHubConnection:
 
         self._post_ui(run)
 
-    async def _dispatch_resource_server_on_message(self, message: Dict[str, Any]) -> None:
-        from .ResourceServers import (
+    async def _dispatch_service_provider_on_message(self, message: Dict[str, Any]) -> None:
+        from .ServiceProviders import (
             build_idc_claude_payload,
-            resource_server_status_payload,
-            run_resource_server_on_message,
+            service_provider_status_payload,
+            run_service_provider_on_message,
         )
 
-        if self._resource_server_config is None:
+        if self._service_provider_config is None:
             return
 
         hub_event = hub_event_name(message)
@@ -288,8 +288,8 @@ class ResourceServerHubConnection:
                     and correlation_id.strip()
                 ):
                     event = message.get("event") or {}
-                    payload = resource_server_status_payload(
-                        self._resource_server_config, self._product_name
+                    payload = service_provider_status_payload(
+                        self._service_provider_config, self._product_name
                     )
                     client.send_hub_request_response(
                         correlation_id.strip(),
@@ -315,7 +315,7 @@ class ResourceServerHubConnection:
                     event = message.get("event") or {}
                     payload = await asyncio.to_thread(
                         build_idc_claude_payload,
-                        self._resource_server_config,
+                        self._service_provider_config,
                         context,
                     )
                     client.send_hub_request_response(
@@ -336,42 +336,42 @@ class ResourceServerHubConnection:
         event = message.get("event") or {}
         hub_event = event.get("hub.event")
         if hub_event in ("dicom-send", "nifti-send", "idc-claude-send"):
-            # Offload staging and resource-server handlers so the hub asyncio loop can
+            # Offload staging and service-provider handlers so the hub asyncio loop can
             # process WebSocket ping/pong and reads during large transfers.
             await asyncio.to_thread(
-                run_resource_server_on_message, self._resource_server_config, message
+                run_service_provider_on_message, self._service_provider_config, message
             )
             return
 
         def run() -> None:
-            run_resource_server_on_message(self._resource_server_config, message)
+            run_service_provider_on_message(self._service_provider_config, message)
 
         self._post_ui(run)
 
     async def _hub_async_main(self) -> None:
-        from .ResourceServers import (
+        from .ServiceProviders import (
             DEFAULT_PRODUCT_VERSION,
             TOPIC,
             build_hub_client,
-            subscribe_events_for_resource_server,
+            subscribe_events_for_service_provider,
         )
 
-        resource_server_cfg = self._resource_server_config
-        if resource_server_cfg is None:
-            from .ResourceServers import ResourceServerConfig
+        service_provider_cfg = self._service_provider_config
+        if service_provider_cfg is None:
+            from .ServiceProviders import ServiceProviderConfig
 
-            resource_server_cfg = ResourceServerConfig(
+            service_provider_cfg = ServiceProviderConfig(
                 self._hub_name,
                 self._product_name,
                 self._product_version or DEFAULT_PRODUCT_VERSION,
                 "",
                 self._script_path or "",
             )
-        subscribe_events = subscribe_events_for_resource_server(resource_server_cfg)
+        subscribe_events = subscribe_events_for_service_provider(service_provider_cfg)
         LOGGER.debug(
             "Slicer hub subscribe product=%s script=%s hub.events=%s",
             self._product_name,
-            getattr(resource_server_cfg, "script_path", self._script_path),
+            getattr(service_provider_cfg, "script_path", self._script_path),
             ",".join(subscribe_events),
         )
         self._client = build_hub_client(
@@ -439,7 +439,7 @@ class ResourceServerHubConnection:
             from .provider_runtime import register_connection
 
             register_connection(self._product_name, self)
-            self._schedule_resource_server_warmup()
+            self._schedule_service_provider_warmup()
 
             while not self._stop_event.is_set():
                 try:
@@ -536,7 +536,7 @@ class ResourceServerHubConnection:
                         message.get("id"),
                         self._product_name,
                     )
-                await self._dispatch_resource_server_on_message(message)
+                await self._dispatch_service_provider_on_message(message)
                 self._track_imaging_study(message)
                 self._maybe_auto_reply(message)
         except Exception as exc:
@@ -589,7 +589,7 @@ class ResourceServerHubConnection:
                 "context": list(self._last_imaging_study_context),
             }
         else:
-            from .ResourceServers import EMPTY_FHIRCAST_CONTEXT
+            from .ServiceProviders import EMPTY_FHIRCAST_CONTEXT
 
             response_data = EMPTY_FHIRCAST_CONTEXT
 

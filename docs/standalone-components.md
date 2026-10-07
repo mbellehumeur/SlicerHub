@@ -30,22 +30,22 @@ python hub.py --port 2018
 
 ---
 
-## resource_servers/
+## service_providers/
 
-Standalone resource servers (no Slicer UI).
+Standalone service providers (no Slicer UI).
 
 ```bash
 cd HubInterface
-pip install -r resource_servers/requirements.txt
-python resource_servers/products/neuro_seg.py --local
-python resource_servers/products/total_segmentator.py --local
+pip install -r service_providers/requirements.txt
+python service_providers/products/neuro_seg.py --local
+python service_providers/products/total_segmentator.py --local
 ```
 
 `--local` uses `http://127.0.0.1:2018`. Default is cloud `SLICER-HUB-CLOUD`.
 
-Examples: `neuro_seg.py`, `lung_screening.py`, `total_segmentator.py` (`TOTALSEG`). TotalSeg also needs TotalSegmentator installed in the Python that runs inference (or `PythonSlicer` on `PATH`); see [totalsegmentator-readme.md](../HubInterface/resource_servers/docs/totalsegmentator-readme.md). `torchxrayvision/torchxrayvision.py` (`TORCHXRAYVISION`) is currently a TotalSeg clone; see [torchxrayvision-readme.md](../HubInterface/resource_servers/docs/torchxrayvision-readme.md).
+Examples: `neuro_seg.py`, `lung_screening.py`, `total_segmentator.py` (`TOTALSEG`). TotalSeg also needs TotalSegmentator installed in the Python that runs inference (or `PythonSlicer` on `PATH`); see [totalsegmentator-readme.md](../HubInterface/service_providers/docs/totalsegmentator-readme.md). `torchxrayvision/torchxrayvision.py` (`TORCHXRAYVISION`) is currently a TotalSeg clone; see [torchxrayvision-readme.md](../HubInterface/service_providers/docs/torchxrayvision-readme.md).
 
-Product docs: [resource_servers/docs/](../HubInterface/resource_servers/docs/).
+Product docs: [service_providers/docs/](../HubInterface/service_providers/docs/).
 
 ---
 

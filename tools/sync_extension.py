@@ -38,7 +38,7 @@ MODULE_DIRS = ("Lib", "Resources", "Testing")
 BUNDLED_DIRS = (
     "hub",
     "python_client",
-    "resource_servers",
+    "service_providers",
     "image_display",
 )
 
@@ -117,12 +117,12 @@ def sync_bundled(src_root: Path, dest_root: Path) -> int:
             if lib_src.is_dir():
                 copied += sync_tree(lib_src, dest_root / name / "lib")
             continue
-        if name == "resource_servers":
+        if name == "service_providers":
             for sub in ("products", "runtime"):
                 sub_src = src / sub
                 if sub_src.is_dir():
                     copied += sync_tree(sub_src, dest_root / name / sub)
-            for fname in ("resource_server.py", "hub_presets.py"):
+            for fname in ("service_provider.py", "hub_presets.py"):
                 fsrc = src / fname
                 if fsrc.is_file():
                     fdest = dest_root / name / fname
@@ -153,7 +153,7 @@ def main() -> int:
         "--with-standalone",
         action="store_true",
         dest="bundle",
-        help="Also sync hub/, python_client/, resource_servers/, image_display/",
+        help="Also sync hub/, python_client/, service_providers/, image_display/",
     )
     args = parser.parse_args()
 

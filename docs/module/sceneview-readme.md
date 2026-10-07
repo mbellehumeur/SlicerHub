@@ -129,7 +129,7 @@ Use the standard Hub protocol:
 | Hub behavior | Fan-out to all connected subscriptions matching `(topic, actor[, productName])` |
 
 Implement handling in HubInterface (e.g. provider `onMessage` script or
-`resource_server_hub.py`) by:
+`service_provider_hub.py`) by:
 
 1. Subscribing to the hub with `productName` such as `3DSLICER`
 2. On `sceneview-request`, building the same `viewports` structure from the

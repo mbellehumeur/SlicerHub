@@ -4,13 +4,13 @@
   <img src="docs/images/banner.png" alt="Slicer Hub Banner" width="100%">
 </p>
 
-Slicer Hub is a 3D Slicer extension focused on desktop integration workflows for healthcare providers and researchers.
+Slicer Hub is a [WebSub](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) messaging infrastructure for desktop integration for medical imaging application used by healthcare providers, educators and researchers.
 
 **GitHub:** [mbellehumeur/SlicerHub](https://github.com/mbellehumeur/SlicerHub)
 
 ## Overview
 
-Slicer Hub is an open-source system that provides an interoperability messaging infrastruture.  It aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original purpose is to support an [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow and [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results).
+Slicer Hub aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original purpose is to support an [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow and [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results).
  
 This python extension supplies the **HUB**, service providers, and the Slicer Qt **Image Display** client (and related desktop pieces). Together with its sister repository of [javascript clients](https://github.com/mbellehumeur/SlicerHub-js-clients), the system includes:
 
@@ -26,13 +26,13 @@ The extension also includes features for education that are independent of the I
 
 - creating, saving, and uploading teaching files and cohorts for class preparation
 - conferencing for collaborative viewing and teaching
-- a vanishing brush tool for temporary annotations during conferencing
+- a [vanishing brush tool](https://youtu.be/xKQEOs1_9Bg?si=-gtvlB3aeq3KF-dX) for temporary annotations during conferencing
 - export to STL for 3D printing
 
 Research and 3D Slicer functionalities, also independent of IHE, are included:
 
 - File transfer between applications
-- Medical Reality scenes and  MRSON
+- Medical Reality scenes and  communications
 - Status-request messaging for using current information from other applications in the workflow
 - Slicer Qt Image Display client and DICOM DB study list (same websocket client)
 
@@ -113,7 +113,7 @@ Service Providers are agents that provide backend services to desktop integratio
 The service provider tab provides a visual description of how processing resources can be connected to the hub and made available to hub workflows.
 
 <p align="center">
-  <img src="docs/images/ResourceServerFeature.png" alt="Service Provider feature" width="80%">
+  <img src="docs/images/ServiceProviderFeature.png" alt="Service Provider feature" width="80%">
 </p>
 
 Service Providers subscribe to all user topics for status-request and dicom/nifti events. In the example, Total Segmentator sends binary results back to the user through the hub.
@@ -168,7 +168,7 @@ Since the service providers are not on the internet, you will get shared keys fo
 |------|---------|
 | [`HubInterface/`](HubInterface/) | Slicer module package (`HubInterface.py`, `Lib/`, `Resources/`, bundled runtime) |
 | `HubInterface/hub/` | FastAPI Slicer hub (`hub.py`) |
-| `HubInterface/resource_servers/` | Service-provider framework + products |
+| `HubInterface/service_providers/` | Service-provider framework + products |
 | `HubInterface/image_display/` | Slicer image display runtime + CLI |
 | `HubInterface/python_client/` | Python `hub_client` package |
 | [`docs/`](docs/) | Extension docs (module docs under `docs/module/`) |
@@ -187,8 +187,8 @@ pip install -e python_client
 cd hub && pip install -r requirements.txt && python hub.py --port 2018
 
 # Terminal 2 — Service provider (examples)
-python resource_servers/products/neuro_seg.py --local
-# python resource_servers/products/total_segmentator.py --local
+python service_providers/products/neuro_seg.py --local
+# python service_providers/products/total_segmentator.py --local
 
 # Terminal 3 — Slicer image display (Slicer required; module NOT required)
 Slicer --python-script image_display/run_image_display.py -- --local --topic USER-1

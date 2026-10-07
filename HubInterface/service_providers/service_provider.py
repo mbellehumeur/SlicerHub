@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Reusable standalone Hub resource-server framework (no 3D Slicer UI).
+"""Reusable standalone Hub service-provider framework (no 3D Slicer UI).
 
 Connects to SLICER-HUB-CLOUD by default (``--local`` uses ``http://127.0.0.1:2018``).
 Dispatches dicom-send / nifti-send / status-request, downloads inbound files
 (HTTP URL first, hub payloadIds fallback), and exposes publish helpers on
-``ResourceServerContext``.
+``ServiceProviderContext``.
 
 Product scripts (e.g. ``lung_screening.py``) supply handlers and call ``run_sync()``.
 
@@ -25,7 +25,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
-LOGGER = logging.getLogger("HubResourceServer")
+LOGGER = logging.getLogger("HubServiceProvider")
 
 SLICER_HUB_CLOUD = {
     "name": "SLICER-HUB-CLOUD",
@@ -135,7 +135,7 @@ from provider_runtime import (  # noqa: E402
 
 
 @dataclass
-class ResourceServerConfig:
+class ServiceProviderConfig:
     product_name: str
     topic: str = "*"
     actors: List[str] = field(default_factory=lambda: ["EC"])
@@ -153,7 +153,7 @@ def resolve_hub_preset(use_local_hub: bool = False) -> Dict[str, Any]:
     return SLICER_HUB_LOCAL if use_local_hub else SLICER_HUB_CLOUD
 
 
-def parse_resource_server_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
+def parse_service_provider_args(argv: Optional[List[str]] = None) -> argparse.Namespace:
     """Shared CLI flags for standalone product entry scripts."""
     parser = argparse.ArgumentParser(add_help=True)
     parser.add_argument(
@@ -165,18 +165,18 @@ def parse_resource_server_args(argv: Optional[List[str]] = None) -> argparse.Nam
 
 
 @dataclass
-class ResourceServerHandlers:
+class ServiceProviderHandlers:
     on_dicom_send: Optional[
-        Callable[["ResourceServerContext", Dict[str, Any], Path, int, int], None]
+        Callable[["ServiceProviderContext", Dict[str, Any], Path, int, int], None]
     ] = None
     on_nifti_send: Optional[
-        Callable[["ResourceServerContext", Dict[str, Any], Path, int, int], None]
+        Callable[["ServiceProviderContext", Dict[str, Any], Path, int, int], None]
     ] = None
     on_send_download_start: Optional[
-        Callable[["ResourceServerContext", Dict[str, Any], str], None]
+        Callable[["ServiceProviderContext", Dict[str, Any], str], None]
     ] = None
     build_status_response: Optional[
-        Callable[["ResourceServerContext"], Dict[str, Any]]
+        Callable[["ServiceProviderContext"], Dict[str, Any]]
     ] = None
 
 
@@ -205,11 +205,11 @@ class _StandaloneHubConnection:
         future.add_done_callback(_log_result)
 
 
-class ResourceServerContext:
+class ServiceProviderContext:
     def __init__(
         self,
         client: SlicerHubClient,
-        config: ResourceServerConfig,
+        config: ServiceProviderConfig,
         loop: asyncio.AbstractEventLoop,
         hub_connection: _StandaloneHubConnection,
     ) -> None:
@@ -333,7 +333,7 @@ def _download_send_files(
     return job_input, file_count, total_bytes
 
 
-def _default_status_response(config: ResourceServerConfig) -> Dict[str, Any]:
+def _default_status_response(config: ServiceProviderConfig) -> Dict[str, Any]:
     return {
         "source": "status",
         "product": config.product_name,
@@ -341,7 +341,7 @@ def _default_status_response(config: ResourceServerConfig) -> Dict[str, Any]:
     }
 
 
-def _build_client(config: ResourceServerConfig) -> SlicerHubClient:
+def _build_client(config: ServiceProviderConfig) -> SlicerHubClient:
     hub_def = resolve_hub_preset(config.use_local_hub)
     hub = HubConfig(
         hub_endpoint=hub_def["hub_endpoint"],
@@ -364,7 +364,7 @@ def _build_client(config: ResourceServerConfig) -> SlicerHubClient:
     return SlicerHubClient(hub, session, options)
 
 
-async def _connect(client: SlicerHubClient, config: ResourceServerConfig) -> None:
+async def _connect(client: SlicerHubClient, config: ServiceProviderConfig) -> None:
     hub_def = resolve_hub_preset(config.use_local_hub)
     hub_name = hub_def["name"]
     auth = await client.authenticate()
@@ -393,7 +393,7 @@ async def _connect(client: SlicerHubClient, config: ResourceServerConfig) -> Non
 
 def _invoke_handler(
     handler: Optional[Callable[..., None]],
-    ctx: ResourceServerContext,
+    ctx: ServiceProviderContext,
     message: Dict[str, Any],
     input_dir: Path,
     file_count: int,
@@ -405,8 +405,8 @@ def _invoke_handler(
 
 
 async def _handle_send_event(
-    ctx: ResourceServerContext,
-    handlers: ResourceServerHandlers,
+    ctx: ServiceProviderContext,
+    handlers: ServiceProviderHandlers,
     message: Dict[str, Any],
     hub_event: str,
 ) -> None:
@@ -464,8 +464,8 @@ async def _handle_send_event(
 
 
 async def _handle_status_request(
-    ctx: ResourceServerContext,
-    handlers: ResourceServerHandlers,
+    ctx: ServiceProviderContext,
+    handlers: ServiceProviderHandlers,
     message: Dict[str, Any],
 ) -> None:
     event_name = hub_event_name(message)
@@ -500,7 +500,7 @@ async def _handle_status_request(
     )
 
 
-async def run(config: ResourceServerConfig, handlers: ResourceServerHandlers) -> int:
+async def run(config: ServiceProviderConfig, handlers: ServiceProviderHandlers) -> int:
     """Run until cancelled. Returns ``0`` on clean stop, ``1`` if hub connect failed."""
     client = _build_client(config)
     hub_def = resolve_hub_preset(config.use_local_hub)
@@ -513,7 +513,7 @@ async def run(config: ResourceServerConfig, handlers: ResourceServerHandlers) ->
     loop = asyncio.get_running_loop()
     hub_connection = _StandaloneHubConnection(client, loop)
     register_connection(config.product_name, hub_connection)
-    ctx = ResourceServerContext(client, config, loop, hub_connection)
+    ctx = ServiceProviderContext(client, config, loop, hub_connection)
     connected = False
     exit_code = 0
 
@@ -578,13 +578,13 @@ async def run(config: ResourceServerConfig, handlers: ResourceServerHandlers) ->
 
 
 def run_sync(
-    config: ResourceServerConfig,
-    handlers: ResourceServerHandlers,
+    config: ServiceProviderConfig,
+    handlers: ServiceProviderHandlers,
     argv: Optional[List[str]] = None,
 ) -> None:
     """Blocking entry for product scripts (parses ``--local`` from ``argv`` / ``sys.argv``)."""
-    args = parse_resource_server_args(argv)
-    config = ResourceServerConfig(
+    args = parse_service_provider_args(argv)
+    config = ServiceProviderConfig(
         product_name=config.product_name,
         topic=config.topic,
         actors=list(config.actors),

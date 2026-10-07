@@ -16,7 +16,7 @@ from slicer.ScriptedLoadableModule import (
 
 from Lib.HubServer import HubServerWidget
 from Lib.ImageDisplayClient import ImageDisplayClientWidget
-from Lib.ResourceServers import ResourceServersWidget
+from Lib.ServiceProviders import ServiceProvidersWidget
 
 
 class HubInterface(ScriptedLoadableModule):
@@ -28,10 +28,10 @@ class HubInterface(ScriptedLoadableModule):
         self.parent.contributors = ["ProjectWeek45"]
         self.parent.helpText = _(
             """
-            Slicer Hub for 3D Slicer: Hub, Resource Servers and  Image Display client .<br><br>
-            Resource Servers:
-            Resource servers subscribe to all user topics for dicom events and send back results to the user.
-            Each resource server connects with its own product name and onMessage script.
+            Slicer Hub for 3D Slicer: Hub, Service Providers and  Image Display client .<br><br>
+            Service Providers:
+            Service providers subscribe to all user topics for dicom events and send back results to the user.
+            Each service provider connects with its own product name and onMessage script.
             The script handles producing the results from the DICOM files received.
             <br><br>
             Image Display Client:
@@ -56,7 +56,7 @@ class HubInterface(ScriptedLoadableModule):
 class HubInterfaceWidget(ScriptedLoadableModuleWidget):
     def __init__(self, parent=None) -> None:
         ScriptedLoadableModuleWidget.__init__(self, parent)
-        self.resourceServersWidget = ResourceServersWidget()
+        self.serviceProvidersWidget = ServiceProvidersWidget()
         self.imageDisplayClientWidget = ImageDisplayClientWidget()
         self.hubWidget = HubServerWidget()
 
@@ -81,25 +81,25 @@ class HubInterfaceWidget(ScriptedLoadableModuleWidget):
         self.layout.addWidget(hubSection)
         self.hubWidget.setup(hubSection)
 
-        resourceServersSection = self._ctk_collapsible_section(
-            _("Resource Servers"), expanded=False
+        serviceProvidersSection = self._ctk_collapsible_section(
+            _("Service Providers"), expanded=False
         )
-        self.layout.addWidget(resourceServersSection)
-        self.resourceServersWidget.setup(resourceServersSection)
+        self.layout.addWidget(serviceProvidersSection)
+        self.serviceProvidersWidget.setup(serviceProvidersSection)
 
         self.layout.addStretch(1)
 
     def cleanup(self) -> None:
-        self.resourceServersWidget.cleanup()
+        self.serviceProvidersWidget.cleanup()
         self.imageDisplayClientWidget.cleanup()
         self.hubWidget.cleanup()
 
     def enter(self) -> None:
-        self.resourceServersWidget.enter()
+        self.serviceProvidersWidget.enter()
         self.imageDisplayClientWidget.enter()
         self.hubWidget.enter()
 
     def exit(self) -> None:
-        self.resourceServersWidget.exit()
+        self.serviceProvidersWidget.exit()
         self.imageDisplayClientWidget.exit()
         self.hubWidget.exit()

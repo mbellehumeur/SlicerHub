@@ -21,13 +21,13 @@ def repo_root() -> Path:
 
 
 def ensure_monorepo_import_paths() -> Path:
-    """Add python_client, RS runtime, and image-display lib to sys.path."""
+    """Add python_client, service-provider runtime, and image-display lib to sys.path."""
     root = repo_root()
     extras = (
         root,
         root / "python_client" / "src",
-        root / "resource_servers" / "runtime",
-        root / "resource_servers",
+        root / "service_providers" / "runtime",
+        root / "service_providers",
         root / "image_display" / "lib",
     )
     for path in extras:
@@ -45,5 +45,5 @@ def hub_script() -> Path:
     return hub_dir() / "hub.py"
 
 
-def resource_server_products_dir() -> Path:
-    return repo_root() / "resource_servers" / "products"
+def service_provider_products_dir() -> Path:
+    return repo_root() / "service_providers" / "products"

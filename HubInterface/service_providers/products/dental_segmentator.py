@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""DENTAL_SEG Hub resource server — standalone CLI entry point.
+"""DENTAL_SEG Hub service provider — standalone CLI entry point.
 
 Run from repo root (plain Python, no 3D Slicer):
 
     pip install aiohttp nnunetv2
-    python resource_servers/products/dental_segmentator.py
-    python resource_servers/products/dental_segmentator.py --local
+    python service_providers/products/dental_segmentator.py
+    python service_providers/products/dental_segmentator.py --local
 
 Default hub is SLICER-HUB-CLOUD; ``--local`` uses ``http://127.0.0.1:2018``.
 
@@ -14,13 +14,14 @@ On inbound nifti-send: download, run nnU-Net v2 DentalSegmentator
 
 On inbound dicom-send: status error (convert to NIfTI first / use nifti-send).
 
-Model weights (Dataset111) — set ``DENTAL_SEG_MODEL_PATH`` to the unzipped
-weights root (folder that contains ``dataset.json`` or the nnUNet trainer
-folder with ``fold_0``). See Zenodo / SlicerDentalSegmentator releases.
+Model weights (Dataset111): if ``DENTAL_SEG_MODEL_PATH`` is unset, the script
+downloads and caches ``Dataset111_453CT_v100.zip`` under
+``~/.slicer-hub/models/dental_segmentator`` on first job. Override with the
+env var to use a pre-unzipped weights folder (``dataset.json`` / ``fold_0``).
 
 Upstream: https://github.com/gaudot/SlicerDentalSegmentator
 
-See ``resource_server.py`` and ``dental_segmentator-readme.md``.
+See ``service_provider.py`` and ``dental_segmentator-readme.md``.
 """
 
 from __future__ import annotations
@@ -31,20 +32,24 @@ import os
 import shutil
 import subprocess
 import sys
+import threading
+import urllib.error
+import urllib.request
+import zipfile
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
-_RS_ROOT = _SCRIPT_DIR.parent
-for _extra in (_SCRIPT_DIR, _RS_ROOT):
+_SP_ROOT = _SCRIPT_DIR.parent
+for _extra in (_SCRIPT_DIR, _SP_ROOT):
     _extra_str = str(_extra)
     if _extra.is_dir() and _extra_str not in sys.path:
         sys.path.insert(0, _extra_str)
 
-from resource_server import (  # noqa: E402
-    ResourceServerConfig,
-    ResourceServerContext,
-    ResourceServerHandlers,
+from service_provider import (  # noqa: E402
+    ServiceProviderConfig,
+    ServiceProviderContext,
+    ServiceProviderHandlers,
     run_sync,
 )
 
@@ -55,9 +60,114 @@ FINAL_STATUS_LINE = "Segmentation complete"
 CASE_ID = "dental"
 MODEL_PATH_ENV = "DENTAL_SEG_MODEL_PATH"
 DEVICE_ENV = "DENTAL_SEG_DEVICE"
+WEIGHTS_ZIP_URL = (
+    "https://github.com/gaudot/SlicerDentalSegmentator/releases/download/"
+    "v1.0.0-alpha/Dataset111_453CT_v100.zip"
+)
+WEIGHTS_ZIP_NAME = "Dataset111_453CT_v100.zip"
+_MODEL_ENSURE_LOCK = threading.Lock()
 
 
-def build_status_response(_ctx: ResourceServerContext) -> Dict[str, Any]:
+def _default_model_cache_dir() -> Path:
+    return Path.home() / ".slicer-hub" / "models" / "dental_segmentator"
+
+
+def _cache_looks_like_model(root: Path) -> bool:
+    if not root.is_dir():
+        return False
+    try:
+        _resolve_nnunet_model_folder(root)
+        return True
+    except FileNotFoundError:
+        return False
+
+
+def _download_file(url: str, dest: Path, on_progress: Optional[Callable[[str], None]] = None) -> None:
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    partial = dest.with_suffix(dest.suffix + ".partial")
+    if partial.is_file():
+        partial.unlink()
+
+    def _report(msg: str) -> None:
+        LOGGER.info("DENTAL_SEG: %s", msg)
+        if on_progress:
+            on_progress(msg)
+
+    _report(f"Downloading DentalSegmentator weights (~220 MB) from {url}")
+    try:
+        with urllib.request.urlopen(url, timeout=120) as resp:
+            total = int(resp.headers.get("Content-Length") or 0)
+            done = 0
+            last_pct = -1
+            with open(partial, "wb") as out:
+                while True:
+                    chunk = resp.read(1024 * 256)
+                    if not chunk:
+                        break
+                    out.write(chunk)
+                    done += len(chunk)
+                    if total > 0:
+                        pct = int(100 * done / total)
+                        if pct >= last_pct + 10 or pct == 100:
+                            last_pct = pct
+                            mb = done / (1024 * 1024)
+                            total_mb = total / (1024 * 1024)
+                            _report(
+                                f"Downloading weights… {pct}% "
+                                f"({mb:.0f}/{total_mb:.0f} MB)"
+                            )
+    except urllib.error.URLError as exc:
+        if partial.is_file():
+            partial.unlink()
+        raise FileNotFoundError(
+            f"Failed to download DentalSegmentator weights from {url}: {exc}"
+        ) from exc
+
+    partial.replace(dest)
+    _report(f"Downloaded {dest.name}")
+
+
+def _ensure_cached_model(
+    on_progress: Optional[Callable[[str], None]] = None,
+) -> Path:
+    """Download+unzip Dataset111 into the default cache if needed."""
+    cache = _default_model_cache_dir()
+    with _MODEL_ENSURE_LOCK:
+        if _cache_looks_like_model(cache):
+            return cache.resolve()
+
+        def _report(msg: str) -> None:
+            LOGGER.info("DENTAL_SEG: %s", msg)
+            if on_progress:
+                on_progress(msg)
+
+        cache.mkdir(parents=True, exist_ok=True)
+        zip_path = cache / WEIGHTS_ZIP_NAME
+        if not zip_path.is_file():
+            _download_file(WEIGHTS_ZIP_URL, zip_path, on_progress=on_progress)
+        else:
+            _report(f"Using cached zip {zip_path}")
+
+        _report("Unzipping DentalSegmentator weights…")
+        try:
+            with zipfile.ZipFile(zip_path, "r") as zf:
+                zf.extractall(cache)
+        except zipfile.BadZipFile as exc:
+            zip_path.unlink(missing_ok=True)
+            raise FileNotFoundError(
+                f"Corrupt weights zip {zip_path}; deleted — re-run to download again"
+            ) from exc
+
+        if not _cache_looks_like_model(cache):
+            raise FileNotFoundError(
+                f"Unzipped weights under {cache} but no nnUNet model "
+                "(fold_0 / dataset.json) was found"
+            )
+        _report(f"DentalSegmentator weights ready at {cache}")
+        return cache.resolve()
+
+
+def build_status_response(_ctx: ServiceProviderContext) -> Dict[str, Any]:
     return {
         "source": "status",
         "product": PRODUCT_NAME,
@@ -97,7 +207,7 @@ def _format_download_status_line(file_count: int, total_bytes: int) -> str:
 
 
 def _publish_to_requester(
-    ctx: ResourceServerContext, message: Dict[str, Any], status_line: str
+    ctx: ServiceProviderContext, message: Dict[str, Any], status_line: str
 ) -> None:
     event = message.get("event") or {}
     topic = (event.get("hub.topic") or "").strip()
@@ -116,7 +226,7 @@ def _publish_to_requester(
 
 
 def on_send_download_start(
-    ctx: ResourceServerContext, message: Dict[str, Any], _hub_event: str
+    ctx: ServiceProviderContext, message: Dict[str, Any], _hub_event: str
 ) -> None:
     file_count, total_bytes = _manifest_file_stats(message)
     if file_count <= 0:
@@ -138,17 +248,12 @@ def _resolve_input_nifti(input_dir: Path) -> Optional[Path]:
     return None
 
 
-def _model_root() -> Path:
+def _model_root(
+    on_progress: Optional[Callable[[str], None]] = None,
+) -> Path:
     raw = (os.environ.get(MODEL_PATH_ENV) or "").strip()
     if not raw:
-        raise FileNotFoundError(
-            f"Set {MODEL_PATH_ENV} to the unzipped DentalSegmentator "
-            "weights folder (contains dataset.json / fold_0). "
-            "Download Dataset111_453CT_v100.zip from "
-            "https://github.com/gaudot/SlicerDentalSegmentator/releases "
-            "and unzip it. On Git Bash use a Windows path, e.g. "
-            "export DENTAL_SEG_MODEL_PATH='C:/Users/YOU/models/dental'."
-        )
+        return _ensure_cached_model(on_progress=on_progress)
     # Git Bash turns /path/... into C:\Program Files\Git\path\...
     lowered = raw.replace("\\", "/").lower()
     if (
@@ -158,8 +263,9 @@ def _model_root() -> Path:
     ):
         raise FileNotFoundError(
             f"{MODEL_PATH_ENV} looks like a documentation placeholder ({raw!r}). "
-            "Download and unzip Dataset111_453CT_v100.zip, then set the env var "
-            "to that real folder (Git Bash: use C:/... not /path/to/...)."
+            "Unset it to auto-download into ~/.slicer-hub/models/dental_segmentator, "
+            "or set it to a real unzipped Dataset111 folder "
+            "(Git Bash: use C:/... not /path/to/...)."
         )
     path = Path(raw).expanduser().resolve()
     if not path.is_dir():
@@ -294,8 +400,11 @@ def _run_nnunet_dental(
     nifti_path: Path,
     job_dir: Path,
     on_line: Optional[Any] = None,
+    on_model_progress: Optional[Callable[[str], None]] = None,
 ) -> Path:
-    model_folder = _resolve_nnunet_model_folder(_model_root())
+    model_folder = _resolve_nnunet_model_folder(
+        _model_root(on_progress=on_model_progress)
+    )
     device = _prediction_device()
     work_in = job_dir / "nnunet_in"
     work_out = job_dir / "nnunet_out"
@@ -365,7 +474,7 @@ def _run_nnunet_dental(
 
 
 def _publish_result_nifti_sync(
-    ctx: ResourceServerContext, topic: str, result_path: Path
+    ctx: ServiceProviderContext, topic: str, result_path: Path
 ) -> None:
     future = asyncio.run_coroutine_threadsafe(
         ctx.publish_nifti_send(topic, str(result_path)),
@@ -376,7 +485,7 @@ def _publish_result_nifti_sync(
 
 
 def _require_job_routing(
-    ctx: ResourceServerContext,
+    ctx: ServiceProviderContext,
     message: Dict[str, Any],
     input_dir: Path,
     label: str,
@@ -404,7 +513,7 @@ def _require_job_routing(
 
 
 def on_dicom_send(
-    ctx: ResourceServerContext,
+    ctx: ServiceProviderContext,
     message: Dict[str, Any],
     input_dir: Path,
     file_count: int,
@@ -423,7 +532,7 @@ def on_dicom_send(
 
 
 def on_nifti_send(
-    ctx: ResourceServerContext,
+    ctx: ServiceProviderContext,
     message: Dict[str, Any],
     input_dir: Path,
     file_count: int,
@@ -452,13 +561,20 @@ def on_nifti_send(
 
     try:
         device = _prediction_device()
+
+        def _model_progress(text: str) -> None:
+            _publish_to_requester(ctx, message, text[:180])
+
         _publish_to_requester(
             ctx,
             message,
             f"Running DentalSegmentator (nnU-Net, device={device})…",
         )
         result_path = _run_nnunet_dental(
-            nifti_path, job_dir, on_line=_status_line
+            nifti_path,
+            job_dir,
+            on_line=_status_line,
+            on_model_progress=_model_progress,
         )
     except FileNotFoundError as exc:
         _publish_to_requester(ctx, message, f"ERROR: {exc}")
@@ -485,7 +601,7 @@ def on_nifti_send(
     LOGGER.info("DENTAL_SEG: job complete result=%s", result_path)
 
 
-HANDLERS = ResourceServerHandlers(
+HANDLERS = ServiceProviderHandlers(
     on_dicom_send=on_dicom_send,
     on_nifti_send=on_nifti_send,
     on_send_download_start=on_send_download_start,
@@ -494,4 +610,4 @@ HANDLERS = ResourceServerHandlers(
 
 
 if __name__ == "__main__":
-    run_sync(ResourceServerConfig(product_name=PRODUCT_NAME), HANDLERS)
+    run_sync(ServiceProviderConfig(product_name=PRODUCT_NAME), HANDLERS)

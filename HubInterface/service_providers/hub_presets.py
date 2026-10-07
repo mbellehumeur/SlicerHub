@@ -1,4 +1,4 @@
-"""Shared hub OAuth presets for resource servers and image display."""
+"""Shared hub OAuth presets for service providers and image display."""
 
 from __future__ import annotations
 

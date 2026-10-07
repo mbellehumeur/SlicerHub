@@ -14,7 +14,7 @@ connects **outbound** to the hub.
 |-----------|--------|-----|
 | Slicer Hub + OHIF / VolView / Slim | Azure App Service | No |
 | 3D Slicer Image Display client | Windows GPU VM (or local PC) | Optional (viewing) |
-| TotalSegmentator / IDC Claude resource servers | Same GPU VM (or separate GPU host) | Yes for fast segmentation |
+| TotalSegmentator / IDC Claude service providers | Same GPU VM (or separate GPU host) | Yes for fast segmentation |
 
 Hub URL example: `https://<app>.azurewebsites.net/api/hub` (`SLICER-HUB-CLOUD` in
 Hub settings). Deploy the hub first with [azure-webapp.md](../../HubInterface/hub/azure-webapp.md).
@@ -238,18 +238,18 @@ Replace `<app>` with your App Service name from [azure-webapp.md](../../HubInter
 4. Confirm in hub admin: `https://<app>.azurewebsites.net/api/hub/admin` —
    subscriber name like `3DSlicer-XXXXXX`
 
-### Resource Server (TotalSegmentator, optional)
+### Service Provider (TotalSegmentator, optional)
 
-1. **Resource Servers** tab → add row:
+1. **Service Providers** tab → add row:
 
    | Field | Value |
    |-------|--------|
    | Product | `TOTALSEG` |
    | Hub | `SLICER-HUB-CLOUD` |
-   | onMessage script | `resource_servers/products/total_segmentator.py` |
+   | onMessage script | `service_providers/products/total_segmentator.py` |
 
 2. Click **Connect**
-3. If the hub uses real OAuth (not mock), configure resource-server credentials
+3. If the hub uses real OAuth (not mock), configure service-provider credentials
    in hub App Settings
 
 No **inbound** ports are required on the VM for Hub — only outbound HTTPS and
@@ -288,7 +288,7 @@ GPU VMs bill while **running**. Use Portal → VM → **Auto-shutdown**, or
 - NSG: RDP **only from known IPs**
 - Strong VM password; consider **Azure Bastion** instead of public RDP long term
 - Hub: use production OAuth, not mock endpoints, when exposed
-- Resource-server keys: hub App Settings, not baked into the VM image
+- Service-provider keys: hub App Settings, not baked into the VM image
 
 ---
 
@@ -307,5 +307,5 @@ GPU VMs bill while **running**. Use Portal → VM → **Auto-shutdown**, or
 ## Related docs
 
 - [azure-webapp.md](../../HubInterface/hub/azure-webapp.md) — Slicer hub on Azure App Service
-- [totalsegmentator-readme.md](../Resources/scripts/totalsegmentator-readme.md) — resource server setup
+- [totalsegmentator-readme.md](../Resources/scripts/totalsegmentator-readme.md) — service provider setup
 - [HUB-README.md](../../HubInterface/hub/docs/HUB-README.md) — hub endpoints and `SLICER-HUB-CLOUD`

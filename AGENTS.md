@@ -14,7 +14,7 @@ Default local port: **2018** (`python HubInterface/hub/hub.py --port 2018`).
 | `HubInterface/` | Slicer module package (discovery: `HubInterface/HubInterface.py`) |
 | `HubInterface/Lib/` | Module UI helpers |
 | `HubInterface/hub/` | FastAPI hub |
-| `HubInterface/resource_servers/` | RS framework + `products/` |
+| `HubInterface/service_providers/` | Service-provider framework + `products/` |
 | `HubInterface/image_display/` | Slicer ID runtime + `run_image_display.py` |
 | `HubInterface/python_client/` | Python `hub_client` (`pip install -e python_client` from `HubInterface/`) |
 

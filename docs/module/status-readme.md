@@ -114,7 +114,7 @@ includes a `segmentation` context item (metadata only; voxels stay on the ID):
 When no SEG is loaded, `segmentations` is `[]` — the `segmentation` key is still present.
 Peers (e.g. reporting) poll with `status-request` and `target.actor: "ID"`.
 
-### Other resource servers
+### Other service providers
 
 ```json
 {
@@ -139,7 +139,7 @@ After WebSocket connect, image displays send `status-request` with `target.actor
 
 ## `status-update` (one-way job log)
 
-Resource servers can publish progress lines to a **single** subscriber without a
+Service providers can publish progress lines to a **single** subscriber without a
 request/response pair. VolView uses this for the Total Segmentator **Job Status** log.
 
 | Field | Value |
@@ -150,7 +150,7 @@ request/response pair. VolView uses this for the Total Segmentator **Job Status*
 | `event.context.level` | `info` or `error` (optional) |
 
 Do **not** set `target.actor` on subscriber-targeted publishes (e.g. do not inherit
-a resource server's default `ID` actor). The hub filters by actor; worklist clients
+a service provider's default `ID` actor). The hub filters by actor; worklist clients
 use `WORKLIST_CLIENT` and would not receive `status-update` with `target.actor=ID`.
 Omit `target.actor` or use `*` when `target.subscriber.name` is set.
 

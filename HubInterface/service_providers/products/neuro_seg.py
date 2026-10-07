@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""NEURO_SEG Hub resource server — standalone CLI entry point.
+"""NEURO_SEG Hub service provider — standalone CLI entry point.
 
 Run from repo root (plain Python, no 3D Slicer):
 
     pip install aiohttp
-    python resource_servers/products/neuro_seg.py
-    python resource_servers/products/neuro_seg.py --local
+    python service_providers/products/neuro_seg.py
+    python service_providers/products/neuro_seg.py --local
 
 Default hub is SLICER-HUB-CLOUD; ``--local`` uses ``http://127.0.0.1:2018``.
 
@@ -13,7 +13,7 @@ On inbound nifti-send: status-update ``Downloading NIfTI volume, …``, download
 files, write ``downloaded-files.txt``, simulate 10s processing with status-update
 ``Processing`` every 3s to the requester, then ``Segmentation complete``.
 
-See ``resource_server.py`` for the reusable framework and
+See ``service_provider.py`` for the reusable framework and
 ``neuro_seg-readme.md`` for extension points (inference, status-update,
 NIfTI result publish).
 """
@@ -27,16 +27,16 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
-_RS_ROOT = _SCRIPT_DIR.parent
-for _extra in (_SCRIPT_DIR, _RS_ROOT):
+_SP_ROOT = _SCRIPT_DIR.parent
+for _extra in (_SCRIPT_DIR, _SP_ROOT):
     _extra_str = str(_extra)
     if _extra.is_dir() and _extra_str not in sys.path:
         sys.path.insert(0, _extra_str)
 
-from resource_server import (  # noqa: E402
-    ResourceServerConfig,
-    ResourceServerContext,
-    ResourceServerHandlers,
+from service_provider import (  # noqa: E402
+    ServiceProviderConfig,
+    ServiceProviderContext,
+    ServiceProviderHandlers,
     run_sync,
 )
 
@@ -48,7 +48,7 @@ STATUS_UPDATE_INTERVAL_SECONDS = 3
 FINAL_STATUS_LINE = "Segmentation complete"
 
 
-def build_status_response(_ctx: ResourceServerContext) -> Dict[str, Any]:
+def build_status_response(_ctx: ServiceProviderContext) -> Dict[str, Any]:
     return {
         "source": "status",
         "product": PRODUCT_NAME,
@@ -87,7 +87,7 @@ def _format_download_status_line(file_count: int, total_bytes: int) -> str:
 
 
 def _publish_to_requester(
-    ctx: ResourceServerContext, message: Dict[str, Any], status_line: str
+    ctx: ServiceProviderContext, message: Dict[str, Any], status_line: str
 ) -> None:
     event = message.get("event") or {}
     topic = (event.get("hub.topic") or "").strip()
@@ -106,7 +106,7 @@ def _publish_to_requester(
 
 
 def on_send_download_start(
-    ctx: ResourceServerContext, message: Dict[str, Any], _hub_event: str
+    ctx: ServiceProviderContext, message: Dict[str, Any], _hub_event: str
 ) -> None:
     file_count, total_bytes = _manifest_file_stats(message)
     if file_count <= 0:
@@ -121,7 +121,7 @@ def on_send_download_start(
 
 
 def _simulate_processing(
-    ctx: ResourceServerContext, message: Dict[str, Any]
+    ctx: ServiceProviderContext, message: Dict[str, Any]
 ) -> None:
     deadline = time.monotonic() + PROCESSING_SECONDS
     next_update = time.monotonic()
@@ -141,7 +141,7 @@ def _resolve_input_nifti(input_dir: Path) -> Path | None:
 
 
 def _handle_inbound_nifti_send(
-    ctx: ResourceServerContext,
+    ctx: ServiceProviderContext,
     message: Dict[str, Any],
     input_dir: Path,
     file_count: int,
@@ -192,7 +192,7 @@ def _handle_inbound_nifti_send(
 
 
 # def _publish_result_nifti_sync(
-#     ctx: ResourceServerContext, topic: str, result_path: Path
+#     ctx: ServiceProviderContext, topic: str, result_path: Path
 # ) -> None:
 #     import asyncio
 #
@@ -205,7 +205,7 @@ def _handle_inbound_nifti_send(
 
 
 def on_nifti_send(
-    ctx: ResourceServerContext,
+    ctx: ServiceProviderContext,
     message: Dict[str, Any],
     input_dir: Path,
     file_count: int,
@@ -216,7 +216,7 @@ def on_nifti_send(
     )
 
 
-HANDLERS = ResourceServerHandlers(
+HANDLERS = ServiceProviderHandlers(
     on_nifti_send=on_nifti_send,
     on_send_download_start=on_send_download_start,
     build_status_response=build_status_response,
@@ -225,7 +225,7 @@ HANDLERS = ResourceServerHandlers(
 
 if __name__ == "__main__":
     run_sync(
-        ResourceServerConfig(
+        ServiceProviderConfig(
             product_name=PRODUCT_NAME,
             events=["nifti-send", "status-request"],
         ),

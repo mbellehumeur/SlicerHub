@@ -100,7 +100,7 @@
         </a>
       </li>
       <li>
-        <strong>Total Segmentator</strong> — From OHIF or VolView, send an MR or CT study to TotalSegmentator and receive segmentation results (SEG or RTSTRUCT). Connected to the hub as a resource server.
+        <strong>Total Segmentator</strong> — From OHIF or VolView, send an MR or CT study to TotalSegmentator and receive segmentation results (SEG or RTSTRUCT). Connected to the hub as a service provider.
         <a href="images/VolViewTotalSegmentator.png" target="_blank" rel="noopener">
           <img src="images/VolViewTotalSegmentator.png" alt="Total Segmentator in VolView">
         </a>
@@ -122,7 +122,7 @@
     <h2>Extension Features</h2>
     <p>
       The extension features a hub and two hub interfaces: one for connecting
-      backend agents like Total Segmentator (Resource servers) and another one
+      backend agents like Total Segmentator (Service providers) and another one
       to connect the Slicer viewer (Image Display client) to the hub.
     </p>
 
@@ -137,26 +137,26 @@
     <p><img src="images/hub-admin.png" alt="Hub portal"></p>
     <p>It can be used without the slicer extension by running the &ldquo;hub.py&rdquo; script.</p>
 
-    <h4>Resource servers</h4>
+    <h4>Service providers</h4>
     <p>
-      Resource servers are agents that provide backend services to desktop
+      Service providers are agents that provide backend services to desktop
       integration. This allows users to, for example, view AI results without
       having to send them to the archive first.
     </p>
     <p>
-      The resource server tab provides a visual description of how processing
+      The service provider tab provides a visual description of how processing
       resources can be connected to the hub and made available to hub
       workflows.
     </p>
-    <p><img src="images/ResourceServerFeature.png" alt="Resource server feature"></p>
+    <p><img src="images/ServiceProviderFeature.png" alt="Service Provider feature"></p>
     <p>
-      Resource servers subscribe to all user topics for status-request and
+      Service providers subscribe to all user topics for status-request and
       dicom/nifti events. In the example, Total Segmentator sends binary
       results back to the user through the hub.
     </p>
     <p>
       Since these resources do not log in as a user, they need a
-      <em>resource server entry</em> in the customer's authorization server.
+      <em>service provider entry</em> in the customer's authorization server.
       This provides a client id and client secret. For the hub extension hub,
       they must be configured in the environment variables of the hub for the
       resource to connect successfully.
@@ -172,22 +172,22 @@
 
     <h3>Simplified, secure deployment of medical imaging services</h3>
     <p>
-      This architecture protects resource servers by eliminating direct inbound
+      This architecture protects service providers by eliminating direct inbound
       internet exposure entirely. No hostname is required and no changes to the
       networking environment are needed. No VPN or proxy to configure.
     </p>
     <p>
-      Each resource server establishes only outbound encrypted connections to
+      Each service provider establishes only outbound encrypted connections to
       the hub, which functions exclusively as a routing appliance. Because no
       inbound ports need to be opened on hospital or enterprise networks, the
-      resource servers remain protected behind existing firewalls and are never
+      service providers remain protected behind existing firewalls and are never
       directly reachable from the public internet.
     </p>
     <p>
       It also simplifies providing resources in-house since the IT department
       only needs to add a hostname and rules for the hub. They do not have to
-      touch their networking every time a new resource server is available for
-      use. They only have to configure a shared resource server key for it in
+      touch their networking every time a new service provider is available for
+      use. They only have to configure a shared service provider key for it in
       their authorization server.
     </p>
     <p>
@@ -199,7 +199,7 @@
       <img src="images/deployment.png" alt="Deployment architecture">
     </p>
     <p>
-      After installation, the resource servers outbound ports can also be
+      After installation, the service providers outbound ports can also be
       locked down, allowing access to the hub and sites needed by the resource
       only.
     </p>
@@ -217,11 +217,11 @@
     <p>
       The hub provides a test mock auth endpoint that assigns a user when none is
       provided. For public web applications that do not need user
-      authentication but want to use the resource servers, the mock endpoints
+      authentication but want to use the service providers, the mock endpoints
       provide the required functionality.
     </p>
     <p>
-      Since the resource servers are not on the internet, you will get shared keys
+      Since the service providers are not on the internet, you will get shared keys
       for the auth server. The hub can use domain name certificates.
     </p>
 
@@ -275,7 +275,7 @@
       <strong>idc-index</strong> — official
       <a href="https://github.com/ImagingDataCommons/idc-index">Imaging Data Commons</a>
       Python package for local DuckDB SQL against IDC metadata and DICOM series
-      download URLs; used by the IDC Claude resource server. If you use it in
+      download URLs; used by the IDC Claude service provider. If you use it in
       research, cite Fedorov A, et al., <em>Radiographics</em>
       (<a href="https://doi.org/10.1148/rg.230180">2023</a>).
     </p>

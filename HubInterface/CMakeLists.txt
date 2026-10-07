@@ -6,7 +6,7 @@ set(MODULE_PYTHON_SCRIPTS
   Lib/HubServer.py
   Lib/ImageDisplayClient.py
   Lib/ConferenceDialog.py
-  Lib/ResourceServers.py
+  Lib/ServiceProviders.py
   Lib/conference.py
   Lib/repo_paths.py
   Lib/__init__.py
@@ -56,18 +56,18 @@ install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/python_client/"
         )
 
 install(DIRECTORY
-        "${CMAKE_CURRENT_SOURCE_DIR}/resource_servers/products"
-        "${CMAKE_CURRENT_SOURCE_DIR}/resource_servers/runtime"
-        DESTINATION "${_HUB_MOD_DIR}/resource_servers"
+        "${CMAKE_CURRENT_SOURCE_DIR}/service_providers/products"
+        "${CMAKE_CURRENT_SOURCE_DIR}/service_providers/runtime"
+        DESTINATION "${_HUB_MOD_DIR}/service_providers"
         PATTERN "__pycache__" EXCLUDE
         PATTERN "*.pyc" EXCLUDE
         PATTERN "*.pyo" EXCLUDE
         )
 
 install(FILES
-        "${CMAKE_CURRENT_SOURCE_DIR}/resource_servers/resource_server.py"
-        "${CMAKE_CURRENT_SOURCE_DIR}/resource_servers/hub_presets.py"
-        DESTINATION "${_HUB_MOD_DIR}/resource_servers"
+        "${CMAKE_CURRENT_SOURCE_DIR}/service_providers/service_provider.py"
+        "${CMAKE_CURRENT_SOURCE_DIR}/service_providers/hub_presets.py"
+        DESTINATION "${_HUB_MOD_DIR}/service_providers"
         )
 
 install(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/image_display/lib"

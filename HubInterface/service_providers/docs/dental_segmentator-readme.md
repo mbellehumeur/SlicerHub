@@ -1,6 +1,6 @@
-# Dental Segmentator Hub resource server
+# Dental Segmentator Hub service provider
 
-Standalone Python resource server for Dental Segmentator — fully automatic CT/CBCT
+Standalone Python service provider for Dental Segmentator — fully automatic CT/CBCT
 dental segmentation (maxilla, mandible, upper/lower teeth, mandibular canal).
 
 Upstream: [gaudot/SlicerDentalSegmentator](https://github.com/gaudot/SlicerDentalSegmentator).
@@ -16,7 +16,7 @@ then publishes the labelmap back with **`nifti-send`**.
 
 **`dicom-send`** is not implemented yet (convert to NIfTI / use nifti-send).
 
-Framework: `resource_server.py` (shared with other resource servers).
+Framework: `service_provider.py` (shared with other service providers).
 
 ## Dependencies
 
@@ -28,9 +28,11 @@ CUDA recommended; CPU works but is slow (set `DENTAL_SEG_DEVICE=cpu`).
 
 ## Model weights
 
-1. Download [Dataset111_453CT_v100.zip](https://github.com/gaudot/SlicerDentalSegmentator/releases/download/v1.0.0-alpha/Dataset111_453CT_v100.zip) (~220 MB).
-2. Unzip to a local folder (must contain `dataset.json` and/or `fold_0`).
-3. Point the server at it (use a real Windows path — Git Bash rewrites `/path/...`):
+By default the service provider **auto-downloads** [Dataset111_453CT_v100.zip](https://github.com/gaudot/SlicerDentalSegmentator/releases/download/v1.0.0-alpha/Dataset111_453CT_v100.zip) (~220 MB) on the first job and caches it under:
+
+`~/.slicer-hub/models/dental_segmentator`
+
+Optional override — point at a pre-unzipped folder that contains `dataset.json` and/or `fold_0` (Git Bash rewrites `/path/...`; use a real Windows path):
 
 ```bash
 # Git Bash / MSYS — quote a drive path:
@@ -48,7 +50,7 @@ $env:DENTAL_SEG_DEVICE = "cuda"
 
 ## Slicer Hub setup
 
-In **Resource Servers**, add or edit a row:
+In **Service Providers**, add or edit a row:
 
 | Field | Value |
 |-------|--------|
@@ -56,7 +58,7 @@ In **Resource Servers**, add or edit a row:
 | Version | `1.0` |
 | Description | e.g. dental CT/CBCT segmentation |
 | Hub | `SLICER-HUB` or `SLICER-HUB-CLOUD` |
-| onMessage script | `resource_servers/products/dental_segmentator.py` |
+| onMessage script | `service_providers/products/dental_segmentator.py` |
 
 Click **Connect**. Subscribed events: `dicom-send`, `nifti-send`, `status-request`.
 
@@ -65,8 +67,8 @@ Click **Connect**. Subscribed events: `dicom-send`, `nifti-send`, `status-reques
 From `HubInterface/`:
 
 ```bash
-export DENTAL_SEG_MODEL_PATH=/path/to/weights
-python resource_servers/products/dental_segmentator.py --local
+# optional: DENTAL_SEG_MODEL_PATH / DENTAL_SEG_DEVICE
+python service_providers/products/dental_segmentator.py --local
 ```
 
 Default hub is **SLICER-HUB-CLOUD**; `--local` uses `http://127.0.0.1:2018`.

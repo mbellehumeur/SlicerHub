@@ -1,4 +1,4 @@
-# TorchXRayVision Hub resource server
+# TorchXRayVision Hub service provider
 
 Upstream: [mlmed/torchxrayvision](https://github.com/mlmed/torchxrayvision) — chest X-ray
 pathology classification (18 findings) and lung/heart anatomy segmentation.
@@ -16,14 +16,14 @@ From `HubInterface/` with a hub already listening (e.g. `--port 2018`):
 pip install -e python_client
 pip install aiohttp
 # Until real inference lands: TotalSegmentator / torch / highdicom in this Python, or PythonSlicer on PATH
-python resource_servers/products/torchxrayvision/torchxrayvision.py --local
+python service_providers/products/torchxrayvision/torchxrayvision.py --local
 ```
 
 `--local` connects to `http://127.0.0.1:2018`. Omit it to use the default cloud hub.
 
 ## Slicer Hub setup
 
-In **Resource Servers**, add or edit a row:
+In **Service Providers**, add or edit a row:
 
 | Field | Value |
 |-------|--------|
@@ -31,7 +31,7 @@ In **Resource Servers**, add or edit a row:
 | Version | `1.0` |
 | Description | e.g. TorchXRayVision chest X-ray AI |
 | Hub | `SLICER-HUB` or `SLICER-HUB-CLOUD` |
-| onMessage script | `resource_servers/products/torchxrayvision/torchxrayvision.py` |
+| onMessage script | `service_providers/products/torchxrayvision/torchxrayvision.py` |
 
 Hub events subscribed for `TORCHXRAYVISION`: `dicom-send`, `nifti-send`, `status-request`.
 

@@ -6,7 +6,7 @@ In addition to distributing FHIRcast events, hub allows the following:
 
  - Request data from applications.
  - File transfer.
- - Resource servers with long running jobs.
+ - Service providers with long running jobs.
  - Conferencing.
  - IHE actor naming for advanced message routing.
  - Three additional subscription fields:
@@ -61,10 +61,10 @@ For DICOM files, the DICOM metadata of each file is therefore available before t
 
 The file and DICOM metadata information has to be created by the client publishing the event since the hub does not parse context data.
 
-When the resource server has the same data access as the image display, like in the vtk-js worklist example where all data is online, the image display does not have to send the binary files. Only the JSON message is sent and the resource server downloads the input data itself and sends the result binaries back to the image display as shown below.
+When the service provider has the same data access as the image display, like in the vtk-js worklist example where all data is online, the image display does not have to send the binary files. Only the JSON message is sent and the service provider downloads the input data itself and sends the result binaries back to the image display as shown below.
 
 
-Resource servers (e.g. TotalSegmentator) receive metadata on the socket, then
+Service providers (e.g. TotalSegmentator) receive metadata on the socket, then
 `fetch_all_payloads` fills `files[].data` before your `onMessage` script runs.
 
 Full description: [binary-file-transfer.md](binary-file-transfer.md).
@@ -110,7 +110,7 @@ and stays in sync as the group works together.*
 
 ## How do long running resources integrate?
 
-Resource servers such as TotalSegmentator connect to the hub like any other hub
+Service providers such as TotalSegmentator connect to the hub like any other hub
 client, but their work takes seconds or minutes instead of a single instant
 response. The viewer sends the input study with **dicom-send** (binary batch
 upload through the hub). While the server runs, it publishes **status-update**
@@ -123,7 +123,7 @@ details see [status-readme.md](status-readme.md); for file transfer mechanics
 see [binary-file-transfer.md](binary-file-transfer.md).
 
 *Animation description: VolView sends a study to TotalSegmentator with
-dicom-send. The resource server runs segmentation and publishes several
+dicom-send. The service provider runs segmentation and publishes several
 status-update messages. It then returns the SEG result with a second
 dicom-send, which the image display loads.*
 

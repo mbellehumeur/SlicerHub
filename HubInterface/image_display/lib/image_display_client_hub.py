@@ -22,7 +22,7 @@ from image_display_client_handler import (
     handle_imaging_study_close,
     handle_imaging_study_open,
 )
-from resource_server_hub import format_connect_failure
+from service_provider_hub import format_connect_failure
 
 _T = TypeVar("_T")
 

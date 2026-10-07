@@ -35,7 +35,7 @@
     <ul>
       <li>Request data from applications.</li>
       <li>File transfer.</li>
-      <li>Resource servers with long running jobs.</li>
+      <li>Service providers with long running jobs.</li>
       <li>Conferencing.</li>
       <li>IHE actor naming for advanced message routing.</li>
       <li>
@@ -150,14 +150,14 @@
       publishing the event since the hub does not parse context data.
     </p>
     <p>
-      When the resource server has the same data access as the image display,
+      When the service provider has the same data access as the image display,
       like in the vtk-js worklist example where all data is online, the image
       display does not have to send the binary files. Only the JSON message is
-      sent and the resource server downloads the input data itself and sends the
+      sent and the service provider downloads the input data itself and sends the
       result binaries back to the image display as shown below.
     </p>
     <p>
-      Resource servers (e.g. TotalSegmentator) receive metadata on the socket,
+      Service providers (e.g. TotalSegmentator) receive metadata on the socket,
       then <code>fetch_all_payloads</code> fills <code>files[].data</code> before
       your <code>onMessage</code> script runs.
     </p>
@@ -174,7 +174,7 @@
         type="image/svg+xml"
         width="1200"
         height="700"
-        aria-label="Interactive binary file transfer diagram (Resource Server to Image Display)">
+        aria-label="Interactive binary file transfer diagram (Service Provider to Image Display)">
         <p>
           Your browser cannot display this interactive SVG.
           <a href="images/binary-file-transfer-rs-to-id-interactive.svg">Open the SVG directly</a>
@@ -241,7 +241,7 @@
 
     <h2>How do long running resources integrate?</h2>
     <p>
-      Resource servers such as TotalSegmentator connect to the hub like any
+      Service providers such as TotalSegmentator connect to the hub like any
       other hub client, but their work takes seconds or minutes instead of a
       single instant response. The viewer sends the input study with
       <strong>dicom-send</strong> (binary batch upload through the hub). While
@@ -259,7 +259,7 @@
     </p>
     <p class="figure-caption">
       <em>Animation description:</em> VolView sends a study to TotalSegmentator
-      with dicom-send. The resource server runs segmentation and publishes
+      with dicom-send. The service provider runs segmentation and publishes
       several status-update messages. It then returns the SEG result with a
       second dicom-send, which the image display loads.
     </p>

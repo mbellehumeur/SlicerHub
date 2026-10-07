@@ -20,8 +20,8 @@ def _bootstrap_paths() -> None:
     for extra in (
         module_root,
         module_root / "python_client" / "src",
-        module_root / "resource_servers" / "runtime",
-        module_root / "resource_servers",
+        module_root / "service_providers" / "runtime",
+        module_root / "service_providers",
         module_root / "image_display" / "lib",
     ):
         s = str(extra)

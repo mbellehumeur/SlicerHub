@@ -3,13 +3,13 @@
 
 Upstream: https://flexray.csail.mit.edu/
 
-This module is a placeholder so the worklist Local AI catalog and Resource Servers
+This module is a placeholder so the worklist Local AI catalog and Service Providers
 UI have a script path analogous to TotalSegmentator / TorchXRayVision. Real
 on-device inference (WebGPU / local runtime) will replace this stub later.
 
 Standalone (when implemented) from ``HubInterface/``:
 
-    python resource_servers/products/flexray/flexray.py --local
+    python service_providers/products/flexray/flexray.py --local
 """
 
 from __future__ import annotations

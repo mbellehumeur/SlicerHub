@@ -1,15 +1,15 @@
-# Neurosegmentation Hub resource server
+# Neurosegmentation Hub service provider
 
-Standalone Python resource server. It receives a NIfTI volume from VolView or OHIF (`nifti-send`), runs neurosegmentation inference, reports progress back to the requester via `status-update` and ends with sending a nifti back to the OHIF/VolView.
+Standalone Python service provider. It receives a NIfTI volume from VolView or OHIF (`nifti-send`), runs neurosegmentation inference, reports progress back to the requester via `status-update` and ends with sending a nifti back to the OHIF/VolView.
 
 The shipped script (`neuro_seg.py`) is a **stub**: it downloads the NIfTI file, simulates 10 seconds of processing, and publishes `Segmentation complete`. Replace the marked sections with your inference and result publishing code.
 
 
-Framework: `resource_server.py` (shared with other resource servers).
+Framework: `service_provider.py` (shared with other service providers).
 
 ## Slicer Hub setup
 
-In **Resource Servers**, add or edit a row:
+In **Service Providers**, add or edit a row:
 
 | Field | Value |
 |-------|--------|
@@ -17,7 +17,7 @@ In **Resource Servers**, add or edit a row:
 | Version | `1.0` |
 | Description | e.g. neurosegmentation |
 | Hub | `SLICER-HUB` or `SLICER-HUB-CLOUD` |
-| onMessage script | `resource_servers/products/neuro_seg.py` |
+| onMessage script | `service_providers/products/neuro_seg.py` |
 
 Click **Connect**. The subscriber name (`NEURO_SEG-XXXXXX`) appears in the hub admin
 portal. Subscribed events: `nifti-send`, `status-request` (no `dicom-send`).
@@ -32,8 +32,8 @@ From the repo root:
 
 ```bash
 pip install aiohttp
-python resource_servers/products/neuro_seg.py
-python resource_servers/products/neuro_seg.py --local
+python service_providers/products/neuro_seg.py
+python service_providers/products/neuro_seg.py --local
 ```
 
 Default hub is **SLICER-HUB-CLOUD**; `--local` uses `http://127.0.0.1:2018`.
@@ -140,7 +140,7 @@ lines during long runs so clients show liveness:
 
 ```python
 def _run_inference(
-    ctx: ResourceServerContext,
+    ctx: ServiceProviderContext,
     message: Dict[str, Any],
     nifti_path: Path,
     output_dir: Path,
@@ -188,7 +188,7 @@ To push the segmentation volume back to the topic, uncomment the block at the bo
 
 ```python
 def _publish_result_nifti_sync(
-    ctx: ResourceServerContext, topic: str, result_path: Path
+    ctx: ServiceProviderContext, topic: str, result_path: Path
 ) -> None:
     import asyncio
 
@@ -257,8 +257,8 @@ the framework downloads each file into `input_dir`.
 | File | Role |
 |------|------|
 | `neuro_seg.py` | Product handlers — **edit here** |
-| `resource_server.py` | Hub connect, download, `ResourceServerContext` publish helpers |
-| `python_client/src/hub_client/client.py` | Hub wire protocol (used via `resource_server`) |
+| `service_provider.py` | Hub connect, download, `ServiceProviderContext` publish helpers |
+| `python_client/src/hub_client/client.py` | Hub wire protocol (used via `service_provider`) |
 
-See also `totalsegmentator-readme.md` for a fully wired resource-server example with job
+See also `totalsegmentator-readme.md` for a fully wired service-provider example with job
 logging and result publish.

@@ -1,8 +1,8 @@
 # Hub binary file transfer
 
-Animated walkthrough (30 s loop): [images/binary-file-transfer-animated-rs-to-id.svg](images/binary-file-transfer-animated-rs-to-id.svg) (Resource Server → Image Display).
+Animated walkthrough (30 s loop): [images/binary-file-transfer-animated-rs-to-id.svg](images/binary-file-transfer-animated-rs-to-id.svg) (Service Provider → Image Display).
 **[Interactive step-by-step version (GitHub Pages)](https://mbellehumeur.github.io/SlicerHub/binary-file-transfer.html)** — click to play each step with motion.
-Inbound variant (Image Display → Resource Server): [images/binary-file-transfer-animated.svg](images/binary-file-transfer-animated.svg).
+Inbound variant (Image Display → Service Provider): [images/binary-file-transfer-animated.svg](images/binary-file-transfer-animated.svg).
 Static diagram: [images/binary-file-transfer.svg](images/binary-file-transfer.svg).
 
 Hub carries imaging files (DICOM, NIfTI, PNG, NRRD, and similar) through a
@@ -18,7 +18,7 @@ short-lived in-memory file store—not a PACS or long-term archive.
    and attaches the full file to `event.context.files[]`.
 
 Subscribers never auto-download inside the Hub client library; the application
-(or Slicer `resource_server_hub.py`) calls `fetch_all_payloads` / `fetchAllPayloads`
+(or Slicer `service_provider_hub.py`) calls `fetch_all_payloads` / `fetchAllPayloads`
 before handling the event.
 
 Authoritative hub code: `hub/hub.py`. Matching clients:
@@ -36,7 +36,7 @@ Filename rules when storing bytes: `VolView/server/hub/filename-policy.md`.
 | Keep `/bind/{endpoint}` JSON-safe and small | WS carries metadata + `payloadIds[]` only |
 | Move hundreds of DICOM slices efficiently | One publish → one WS message → N parallel GETs |
 | Let receivers control memory and timing | Download is explicit, not on every WS frame |
-| Resource servers behind firewalls | Outbound WSS + HTTPS only to the hub |
+| Service providers behind firewalls | Outbound WSS + HTTPS only to the hub |
 
 ---
 
@@ -91,7 +91,7 @@ Each entry describes one file before upload:
 - **`byteLength`** — must match the following multipart part size
 - **`mimeType`** — optional; part may use `application/dicom`,
   `application/octet-stream`, or this value
-- **`dicomMetadata`** — optional DICOM JSON tags for resource-server filtering
+- **`dicomMetadata`** — optional DICOM JSON tags for service-provider filtering
 - Publishers may set **`data`** in memory; the client strips it and sends bytes in
   the multipart parts only
 
@@ -192,7 +192,7 @@ sequenceDiagram
     Client->>App: enriched message
 ```
 
-**Slicer (`resource_server_hub.py`):** the hub asyncio loop calls
+**Slicer (`service_provider_hub.py`):** the hub asyncio loop calls
 `fetch_all_payloads()` **before** dispatching to the provider `onMessage` script,
 so TotalSegmentator and similar handlers see `context.files[].data` already set.
 
@@ -208,7 +208,7 @@ so TotalSegmentator and similar handlers see `context.files[].data` already set.
 | `HUB_CLIENT_HTTP_PAYLOAD_PROGRESS_INTERVAL` | 25 | Log `Download … completed=N/M …` |
 | Transport | `http.client` + thread pool | Fresh TCP per file; one retry on connection reset |
 
-Use **`127.0.0.1`** in local hub URLs when possible (`ResourceServers.py`
+Use **`127.0.0.1`** in local hub URLs when possible (`ServiceProviders.py`
 already does for `VOLVIEW-HUB`).
 
 vtk-js / browser: `fetchAllPayloads()` uses the same concurrency constant and
@@ -277,6 +277,6 @@ VolView → local hub → TotalSegmentator on topic `USER-1`:
 | Browser client | `vtk-js/Sources/IO/Core/HubClient/` |
 | VolView app | `VolView/src/io/hub-client.ts`, `build-dicom-send-manifest.ts`, `build-nifti-send-context.ts` |
 | OHIF | `Viewers/extensions/cast/src/services/CastService/`, `Viewers/extensions/cast/src/cast/` |
-| Slicer hub loop | `resource_servers/runtime/resource_server_hub.py` |
-| Provider scripts | `resource_servers/runtime/provider_runtime.py`, `resource_servers/products/` |
+| Slicer hub loop | `service_providers/runtime/service_provider_hub.py` |
+| Provider scripts | `service_providers/runtime/provider_runtime.py`, `service_providers/products/` |
 

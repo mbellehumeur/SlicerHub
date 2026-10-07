@@ -1,4 +1,4 @@
-# TotalSegmentator Hub resource server
+# TotalSegmentator Hub service provider
 
 ## Standalone CLI (no Slicer UI)
 
@@ -8,7 +8,7 @@ From `HubInterface/` with a hub already listening (e.g. `--port 2018`):
 pip install -e python_client
 pip install aiohttp
 # Inference deps are operator-managed (TotalSegmentator / torch / highdicom), or use PythonSlicer on PATH
-python resource_servers/products/total_segmentator.py --local
+python service_providers/products/total_segmentator.py --local
 ```
 
 `--local` connects to `http://127.0.0.1:2018`. Omit it to use the default cloud hub.
@@ -17,7 +17,7 @@ The CLI reuses the same job body as the Slicer **onMessage** path (`dicom-send` 
 
 ## Slicer Hub setup
 
-In **Resource Servers**, add or edit a row:
+In **Service Providers**, add or edit a row:
 
 | Field | Value |
 |-------|--------|
@@ -25,11 +25,11 @@ In **Resource Servers**, add or edit a row:
 | Version | `1.0` |
 | Description | e.g. Total Segmentator CT segmentation |
 | Hub | `SLICER-HUB` or `SLICER-HUB-CLOUD` |
-| onMessage script | `resource_servers/products/total_segmentator.py` |
+| onMessage script | `service_providers/products/total_segmentator.py` |
 
 Click **Connect**. The subscriber name (`TOTALSEG-XXXXXX`) appears only in the **hub admin portal**. Hub events subscribed for `TOTALSEG`: `dicom-send`, `nifti-send`, `status-request`.
 
-On `status-request`, the resource server hub answers with `{ source: "status", product, items: [{ availability: online }] }`. While a segmentation job is running, `items` also includes `{ key: "job", value: "running" }` (see `build_status_response` in `total_segmentator.py`).
+On `status-request`, the service provider hub answers with `{ source: "status", product, items: [{ availability: online }] }`. While a segmentation job is running, `items` also includes `{ key: "job", value: "running" }` (see `build_status_response` in `total_segmentator.py`).
 
 ### `status-update` (job log to requester)
 
@@ -67,9 +67,9 @@ VolView subscribes to `status-update`, appends each `context.message` to the **J
 textarea in the Total Segmentator dialog, and leaves the dialog open after upload so lines
 stream in live. Non-VolView sends (empty requester) still log locally only.
 
-**Disconnect the AIBRAIN resource server** while testing TotalSegmentator. If both are connected, AIBRAIN immediately publishes the demo `ai-results-mrbrain.dcm` on every `dicom-send` (the Hub module now skips that when multiple resource servers are connected, but using one resource server avoids confusion).
+**Disconnect the AIBRAIN service provider** while testing TotalSegmentator. If both are connected, AIBRAIN immediately publishes the demo `ai-results-mrbrain.dcm` on every `dicom-send` (the Hub module now skips that when multiple service providers are connected, but using one service provider avoids confusion).
 
-Requires the **TotalSegmentator** Slicer extension (Python package `totalsegmentator`) when using the Slicer path. For plain-Python CLI, install TotalSegmentator into that environment (not pinned in `resource_servers/requirements.txt`). DICOM SEG output also needs **`highdicom`**.
+Requires the **TotalSegmentator** Slicer extension (Python package `totalsegmentator`) when using the Slicer path. For plain-Python CLI, install TotalSegmentator into that environment (not pinned in `service_providers/requirements.txt`). DICOM SEG output also needs **`highdicom`**.
 
 Inference runs in a **subprocess** (`TotalSegmentator` console script / `PythonSlicer` when available, else `python -m totalsegmentator.bin.TotalSegmentator`). That avoids Windows nnU-Net multiprocessing failures inside a live Slicer GUI process.
 

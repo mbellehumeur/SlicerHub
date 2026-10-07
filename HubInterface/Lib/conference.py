@@ -9,7 +9,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
-from .ResourceServers import HUBS
+from .ServiceProviders import HUBS
 
 LOGGER = logging.getLogger("HubInterface.Conference")
 

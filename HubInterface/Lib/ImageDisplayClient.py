@@ -15,7 +15,7 @@ from slicer.i18n import tr as _
 from hub_client import generate_subscriber_name
 from .conference import hub_endpoint_for_name
 from .ConferenceDialog import ConferenceDialog
-from .ResourceServers import (
+from .ServiceProviders import (
     DEFAULT_HUB_NAME,
     HUBS,
     hub_admin_url_for_name,

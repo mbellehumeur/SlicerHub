@@ -1,20 +1,20 @@
 #!/usr/bin/env python3
-"""TotalSegmentator Hub resource server — Slicer onMessage + standalone CLI.
+"""TotalSegmentator Hub service provider — Slicer onMessage + standalone CLI.
 
-Slicer Slicer Hub (Resource Servers): point the onMessage script path at this file.
+Slicer Slicer Hub (Service Providers): point the onMessage script path at this file.
 
 Standalone (plain Python, no Slicer UI) from ``HubInterface/``:
 
     pip install -e python_client
     pip install aiohttp
     # Optional: TotalSegmentator + torch in this Python, or PythonSlicer on PATH
-    python resource_servers/products/total_segmentator.py --local
+    python service_providers/products/total_segmentator.py --local
 
 Default hub is SLICER-HUB-CLOUD; ``--local`` uses ``http://127.0.0.1:2018``.
 
-Why the Slicer onMessage path is safe (cross-references to ``Lib/resource_server_hub.py``):
+Why the Slicer onMessage path is safe (cross-references to ``Lib/service_provider_hub.py``):
 
-- For ``dicom-send`` and ``nifti-send``, ``_dispatch_resource_server_on_message``
+- For ``dicom-send`` and ``nifti-send``, ``_dispatch_service_provider_on_message``
   already invokes the handler via ``asyncio.to_thread`` (one worker thread),
   off both the hub asyncio loop and the Slicer Qt UI thread.
 - The hub does **not** call ``fetch_all_payloads`` before those events; bytes are
@@ -44,12 +44,12 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
-_RS_ROOT = _SCRIPT_DIR.parent
+_SP_ROOT = _SCRIPT_DIR.parent
 for _extra in (
     _SCRIPT_DIR,
-    _RS_ROOT,
-    _RS_ROOT / "runtime",
-    _RS_ROOT.parent / "python_client" / "src",
+    _SP_ROOT,
+    _SP_ROOT / "runtime",
+    _SP_ROOT.parent / "python_client" / "src",
 ):
     _extra_str = str(_extra)
     if _extra.is_dir() and _extra_str not in sys.path:
@@ -59,7 +59,7 @@ from provider_runtime import (
     HubPayloadTruncatedError,
     extract_all_dicom_send_files_to_dir,
     extract_all_nifti_send_files_to_dir,
-    get_active_resource_server_products,
+    get_active_service_provider_products,
     publish_dicom_send_file,
     publish_status_update,
     record_dicom_send_received,
@@ -310,7 +310,7 @@ _job_busy = False
 
 
 def build_status_response(provider: Any) -> Dict[str, Any]:
-    """Return ``status-response`` payload (``resource_server_hub`` calls this)."""
+    """Return ``status-response`` payload (``service_provider_hub`` calls this)."""
     product_name = getattr(provider, "product_name", "") or DEFAULT_PRODUCT_NAME
     items: list[Dict[str, str]] = [
         {"key": "availability", "value": "online"},
@@ -595,7 +595,7 @@ def _run_segmentation_job_body(
                 output_file,
                 topic,
                 product_name,
-                ", ".join(get_active_resource_server_products()) or "(none)",
+                ", ".join(get_active_service_provider_products()) or "(none)",
             )
     except Exception as exc:
         _status_exception("Segmentation failed: %s", exc)
@@ -978,7 +978,7 @@ def _find_output_dicom(output_dir: Path) -> Optional[Path]:
 
 
 # ---------------------------------------------------------------------------
-# Standalone CLI (resource_server.run_sync) — Slicer onMessage path unchanged
+# Standalone CLI (service_provider.run_sync) — Slicer onMessage path unchanged
 # ---------------------------------------------------------------------------
 
 
@@ -1090,15 +1090,15 @@ def on_nifti_send(
 
 
 if __name__ == "__main__":
-    from resource_server import ResourceServerConfig, ResourceServerHandlers, run_sync
+    from service_provider import ServiceProviderConfig, ServiceProviderHandlers, run_sync
 
-    HANDLERS = ResourceServerHandlers(
+    HANDLERS = ServiceProviderHandlers(
         on_dicom_send=on_dicom_send,
         on_nifti_send=on_nifti_send,
         on_send_download_start=on_send_download_start,
         build_status_response=build_status_response,
     )
     run_sync(
-        ResourceServerConfig(product_name=DEFAULT_PRODUCT_NAME),
+        ServiceProviderConfig(product_name=DEFAULT_PRODUCT_NAME),
         HANDLERS,
     )

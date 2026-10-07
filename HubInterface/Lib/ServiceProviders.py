@@ -1,4 +1,4 @@
-"""Slicer Hub — Resource Servers subsection (hub connect, onMessage scripts)."""
+"""Slicer Hub — Service Providers subsection (hub connect, onMessage scripts)."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ from slicer.i18n import tr as _
 
 from hub_client import HubClientOptions, HubConfig, SessionConfig, SlicerHubClient
 
-LOGGER = logging.getLogger("HubInterface.ResourceServers")
+LOGGER = logging.getLogger("HubInterface.ServiceProviders")
 LOGGER.setLevel(logging.INFO)
 
 # --- Hub config (align with Viewers/platform/app/public/config/hub.js) ---
@@ -69,9 +69,9 @@ DEFAULT_DESCRIPTION = "Fully automatic whole-body CT segmentation of 104 structu
 
 
 def default_aibrain_script_path() -> str:
-    from .repo_paths import resource_server_products_dir
+    from .repo_paths import service_provider_products_dir
 
-    return str(resource_server_products_dir() / "aibrain_on_message.py")
+    return str(service_provider_products_dir() / "aibrain_on_message.py")
 
 
 DEFAULT_SCRIPT_PATH = default_aibrain_script_path()
@@ -90,7 +90,7 @@ MAIN_QUEUE_TIMER_MS = 50
 
 
 @dataclass
-class ResourceServerConfig:
+class ServiceProviderConfig:
     hub_name: str
     product_name: str
     product_version: str
@@ -98,12 +98,12 @@ class ResourceServerConfig:
     script_path: str
 
 
-def subscribe_events_for_resource_server(cfg: ResourceServerConfig) -> List[str]:
+def subscribe_events_for_service_provider(cfg: ServiceProviderConfig) -> List[str]:
     return list(EVENTS)
 
 
-DEFAULT_RESOURCE_SERVERS = [
-    ResourceServerConfig(
+DEFAULT_SERVICE_PROVIDERS = [
+    ServiceProviderConfig(
         DEFAULT_HUB_NAME,
         DEFAULT_PRODUCT_NAME,
         DEFAULT_PRODUCT_VERSION,
@@ -113,14 +113,14 @@ DEFAULT_RESOURCE_SERVERS = [
 ]
 
 _SETTINGS_GROUP = "HubInterface"
-_SETTINGS_KEY_RESOURCE_SERVERS = "resourceServers"
-_SETTINGS_KEY_RESOURCE_SERVERS_LEGACY = "serviceProviders"
+_SETTINGS_KEY_SERVICE_PROVIDERS = "serviceProviders"
+_SETTINGS_KEY_SERVICE_PROVIDERS_LEGACY = "resourceServers"
 
 EMPTY_FHIRCAST_CONTEXT = {"context.type": "", "context": []}
 
 
-def _config_from_dict(data: Dict[str, Any]) -> ResourceServerConfig:
-    return ResourceServerConfig(
+def _config_from_dict(data: Dict[str, Any]) -> ServiceProviderConfig:
+    return ServiceProviderConfig(
         hub_name=normalize_hub_name(str(data.get("hub_name") or DEFAULT_HUB_NAME)),
         product_name=str(data.get("product_name") or DEFAULT_PRODUCT_NAME),
         product_version=str(data.get("product_version") or DEFAULT_PRODUCT_VERSION),
@@ -129,36 +129,36 @@ def _config_from_dict(data: Dict[str, Any]) -> ResourceServerConfig:
     )
 
 
-def load_saved_resource_servers() -> List[ResourceServerConfig]:
+def load_saved_service_providers() -> List[ServiceProviderConfig]:
     settings = qt.QSettings()
     settings.beginGroup(_SETTINGS_GROUP)
-    raw = settings.value(_SETTINGS_KEY_RESOURCE_SERVERS, "")
+    raw = settings.value(_SETTINGS_KEY_SERVICE_PROVIDERS, "")
     if not raw:
-        raw = settings.value(_SETTINGS_KEY_RESOURCE_SERVERS_LEGACY, "")
+        raw = settings.value(_SETTINGS_KEY_SERVICE_PROVIDERS_LEGACY, "")
     settings.endGroup()
     if not raw:
         return []
     try:
         payload = json.loads(str(raw))
     except (json.JSONDecodeError, TypeError) as exc:
-        LOGGER.warning("Could not load saved resource servers: %s", exc)
+        LOGGER.warning("Could not load saved service providers: %s", exc)
         return []
     if not isinstance(payload, list):
         return []
-    servers: List[ResourceServerConfig] = []
+    servers: List[ServiceProviderConfig] = []
     for item in payload:
         if isinstance(item, dict):
             servers.append(_config_from_dict(item))
     return servers
 
 
-def save_resource_servers_to_settings(
-    servers: List[ResourceServerConfig],
+def save_service_providers_to_settings(
+    servers: List[ServiceProviderConfig],
 ) -> None:
     settings = qt.QSettings()
     settings.beginGroup(_SETTINGS_GROUP)
     settings.setValue(
-        _SETTINGS_KEY_RESOURCE_SERVERS,
+        _SETTINGS_KEY_SERVICE_PROVIDERS,
         json.dumps([asdict(cfg) for cfg in servers]),
     )
     settings.endGroup()
@@ -187,14 +187,14 @@ def local_slicer_hub_admin_url(port: int) -> str:
     return urljoin(hub_base, "admin?theme=3dslicer")
 
 
-from resource_server_hub import (  # noqa: E402
-    ResourceServerHubConnection,
+from service_provider_hub import (  # noqa: E402
+    ServiceProviderHubConnection,
     disconnect_all_active_connections,
 )
 
 
-def _load_resource_server_script_module(path: str):
-    """Import a resource-server onMessage script; return the module or ``None``."""
+def _load_service_provider_script_module(path: str):
+    """Import a service-provider onMessage script; return the module or ``None``."""
     normalized = (path or "").strip()
     if not normalized or not os.path.isfile(normalized):
         return None
@@ -209,7 +209,7 @@ def _load_resource_server_script_module(path: str):
     try:
         spec = importlib.util.spec_from_file_location(module_name, normalized)
         if spec is None or spec.loader is None:
-            LOGGER.warning("Could not load resource server script: %s", normalized)
+            LOGGER.warning("Could not load service provider script: %s", normalized)
             return None
         module = importlib.util.module_from_spec(spec)
         sys.modules[module_name] = module
@@ -217,15 +217,15 @@ def _load_resource_server_script_module(path: str):
         return module
     except Exception as exc:
         LOGGER.exception(
-            "Resource server script import failed path=%s: %s",
+            "Service provider script import failed path=%s: %s",
             normalized,
             exc,
         )
         return None
 
 
-def resource_server_status_payload(
-    resource_server: ResourceServerConfig, product_name: str
+def service_provider_status_payload(
+    service_provider: ServiceProviderConfig, product_name: str
 ) -> Dict[str, Any]:
     """Build ``status-response`` data; scripts may override via ``build_status_response``."""
     default: Dict[str, Any] = {
@@ -233,19 +233,19 @@ def resource_server_status_payload(
         "product": product_name,
         "items": [{"key": "availability", "value": "online"}],
     }
-    module = _load_resource_server_script_module(resource_server.script_path)
+    module = _load_service_provider_script_module(service_provider.script_path)
     if module is None:
         return default
     builder = getattr(module, "build_status_response", None)
     if not callable(builder):
         return default
     try:
-        payload = builder(resource_server)
+        payload = builder(service_provider)
     except Exception as exc:
         LOGGER.warning(
             "build_status_response failed product=%s script=%s: %s",
-            resource_server.product_name,
-            resource_server.script_path,
+            service_provider.product_name,
+            service_provider.script_path,
             exc,
         )
         return default
@@ -258,14 +258,14 @@ def resource_server_status_payload(
 
 
 def build_idc_claude_payload(
-    resource_server: ResourceServerConfig, request_context: Dict[str, Any]
+    service_provider: ServiceProviderConfig, request_context: Dict[str, Any]
 ) -> Dict[str, Any]:
     """Build ``idc-claude-response`` data via script ``build_idc_claude_response``."""
     default: Dict[str, Any] = {
         "source": "idc-claude",
         "error": "IDC Claude script not configured",
     }
-    module = _load_resource_server_script_module(resource_server.script_path)
+    module = _load_service_provider_script_module(service_provider.script_path)
     if module is None:
         return default
     builder = getattr(module, "build_idc_claude_response", None)
@@ -275,12 +275,12 @@ def build_idc_claude_payload(
             "error": "Script has no build_idc_claude_response callable",
         }
     try:
-        payload = builder(request_context, resource_server)
+        payload = builder(request_context, service_provider)
     except Exception as exc:
         LOGGER.warning(
             "build_idc_claude_response failed product=%s script=%s: %s",
-            resource_server.product_name,
-            resource_server.script_path,
+            service_provider.product_name,
+            service_provider.script_path,
             exc,
         )
         return {"source": "idc-claude", "error": str(exc)}
@@ -292,17 +292,17 @@ def build_idc_claude_payload(
     return payload
 
 
-def run_resource_server_on_message(
-    resource_server: ResourceServerConfig, message: Dict[str, Any]
+def run_service_provider_on_message(
+    service_provider: ServiceProviderConfig, message: Dict[str, Any]
 ) -> None:
-    """Load resource server script and call ``onMessage(message, resource_server)`` if defined."""
-    path = (resource_server.script_path or "").strip()
+    """Load service provider script and call ``onMessage(message, service_provider)`` if defined."""
+    path = (service_provider.script_path or "").strip()
     if not path:
         return
     if not os.path.isfile(path):
-        LOGGER.warning("Resource server script not found: %s", path)
+        LOGGER.warning("Service provider script not found: %s", path)
         return
-    module = _load_resource_server_script_module(path)
+    module = _load_service_provider_script_module(path)
     if module is None:
         return
     handler = getattr(module, "onMessage", None)
@@ -310,35 +310,35 @@ def run_resource_server_on_message(
         LOGGER.warning("Script has no onMessage callable: %s", path)
         return
     try:
-        handler(message, resource_server)
+        handler(message, service_provider)
     except Exception as exc:
         LOGGER.exception(
-            "Resource server onMessage failed product=%s script=%s: %s",
-            resource_server.product_name,
+            "Service provider onMessage failed product=%s script=%s: %s",
+            service_provider.product_name,
             path,
             exc,
         )
 
 
-def run_resource_server_warmup_on_connect(
-    resource_server: ResourceServerConfig,
+def run_service_provider_warmup_on_connect(
+    service_provider: ServiceProviderConfig,
 ) -> None:
-    """Call script ``warmup_on_connect(resource_server)`` when defined."""
-    path = (resource_server.script_path or "").strip()
+    """Call script ``warmup_on_connect(service_provider)`` when defined."""
+    path = (service_provider.script_path or "").strip()
     if not path or not os.path.isfile(path):
         return
-    module = _load_resource_server_script_module(path)
+    module = _load_service_provider_script_module(path)
     if module is None:
         return
     warmup = getattr(module, "warmup_on_connect", None)
     if not callable(warmup):
         return
     try:
-        warmup(resource_server)
+        warmup(service_provider)
     except Exception as exc:
         LOGGER.warning(
             "warmup_on_connect failed product=%s script=%s: %s",
-            resource_server.product_name,
+            service_provider.product_name,
             path,
             exc,
         )
@@ -379,7 +379,7 @@ def build_hub_client(
 
 
 _PROVIDER_FRAME_STYLE = """
-QFrame#HubResourceServerFrame {
+QFrame#HubServiceProviderFrame {
   border: 3px solid palette(dark);
   border-radius: 8px;
   background-color: palette(base);
@@ -462,21 +462,21 @@ def _provider_action_column_width(
     return max(row_widths, default=0) + 8
 
 
-class ResourceServerRow:
-    """One resource server row (QFrame)."""
+class ServiceProviderRow:
+    """One service provider row (QFrame)."""
 
     def __init__(
         self,
         parent: qt.QWidget,
-        widget: "ResourceServersWidget",
-        config: Optional[ResourceServerConfig] = None,
-        on_remove: Optional[Callable[["ResourceServerRow"], None]] = None,
+        widget: "ServiceProvidersWidget",
+        config: Optional[ServiceProviderConfig] = None,
+        on_remove: Optional[Callable[["ServiceProviderRow"], None]] = None,
     ) -> None:
         self._widget = widget
         self._on_remove = on_remove
         self._script_path = ""
-        self.hub = ResourceServerHubConnection(widget.post_ui)
-        cfg = config or ResourceServerConfig(
+        self.hub = ServiceProviderHubConnection(widget.post_ui)
+        cfg = config or ServiceProviderConfig(
             DEFAULT_HUB_NAME,
             DEFAULT_PRODUCT_NAME,
             DEFAULT_PRODUCT_VERSION,
@@ -485,7 +485,7 @@ class ResourceServerRow:
         )
 
         self.frame: Optional[qt.QFrame] = qt.QFrame(parent)
-        self.frame.setObjectName("HubResourceServerFrame")
+        self.frame.setObjectName("HubServiceProviderFrame")
         self.frame.setFrameShape(qt.QFrame.NoFrame)
         self.frame.setStyleSheet(_PROVIDER_FRAME_STYLE)
         self.frame.setMinimumHeight(160)
@@ -710,10 +710,10 @@ class ResourceServerRow:
         if not self._on_remove:
             return
         cfg = self.to_config()
-        label = cfg.product_name or cfg.description or _("this resource server")
+        label = cfg.product_name or cfg.description or _("this service provider")
         if not slicer.util.confirmYesNoDisplay(
-            _('Remove resource server "{name}"?').format(name=label),
-            windowTitle=_("Remove resource server"),
+            _('Remove service provider "{name}"?').format(name=label),
+            windowTitle=_("Remove service provider"),
             parent=self.frame,
         ):
             return
@@ -725,8 +725,8 @@ class ResourceServerRow:
     def _on_disconnect(self) -> None:
         self._widget.disconnect_row(self)
 
-    def to_config(self) -> ResourceServerConfig:
-        return ResourceServerConfig(
+    def to_config(self) -> ServiceProviderConfig:
+        return ServiceProviderConfig(
             hub_name=self.hubComboBox.currentText,
             product_name=self.productNameEdit.text.strip(),
             product_version=self.versionEdit.text.strip(),
@@ -783,7 +783,7 @@ class ResourceServerRow:
             self.disconnectButton.enabled = False
             self.set_connection_locked(False)
             self.set_action_buttons_enabled(True)
-            self._widget._update_resource_server_remove_buttons()
+            self._widget._update_service_provider_remove_buttons()
         elif state == "disconnected":
             self._apply_status_style("idle")
             self.statusLabel.text = _("Disconnected")
@@ -791,7 +791,7 @@ class ResourceServerRow:
             self.disconnectButton.enabled = False
             self.set_connection_locked(False)
             self.set_action_buttons_enabled(True)
-            self._widget._update_resource_server_remove_buttons()
+            self._widget._update_service_provider_remove_buttons()
         elif state == "error":
             self._apply_status_style("error")
             reason = (_detail or {}).get("reason")
@@ -804,13 +804,13 @@ class ResourceServerRow:
             self._show_disconnect_active()
 
 
-class ResourceServersWidget:
-    """UI and actions for the Resource Servers section."""
+class ServiceProvidersWidget:
+    """UI and actions for the Service Providers section."""
 
     def __init__(self) -> None:
-        self._resourceServerRows: List[ResourceServerRow] = []
+        self._serviceProviderRows: List[ServiceProviderRow] = []
         self._section: Optional[qt.QWidget] = None
-        self.resourceServersListLayout: Optional[qt.QVBoxLayout] = None
+        self.serviceProvidersListLayout: Optional[qt.QVBoxLayout] = None
         self._main_queue: queue.Queue[Callable[[], None]] = queue.Queue()
         self._main_queue_running = False
         self._setup_complete = False
@@ -825,40 +825,40 @@ class ResourceServersWidget:
         self._section = section
         layout = qt.QVBoxLayout(section)
 
-        self.resourceServersScrollArea = qt.QScrollArea()
-        self.resourceServersScrollArea.setWidgetResizable(True)
-        self.resourceServersScrollArea.setFrameShape(qt.QFrame.NoFrame)
-        self.resourceServersScrollArea.setMinimumHeight(320)
-        self.resourceServersScrollArea.setMaximumHeight(640)
-        self.resourceServersListWidget = qt.QWidget()
-        self.resourceServersListLayout = qt.QVBoxLayout(self.resourceServersListWidget)
-        self.resourceServersListLayout.setContentsMargins(0, 0, 0, 0)
-        self.resourceServersListLayout.setSpacing(18)
-        self.resourceServersScrollArea.setWidget(self.resourceServersListWidget)
-        layout.addWidget(self.resourceServersScrollArea)
+        self.serviceProvidersScrollArea = qt.QScrollArea()
+        self.serviceProvidersScrollArea.setWidgetResizable(True)
+        self.serviceProvidersScrollArea.setFrameShape(qt.QFrame.NoFrame)
+        self.serviceProvidersScrollArea.setMinimumHeight(320)
+        self.serviceProvidersScrollArea.setMaximumHeight(640)
+        self.serviceProvidersListWidget = qt.QWidget()
+        self.serviceProvidersListLayout = qt.QVBoxLayout(self.serviceProvidersListWidget)
+        self.serviceProvidersListLayout.setContentsMargins(0, 0, 0, 0)
+        self.serviceProvidersListLayout.setSpacing(18)
+        self.serviceProvidersScrollArea.setWidget(self.serviceProvidersListWidget)
+        layout.addWidget(self.serviceProvidersScrollArea)
 
         addRemoveRow = qt.QHBoxLayout()
-        self.addResourceServerButton = qt.QPushButton(_("Add resource server"))
-        self.addResourceServerButton.clicked.connect(self.onAddResourceServer)
-        addRemoveRow.addWidget(self.addResourceServerButton)
+        self.addServiceProviderButton = qt.QPushButton(_("Add service provider"))
+        self.addServiceProviderButton.clicked.connect(self.onAddServiceProvider)
+        addRemoveRow.addWidget(self.addServiceProviderButton)
         addRemoveRow.addStretch(1)
         layout.addLayout(addRemoveRow)
 
         try:
-            saved = load_saved_resource_servers()
-            servers = saved if saved else list(DEFAULT_RESOURCE_SERVERS)
+            saved = load_saved_service_providers()
+            servers = saved if saved else list(DEFAULT_SERVICE_PROVIDERS)
             for server in servers:
-                self._add_resource_server_row(server)
+                self._add_service_provider_row(server)
         except Exception as exc:
-            LOGGER.exception("Failed to create default resource server row: %s", exc)
+            LOGGER.exception("Failed to create default service provider row: %s", exc)
             slicer.util.errorDisplay(
-                f"Slicer Hub UI error (resource server row): {exc}"
+                f"Slicer Hub UI error (service provider row): {exc}"
             )
-        self.resourceServersListLayout.addStretch(1)
+        self.serviceProvidersListLayout.addStretch(1)
 
     def cleanup(self) -> None:
         self.exit()
-        for row in list(self._resourceServerRows):
+        for row in list(self._serviceProviderRows):
             row.hub.disconnectHub()
         disconnect_all_active_connections()
         self._main_queue_drain()
@@ -867,7 +867,7 @@ class ResourceServersWidget:
         self._main_queue_running = True
         self._main_queue_timer.start()
         self._main_queue_drain()
-        for row in self._resourceServerRows:
+        for row in self._serviceProviderRows:
             self._update_row_status(row)
 
     def exit(self) -> None:
@@ -890,62 +890,62 @@ class ResourceServersWidget:
             return
         self._main_queue_drain()
 
-    def _add_resource_server_row(
-        self, config: Optional[ResourceServerConfig] = None
-    ) -> ResourceServerRow:
-        if self.resourceServersListLayout is None:
-            raise RuntimeError("ResourceServersWidget.setup not called")
+    def _add_service_provider_row(
+        self, config: Optional[ServiceProviderConfig] = None
+    ) -> ServiceProviderRow:
+        if self.serviceProvidersListLayout is None:
+            raise RuntimeError("ServiceProvidersWidget.setup not called")
         try:
-            row = ResourceServerRow(
-                self.resourceServersListWidget,
+            row = ServiceProviderRow(
+                self.serviceProvidersListWidget,
                 self,
                 config=config,
-                on_remove=self._remove_resource_server_row,
+                on_remove=self._remove_service_provider_row,
             )
         except Exception as exc:
-            LOGGER.exception("Failed to add resource server row: %s", exc)
-            slicer.util.errorDisplay(f"Could not add resource server: {exc}")
+            LOGGER.exception("Failed to add service provider row: %s", exc)
+            slicer.util.errorDisplay(f"Could not add service provider: {exc}")
             raise
-        self._resourceServerRows.append(row)
-        insert_at = max(0, self.resourceServersListLayout.count() - 1)
-        self.resourceServersListLayout.insertWidget(insert_at, row.frame)
+        self._serviceProviderRows.append(row)
+        insert_at = max(0, self.serviceProvidersListLayout.count() - 1)
+        self.serviceProvidersListLayout.insertWidget(insert_at, row.frame)
         row.frame.show()
-        self.resourceServersListWidget.adjustSize()
-        self._update_resource_server_remove_buttons()
+        self.serviceProvidersListWidget.adjustSize()
+        self._update_service_provider_remove_buttons()
         return row
 
-    def _remove_resource_server_row(self, row: ResourceServerRow) -> None:
-        if len(self._resourceServerRows) <= 1:
+    def _remove_service_provider_row(self, row: ServiceProviderRow) -> None:
+        if len(self._serviceProviderRows) <= 1:
             return
-        if row not in self._resourceServerRows:
+        if row not in self._serviceProviderRows:
             return
         row.hub.disconnectHub()
-        self._resourceServerRows.remove(row)
+        self._serviceProviderRows.remove(row)
         row.removeButton.setEnabled(False)
-        qt.QTimer.singleShot(0, lambda r=row: self._destroy_resource_server_row(r))
+        qt.QTimer.singleShot(0, lambda r=row: self._destroy_service_provider_row(r))
 
-    def _destroy_resource_server_row(self, row: ResourceServerRow) -> None:
-        if self.resourceServersListLayout is None:
+    def _destroy_service_provider_row(self, row: ServiceProviderRow) -> None:
+        if self.serviceProvidersListLayout is None:
             return
         frame = row.frame
         if frame is None:
             return
         row.frame = None
-        self.resourceServersListLayout.removeWidget(frame)
+        self.serviceProvidersListLayout.removeWidget(frame)
         frame.setParent(None)
         frame.deleteLater()
-        self.resourceServersListWidget.adjustSize()
-        self._update_resource_server_remove_buttons()
+        self.serviceProvidersListWidget.adjustSize()
+        self._update_service_provider_remove_buttons()
 
-    def _update_resource_server_remove_buttons(self) -> None:
-        allow_remove = len(self._resourceServerRows) > 1
-        for row in self._resourceServerRows:
+    def _update_service_provider_remove_buttons(self) -> None:
+        allow_remove = len(self._serviceProviderRows) > 1
+        for row in self._serviceProviderRows:
             row.removeButton.setEnabled(allow_remove)
 
-    def onAddResourceServer(self) -> None:
+    def onAddServiceProvider(self) -> None:
         try:
-            self._add_resource_server_row(
-                ResourceServerConfig(
+            self._add_service_provider_row(
+                ServiceProviderConfig(
                     DEFAULT_HUB_NAME,
                     DEFAULT_PRODUCT_NAME,
                     DEFAULT_PRODUCT_VERSION,
@@ -956,13 +956,13 @@ class ResourceServersWidget:
         except Exception:
             pass
 
-    def get_resource_servers(self) -> List[ResourceServerConfig]:
-        return [row.to_config() for row in self._resourceServerRows]
+    def get_service_providers(self) -> List[ServiceProviderConfig]:
+        return [row.to_config() for row in self._serviceProviderRows]
 
-    def save_row(self, row: ResourceServerRow) -> None:
+    def save_row(self, row: ServiceProviderRow) -> None:
         cfg = row.to_config()
         if not cfg.product_name:
-            slicer.util.errorDisplay(_("Enter a product name for this resource server."))
+            slicer.util.errorDisplay(_("Enter a product name for this service provider."))
             return
         script_path = (cfg.script_path or "").strip()
         if script_path and not os.path.isfile(script_path):
@@ -971,21 +971,21 @@ class ResourceServersWidget:
             )
             return
         try:
-            save_resource_servers_to_settings(self.get_resource_servers())
+            save_service_providers_to_settings(self.get_service_providers())
             LOGGER.info(
-                "Saved %d resource server(s) to settings",
-                len(self._resourceServerRows),
+                "Saved %d service provider(s) to settings",
+                len(self._serviceProviderRows),
             )
         except Exception as exc:
-            LOGGER.exception("Failed to save resource servers: %s", exc)
+            LOGGER.exception("Failed to save service providers: %s", exc)
             slicer.util.errorDisplay(
-                _("Could not save resource servers: {error}").format(error=exc)
+                _("Could not save service providers: {error}").format(error=exc)
             )
 
-    def connect_row(self, row: ResourceServerRow) -> None:
+    def connect_row(self, row: ServiceProviderRow) -> None:
         cfg = row.to_config()
         if not cfg.product_name:
-            slicer.util.errorDisplay(_("Enter a product name for this resource server."))
+            slicer.util.errorDisplay(_("Enter a product name for this service provider."))
             return
         if row.hub.isHubThreadRunning():
             return
@@ -1007,11 +1007,11 @@ class ResourceServersWidget:
             LOGGER.warning("Hub connect failed: %s", exc)
             self._update_row_status(row)
 
-    def disconnect_row(self, row: ResourceServerRow) -> None:
+    def disconnect_row(self, row: ServiceProviderRow) -> None:
         row.hub.disconnectHub()
         self._update_row_status(row)
 
-    def _update_row_status(self, row: ResourceServerRow) -> None:
+    def _update_row_status(self, row: ServiceProviderRow) -> None:
         if row.hub.isHubConnected():
             row._apply_status_style("connected")
             row.statusLabel.text = _connected_status_text(row.hub.get_message_count())
@@ -1025,4 +1025,4 @@ class ResourceServersWidget:
             row.disconnectButton.enabled = False
             row.set_connection_locked(False)
             row.set_action_buttons_enabled(True)
-            self._update_resource_server_remove_buttons()
+            self._update_service_provider_remove_buttons()

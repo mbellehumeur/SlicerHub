@@ -1,4 +1,4 @@
-"""Helpers for resource-server onMessage scripts (publish, dicom-send payloads)."""
+"""Helpers for service-provider onMessage scripts (publish, dicom-send payloads)."""
 
 from __future__ import annotations
 
@@ -27,17 +27,17 @@ from hub_client import (
 )
 
 if TYPE_CHECKING:
-    from resource_server_hub import ResourceServerHubConnection
+    from service_provider_hub import ServiceProviderHubConnection
 
-LOGGER = logging.getLogger("HubInterface.ResourceServerRuntime")
+LOGGER = logging.getLogger("HubInterface.ServiceProviderRuntime")
 LOGGER.setLevel(logging.INFO)
 
-_connections: Dict[str, "ResourceServerHubConnection"] = {}
+_connections: Dict[str, "ServiceProviderHubConnection"] = {}
 _receive_log: List[Dict[str, Any]] = []
 
 
 def register_connection(
-    product_name: str, connection: "ResourceServerHubConnection"
+    product_name: str, connection: "ServiceProviderHubConnection"
 ) -> None:
     key = (product_name or "").strip()
     if key:
@@ -54,8 +54,8 @@ def get_receive_log() -> List[Dict[str, Any]]:
     return list(_receive_log)
 
 
-def get_active_resource_server_products() -> List[str]:
-    """Product names of resource servers currently connected to the hub."""
+def get_active_service_provider_products() -> List[str]:
+    """Product names of service providers currently connected to the hub."""
     return list(_connections.keys())
 
 
@@ -74,7 +74,7 @@ def _dicom_bytes_from_resource(resource: Dict[str, Any]) -> Optional[bytes]:
 
 def _resolve_hub_connection(
     product_name: Optional[str],
-) -> Optional["ResourceServerHubConnection"]:
+) -> Optional["ServiceProviderHubConnection"]:
     key = (product_name or "").strip()
     if key and key in _connections:
         return _connections[key]
@@ -518,7 +518,7 @@ def _plan_send_file_jobs(
                     "No Slicer hub client for payloadIds index=%d file=%s (active: %s)",
                     index,
                     file_name,
-                    ", ".join(get_active_resource_server_products()) or "(none)",
+                    ", ".join(get_active_service_provider_products()) or "(none)",
                 )
                 continue
             _append_hub_payload_jobs(
@@ -587,7 +587,7 @@ def _plan_send_file_jobs_to_dir(
                     "No Slicer hub client for payloadIds index=%d file=%s (active: %s)",
                     index,
                     file_name,
-                    ", ".join(get_active_resource_server_products()) or "(none)",
+                    ", ".join(get_active_service_provider_products()) or "(none)",
                 )
                 continue
             chunk_jobs: List[_SendFileJob] = []
@@ -938,14 +938,14 @@ def send_hub_request_response(
     data: Dict[str, Any],
     topic: Optional[str] = None,
 ) -> bool:
-    """Send ``<datatype>-response`` on the resource server hub WebSocket."""
+    """Send ``<datatype>-response`` on the service provider hub WebSocket."""
     key = (product_name or "").strip()
     connection = _connections.get(key)
     if not connection or not connection._client or not connection._loop:
         LOGGER.warning(
             "send_hub_request_response: no connection for product=%s (active: %s)",
             key,
-            ", ".join(get_active_resource_server_products()) or "(none)",
+            ", ".join(get_active_service_provider_products()) or "(none)",
         )
         return False
 
@@ -959,14 +959,14 @@ def send_hub_request_response(
 
 
 def publish_dicom_send_file(product_name: str, topic: str, file_path: str) -> bool:
-    """Schedule dicom-send publish on the resource server's hub connection thread."""
+    """Schedule dicom-send publish on the service provider's hub connection thread."""
     key = (product_name or "").strip()
     connection = _connections.get(key)
     if not connection:
         LOGGER.warning(
             "publish_dicom_send_file: no connection for product=%s (active: %s)",
             key,
-            ", ".join(get_active_resource_server_products()) or "(none)",
+            ", ".join(get_active_service_provider_products()) or "(none)",
         )
         return False
 
@@ -981,14 +981,14 @@ def publish_dicom_send_file(product_name: str, topic: str, file_path: str) -> bo
 
 
 def publish_nifti_send_file(product_name: str, topic: str, file_path: str) -> bool:
-    """Schedule nifti-send publish on the resource server's hub connection thread."""
+    """Schedule nifti-send publish on the service provider's hub connection thread."""
     key = (product_name or "").strip()
     connection = _connections.get(key)
     if not connection:
         LOGGER.warning(
             "publish_nifti_send_file: no connection for product=%s (active: %s)",
             key,
-            ", ".join(get_active_resource_server_products()) or "(none)",
+            ", ".join(get_active_service_provider_products()) or "(none)",
         )
         return False
 
@@ -1084,7 +1084,7 @@ def publish_idc_claude_send(
         LOGGER.warning(
             "publish_idc_claude_send: no connection for product=%s (active: %s)",
             key,
-            ", ".join(get_active_resource_server_products()) or "(none)",
+            ", ".join(get_active_service_provider_products()) or "(none)",
         )
         return False
     try:
@@ -1112,7 +1112,7 @@ def publish_status_update(
         LOGGER.warning(
             "publish_status_update: no connection for product=%s (active: %s)",
             key,
-            ", ".join(get_active_resource_server_products()) or "(none)",
+            ", ".join(get_active_service_provider_products()) or "(none)",
         )
         return False
 

@@ -1,6 +1,6 @@
-# Hub resource servers
+# Hub service providers
 
-Standalone Hub resource-server framework and product scripts.
+Standalone Hub service-provider framework and product scripts.
 
 ## Install
 
@@ -8,13 +8,13 @@ From monorepo root:
 
 ```bash
 pip install -e python_client
-pip install -r resource_servers/requirements.txt
+pip install -r service_providers/requirements.txt
 ```
 
 ## Run a product
 
 ```bash
-python resource_servers/products/neuro_seg.py --local
+python service_providers/products/neuro_seg.py --local
 ```
 
 See [docs/](docs/) for per-product guides.
