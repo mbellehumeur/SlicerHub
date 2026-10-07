@@ -12,9 +12,10 @@ Slicer Hub is a 3D Slicer extension focused on desktop integration workflows for
 
 Slicer Hub is an open-source system that provides an interoperability messaging infrastruture.  It aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original purpose is to support an [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow and [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results).
  
-This extension supplies the **HUB**, service providers, and the Slicer Qt **Image Display** client (and related desktop pieces). Together with browser clients, the system includes:
+This python extension supplies the **HUB**, service providers, and the Slicer Qt **Image Display** client (and related desktop pieces). Together with its sister repository of [javascript clients](https://github.com/mbellehumeur/SlicerHub-js-clients), the system includes:
 
 - a WebSub hub (**HUB** actor) for communication between applications and users
+- a worklist application (**WORKLIST_CLIENT** actor) 
 - open-source medical imaging viewers (**IMAGE_DISPLAY** actors)
 - open-source medical imaging inference models (**EVIDENCE_CREATOR** actors)
 - a DICOM SR reporting example (**REPORT_CREATOR** actor)
@@ -35,7 +36,7 @@ Research and 3D Slicer functionalities, also independent of IHE, are included:
 - Status-request messaging for using current information from other applications in the workflow
 - Slicer Qt Image Display client and DICOM DB study list (same websocket client)
 
-File transfer allows inference servers to send their results directly back to the viewers without storing them in PACS first. It also supports research file formats like NIfTI, NRRD, and Zarr.
+File transfer allows inference servers to send their results directly back to the viewers without storing them in PACS first. It also supports research file formats like NIfTI, NRRD, and Zarr; allowing image display clients to work directly with research servers and inference models.
 
 
 
