@@ -10,9 +10,9 @@ Slicer Hub is a 3D Slicer extension focused on desktop integration workflows for
 
 ## Overview
 
-Slicer Hub is an open-source system that provides a critical interoperability messaging infrastruture.  It aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original purpose is to support an [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow and [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results).
+Slicer Hub is an open-source system that provides an interoperability messaging infrastruture.  It aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original purpose is to support an [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow and [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results).
  
-This extension supplies the **HUB**, resource servers, and the Slicer Qt **Image Display** client (and related desktop pieces). Together with browser clients, the system includes:
+This extension supplies the **HUB**, service providers, and the Slicer Qt **Image Display** client (and related desktop pieces). Together with browser clients, the system includes:
 
 - a WebSub hub (**HUB** actor) for communication between applications and users
 - open-source medical imaging viewers (**IMAGE_DISPLAY** actors)
@@ -21,21 +21,23 @@ This extension supplies the **HUB**, resource servers, and the Slicer Qt **Image
 - the [Imaging Data Commons](https://imaging.datacommons.cancer.gov/) and the [3D Slicer](https://www.slicer.org/) DICOM DB as read-only image archives (**IMAGE_ARCHIVE** actor)
 - an authentication / identity provider with integration to the hub OIDC endpoints or built-in hub anonymous/mock authentication
 
-The system also includes features for education that are independent of the IHE Integrated Reporting workflow:
+The extension also includes features for education that are independent of the IHE Integrated Reporting workflow:
 
 - creating, saving, and uploading teaching files and cohorts for class preparation
 - conferencing for collaborative viewing and teaching
 - a vanishing brush tool for temporary annotations during conferencing
 - export to STL for 3D printing
 
-Research and 3D Slicer functionalities, also independent of IHE, are provided:
+Research and 3D Slicer functionalities, also independent of IHE, are included:
 
-- file transfer between applications
-- medical reality scenes
-- Slicer Qt Image Display client
-- Slicer DICOM DB access
+- File transfer between applications
+- Medical Reality scenes and  MRSON
+- Status-request messaging for using current information from other applications in the workflow
+- Slicer Qt Image Display client and DICOM DB study list (same websocket client)
 
 File transfer allows inference servers to send their results directly back to the viewers without storing them in PACS first. It also supports research file formats like NIfTI, NRRD, and Zarr.
+
+
 
 ## Background
 
@@ -43,7 +45,7 @@ Hub is an offshoot of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the sta
 
 [Interactive ImagingStudy-open event flow](docs/images/imagingstudy-open-flow-interactive.svg) — click to play each step of a FHIRcast ImagingStudy-open event distributed to all applications over low-latency websocket connections (worklist selection, HTTPS publish, hub fan-out, synchronized app updates).
 
-You can test websocket subscription integration with the vtk-js IO module Slicer Hub example. Open several viewer instances, open a study in the worklist and use the “Open scene views” button to view cross-product multi-host display layouts:
+You can test websocket subscription integration Slicer Hub example. Open several viewer instances, open a study in the worklist and use the “Open scene views” button to view cross-product multi-host display layouts:
 
 [Open worklist demo](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/)
 
@@ -56,9 +58,10 @@ You can test websocket subscription integration with the vtk-js IO module Slicer
 The worklist example demonstrates:
 
 - **OHIF** — Open OHIF viewer instances that stay in sync with the worklist.
+- **SlicerLive** — Open a SlicerLive  instances that stay in sync with the worklist.-=
 - **VolView** — Open VolView instances that stay in sync with the worklist.
 - **Slim** — Open Slim instances that stay in sync with the worklist.
-- **IDC MCP server** — Build a personal IDC study worklist from natural-language queries.
+
 
   <p align="center">
     <img src="docs/images/IDC_MCP_Server.png" alt="IDC MCP server" width="80%">
@@ -70,7 +73,7 @@ The worklist example demonstrates:
     <img src="docs/images/sceneviews.png" alt="Scene views" width="80%">
   </p>
 
-- **Total Segmentator** — From OHIF or VolView, send an MR or CT study to TotalSegmentator and receive segmentation results (SEG or RTSTRUCT). Connected to the hub as a resource server.
+- **Total Segmentator** — From OHIF or VolView, send an MR or CT study to TotalSegmentator and receive segmentation results (SEG or RTSTRUCT). Connected to the hub as a service provider.
 
   <p align="center">
     <img src="docs/images/VolViewTotalSegmentator.png" alt="Total Segmentator in VolView" width="80%">
@@ -86,7 +89,7 @@ Hub has a context/content sharing strategy and hub architecture that differs som
 
 ## Extension Features
 
-The extension features a hub and two hub interfaces: one for connecting backend agents like Total Segmentator (resource servers) and another to connect the Slicer viewer (Image Display client) to the hub.
+The extension features a hub and two hub interfaces: one for connecting backend agents like Total Segmentator (service providers) and another to connect the Slicer viewer (Image Display client) to the hub.
 
 ### Hub
 
@@ -102,19 +105,19 @@ The hub is the routing appliance that distributes messages and handles data tran
 
 It can be used without the Slicer extension by running the `hub.py` script.
 
-### Resource servers
+### Service Providers
 
-Resource servers are agents that provide backend services to desktop integration. This allows users to, for example, view AI results without having to send them to the archive first.
+Service Providers are agents that provide backend services to desktop integration. This allows users to, for example, view AI results without having to send them to the archive first.
 
-The resource server tab provides a visual description of how processing resources can be connected to the hub and made available to hub workflows.
+The service provider tab provides a visual description of how processing resources can be connected to the hub and made available to hub workflows.
 
 <p align="center">
-  <img src="docs/images/ResourceServerFeature.png" alt="Resource server feature" width="80%">
+  <img src="docs/images/ResourceServerFeature.png" alt="Service Provider feature" width="80%">
 </p>
 
-Resource servers subscribe to all user topics for status-request and dicom/nifti events. In the example, Total Segmentator sends binary results back to the user through the hub.
+Service Providers subscribe to all user topics for status-request and dicom/nifti events. In the example, Total Segmentator sends binary results back to the user through the hub.
 
-Since these resources do not log in as a user, they need a *resource server entry* in the customer's authorization server. This provides a client id and client secret. For the hub extension hub, they must be configured in the environment variables of the hub for the resource to connect successfully.
+Since these resources do not log in as a user, they need a *service provider entry* in the customer's authorization server. This provides a client id and client secret. For the hub extension hub, they must be configured in the environment variables of the hub for the resource to connect successfully.
 
 ### Image Display Client
 
@@ -126,11 +129,11 @@ The image display client provides a PACS client type interface to the 3D Slicer 
 
 ### Simplified, secure deployment of medical imaging services
 
-This architecture protects resource servers by eliminating direct inbound internet exposure entirely. No hostname is required and no changes to the networking environment are needed. No VPN or proxy to configure.
+This architecture protects service providers by eliminating direct inbound internet exposure entirely. No hostname is required and no changes to the networking environment are needed. No VPN or proxy to configure.
 
-Each resource server establishes only outbound encrypted connections to the hub, which functions exclusively as a routing appliance. Because no inbound ports need to be opened on hospital or enterprise networks, the resource servers remain protected behind existing firewalls and are never directly reachable from the public internet.
+Each service provider establishes only outbound encrypted connections to the hub, which functions exclusively as a routing appliance. Because no inbound ports need to be opened on hospital or enterprise networks, the service providers remain protected behind existing firewalls and are never directly reachable from the public internet.
 
-It also simplifies providing resources in-house since the IT department only needs to add a hostname and rules for the hub. They do not have to touch their networking every time a new resource server is available for use. They only have to configure a shared resource server key for it in their authorization server.
+It also simplifies providing resources in-house since the IT department only needs to add a hostname and rules for the hub. They do not have to touch their networking every time a new service provider is available for use. They only have to configure a shared service provider key for it in their authorization server.
 
 For the hub, the architecture provides a significantly reduced attack surface and minimizes operational security risk since it maintains no storage or database.
 
@@ -138,15 +141,15 @@ For the hub, the architecture provides a significantly reduced attack surface an
   <img src="docs/images/deployment.png" alt="Deployment architecture" width="100%">
 </p>
 
-After installation, the resource servers outbound ports can also be locked down, allowing access to the hub and sites needed by the resource only.
+After installation, the service providers' outbound ports can also be locked down, allowing access to the hub and sites needed by the resource only.
 
 In theory, the hub can be cloud deployed as a serverless application. In practice, many of those low-cost offerings do not support websocket services and a docker based offering is necessary like Azure WebApps or AWS Elastic Beanstalk.
 
 For high availability deployment a hot standby configuration can be used. The “reset server” button in the hub admin portal allows testing workflow behavior during failover.
 
-The hub provides a test mock auth endpoint that assigns a user when none is provided. For public web applications that do not need user authentication but want to use the resource servers, the mock endpoints provide the required functionality.
+The hub provides a test mock auth endpoint that assigns a user when none is provided. For public web applications that do not need user authentication but want to use the service providers, the mock endpoints provide the required functionality.
 
-Since the resource servers are not on the internet, you will get shared keys for the auth server. The hub can use domain name certificates.
+Since the service providers are not on the internet, you will get shared keys for the auth server. The hub can use domain name certificates.
 
 ## Installation
 
@@ -164,7 +167,7 @@ Since the resource servers are not on the internet, you will get shared keys for
 |------|---------|
 | [`HubInterface/`](HubInterface/) | Slicer module package (`HubInterface.py`, `Lib/`, `Resources/`, bundled runtime) |
 | `HubInterface/hub/` | FastAPI Slicer hub (`hub.py`) |
-| `HubInterface/resource_servers/` | Resource-server framework + products |
+| `HubInterface/resource_servers/` | Service-provider framework + products |
 | `HubInterface/image_display/` | Slicer image display runtime + CLI |
 | `HubInterface/python_client/` | Python `hub_client` package |
 | [`docs/`](docs/) | Extension docs (module docs under `docs/module/`) |
@@ -182,7 +185,7 @@ pip install -e python_client
 # Terminal 1 — Hub
 cd hub && pip install -r requirements.txt && python hub.py --port 2018
 
-# Terminal 2 — Resource server (examples)
+# Terminal 2 — Service provider (examples)
 python resource_servers/products/neuro_seg.py --local
 # python resource_servers/products/total_segmentator.py --local
 
@@ -221,7 +224,7 @@ Slicer Hub is distributed under the [MIT License](LICENSE).
 
 **IDC Claude** — builds custom worklists from natural-language queries against the [Imaging Data Commons](https://portal.imaging.datacommons.cancer.gov/) (National Cancer Institute) using Anthropic Claude. Query guidance follows the [IDC skill](https://github.com/ImagingDataCommons/imaging-data-commons-skill).
 
-**idc-index** — official [Imaging Data Commons](https://github.com/ImagingDataCommons/idc-index) Python package for local DuckDB SQL against IDC metadata and DICOM series download URLs; used by the IDC Claude resource server. If you use it in research, cite Fedorov A, et al., *Radiographics* ([2023](https://doi.org/10.1148/rg.230180)).
+**idc-index** — official [Imaging Data Commons](https://github.com/ImagingDataCommons/idc-index) Python package for local DuckDB SQL against IDC metadata and DICOM series download URLs; used by the IDC Claude service provider. If you use it in research, cite Fedorov A, et al., *Radiographics* ([2023](https://doi.org/10.1148/rg.230180)).
 
 **VolView** — open-source web viewer from [Kitware, Inc.](https://github.com/Kitware/VolView).
 
