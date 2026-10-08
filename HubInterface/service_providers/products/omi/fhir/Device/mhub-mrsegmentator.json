@@ -1,0 +1,139 @@
+{
+  "resourceType": "Device",
+  "id": "mhub-mrsegmentator",
+  "meta": {
+    "profile": [
+      "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-mrsegmentator-input"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-mrsegmentator-output"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+      "extension": [
+        {
+          "url": "citation",
+          "valueString": "Hartmut Häntze, Lina Xu, Felix J. Dorfner, Leonhard Donle, Daniel Truhn, Hugo Aerts, Mathias Prokop, Bram van Ginneken, Alessa Hering, Lisa C. Adams, and Keno K. Bressem. MRSegmentator: Robust multi-modality segmentation of 40 classes in MRI and CT sequences. arXiv, 2024."
+        }
+      ]
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+      "extension": [
+        {
+          "url": "license",
+          "valueString": "Apache 2.0"
+        }
+      ]
+    }
+  ],
+  "identifier": [
+    {
+      "system": "http://slicerhub.org/fhir/sid/device",
+      "value": "181b26fa-466d-400e-a7ec-f691465caca1"
+    }
+  ],
+  "status": "active",
+  "deviceName": [
+    {
+      "name": "MRSegmentator",
+      "type": "user-friendly-name"
+    },
+    {
+      "name": "mrsegmentator",
+      "type": "model-name"
+    }
+  ],
+  "version": [
+    {
+      "value": "0.1.0"
+    }
+  ],
+  "property": [
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "360037004",
+            "display": "Imaging modality"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://dicom.nema.org/resources/ontology/DCM",
+              "code": "MRI|CT",
+              "display": "MRI|CT"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "410656007",
+            "display": "Type of service"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+              "code": "segmentation",
+              "display": "Segmentation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "246102003",
+            "display": "Maturity level"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+              "code": "LVL2",
+              "display": "LEVEL 2"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "owner": {
+    "reference": "Organization/SlicerHub",
+    "display": "Slicer Hub"
+  },
+  "note": [
+    {
+      "text": "MRSegmentator is an AI-based pipeline for the segmentation of 40 anatomical structures in MR images (with and without contrast)."
+    },
+    {
+      "text": "Links: https://mhub.ai/models/mrsegmentator"
+    }
+  ]
+}

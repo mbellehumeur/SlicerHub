@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_node21_baseline-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_node21_baseline-output",
+  "name": "mhubgcnode21baselineoutput",
+  "title": "Chest Radiograph Nodule Locator (NODE21 Baseline) output parameters",
+  "status": "active",
+  "description": "Output contract for Chest Radiograph Nodule Locator (NODE21 Baseline) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

@@ -1,0 +1,143 @@
+{
+  "resourceType": "Device",
+  "id": "mhub-gc_stoic_baseline",
+  "meta": {
+    "profile": [
+      "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_stoic_baseline-input"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_stoic_baseline-output"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+      "extension": [
+        {
+          "url": "doi",
+          "valueUri": "https://arxiv.org/abs/2306.10484v2"
+        },
+        {
+          "url": "citation",
+          "valueString": "Luuk H. Boulogne, Julian Lorenz, Daniel Kienzle, Robin Schon, Katja Ludwig, Rainer Lienhart, Simon Jegou, Guang Li, Cong Chen, Qi Wang, Derik Shi, Mayug Maniparambil, Dominik Muller, Silvan Mertes, Niklas Schroter, Fabio Hellmann, Miriam Elia, Ine Dirks, Matias Nicolas Bossa, Abel Diaz Berenguer, Tanmoy Mukherjee, Jef Vandemeulebroucke, Hichem Sahli, Nikos Deligiannis, Panagiotis Gonidakis, Ngoc Dung Huynh, Imran Razzak, Reda Bouadjenek, Mario Verdicchio, Pasquale Borrelli, Marco Aiello, James A. Meakin, Alexander Lemm, Christoph Russ, Razvan Ionasec, Nikos Paragios, Bram van Ginneken, Marie-Pierre Revel Dubois, The STOIC2021 COVID-19 AI challenge: applying reusable training methodologies to private data, arXiv:2306.10484, 2023, https://arxiv.org/abs/2306.10484v2"
+        }
+      ]
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+      "extension": [
+        {
+          "url": "license",
+          "valueString": "MIT license"
+        }
+      ]
+    }
+  ],
+  "identifier": [
+    {
+      "system": "http://slicerhub.org/fhir/sid/device",
+      "value": "49f7d1e4-7aa9-4cb4-9f18-a1eb811cd929"
+    }
+  ],
+  "status": "active",
+  "deviceName": [
+    {
+      "name": "STOIC2021 baseline",
+      "type": "user-friendly-name"
+    },
+    {
+      "name": "gc_stoic_baseline",
+      "type": "model-name"
+    }
+  ],
+  "version": [
+    {
+      "value": "0.1.0"
+    }
+  ],
+  "property": [
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "360037004",
+            "display": "Imaging modality"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://dicom.nema.org/resources/ontology/DCM",
+              "code": "CT",
+              "display": "Computed Tomography"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "410656007",
+            "display": "Type of service"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+              "code": "diagnostics",
+              "display": "Diagnostics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "246102003",
+            "display": "Maturity level"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+              "code": "LVL2",
+              "display": "LEVEL 2"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "owner": {
+    "reference": "Organization/SlicerHub",
+    "display": "Slicer Hub"
+  },
+  "note": [
+    {
+      "text": "This model predicts the probability and severity of COVID-19 in lung-CT scans. Severe COVID-19 is defined as patient intubation or death within one month from the acquisition of the CT scan."
+    },
+    {
+      "text": "Links: https://mhub.ai/models/gc_stoic_baseline"
+    }
+  ]
+}

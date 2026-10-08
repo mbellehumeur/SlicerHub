@@ -1489,7 +1489,7 @@
                 totalConferencesElement.textContent = String(list.length);
             }
             if (list.length > 0) {
-                let tableHTML = '<table><thead><tr><th>Title</th><th>Host</th><th>Topics</th></tr></thead><tbody>';
+                let tableHTML = '<table><thead><tr><th>Title</th><th>Host</th><th>Participants</th></tr></thead><tbody>';
                 list.forEach(conf => {
                     const topics = (conf.topics || []).join(', ');
                     tableHTML += `

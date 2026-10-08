@@ -1,0 +1,143 @@
+{
+  "resourceType": "Device",
+  "id": "mhub-gc_lunglobes",
+  "meta": {
+    "profile": [
+      "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_lunglobes-input"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_lunglobes-output"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+      "extension": [
+        {
+          "url": "doi",
+          "valueUri": "https://doi.org/10.1109/TMI.2020.2995108"
+        },
+        {
+          "url": "citation",
+          "valueString": "W. Xie, C. Jacobs, J. -P. Charbonnier and B. van Ginneken, 'Relational Modeling for Robust and Efficient Pulmonary Lobe Segmentation in CT Scans,' in IEEE Transactions on Medical Imaging, vol. 39, no. 8, pp. 2664-2675, Aug. 2020, doi: 10.1109/TMI.2020.2995108."
+        }
+      ]
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+      "extension": [
+        {
+          "url": "license",
+          "valueString": "Apache 2.0"
+        }
+      ]
+    }
+  ],
+  "identifier": [
+    {
+      "system": "http://slicerhub.org/fhir/sid/device",
+      "value": "b533ed49-3e76-4aa8-bd92-264810f00a86"
+    }
+  ],
+  "status": "active",
+  "deviceName": [
+    {
+      "name": "Pulmonary Lobes Seg (RTSU-Net)",
+      "type": "user-friendly-name"
+    },
+    {
+      "name": "gc_lunglobes",
+      "type": "model-name"
+    }
+  ],
+  "version": [
+    {
+      "value": "0.1.0"
+    }
+  ],
+  "property": [
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "360037004",
+            "display": "Imaging modality"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://dicom.nema.org/resources/ontology/DCM",
+              "code": "CT",
+              "display": "Computed Tomography"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "410656007",
+            "display": "Type of service"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+              "code": "segmentation",
+              "display": "Segmentation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "246102003",
+            "display": "Maturity level"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+              "code": "LVL2",
+              "display": "LEVEL 2"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "owner": {
+    "reference": "Organization/SlicerHub",
+    "display": "Slicer Hub"
+  },
+  "note": [
+    {
+      "text": "RTSU-Net is an AI-based pipeline for the automated pulmonary lobes segmentation in CT (robust to the presence of severe pathologies)."
+    },
+    {
+      "text": "Links: https://mhub.ai/models/gc_lunglobes"
+    }
+  ]
+}

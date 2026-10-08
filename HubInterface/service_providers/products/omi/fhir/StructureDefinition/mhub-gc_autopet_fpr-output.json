@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_autopet_fpr-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_autopet_fpr-output",
+  "name": "mhubgcautopetfproutput",
+  "title": "Second place in AutoPET challenge: False Positive Reduction Network output parameters",
+  "status": "active",
+  "description": "Output contract for Second place in AutoPET challenge: False Positive Reduction Network (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

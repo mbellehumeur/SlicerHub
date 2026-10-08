@@ -1,24 +1,22 @@
-# 3D Slicer Hub Extension
+# Slicer Hub Extension
 
 <p align="center">
   <img src="docs/images/banner.png" alt="Slicer Hub Banner" width="100%">
 </p>
 
-Slicer Hub is a [WebSub](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) messaging infrastructure for desktop integration for medical imaging application used by healthcare providers, educators and researchers.
-
-**GitHub:** [mbellehumeur/SlicerHub](https://github.com/mbellehumeur/SlicerHub)
+Slicer Hub is a [WebSub](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) messaging infrastructure for desktop integration of medical imaging application used by healthcare providers, educators and researchers.
 
 ## Overview
 
-Slicer Hub aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original purpose is to support an [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow and [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results).
+Slicer Hub aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original intent was to support the [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow; currently [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results) is also in focus.
  
-This python extension supplies the **HUB**, service providers, and the Slicer Qt **Image Display** client (and related desktop pieces). Together with its sister repository of [javascript clients](https://github.com/mbellehumeur/SlicerHub-js-clients), the system includes:
+This python extension supplies the **HUB**, service provider example scrips, and the Slicer Qt **Image Display** client. Together with its sister repository of [javascript clients](https://github.com/mbellehumeur/SlicerHub-js-clients), the system includes:
 
 - a WebSub hub (**HUB** actor) for communication between applications and users
 - a worklist application (**WORKLIST_CLIENT** actor) 
 - open-source medical imaging viewers (**IMAGE_DISPLAY** actors)
 - open-source medical imaging inference models (**EVIDENCE_CREATOR** actors)
-- a DICOM SR reporting example (**REPORT_CREATOR** actor)
+- a DICOM SR reporting example (**REPORT_CREATOR** actor - WIP)
 - the [Imaging Data Commons](https://imaging.datacommons.cancer.gov/) and the [3D Slicer](https://www.slicer.org/) DICOM DB as read-only image archives (**IMAGE_ARCHIVE** actor)
 - an authentication / identity provider with integration to the hub OIDC endpoints or built-in hub anonymous/mock authentication
 
@@ -31,22 +29,30 @@ The extension also includes features for education that are independent of the I
 
 Research and 3D Slicer functionalities, also independent of IHE, are included:
 
-- File transfer between applications
-- Medical Reality scenes and  communications
+- File transfer between applications 
+- Medical Reality scenes communication with the long term goal of inference of multi-application hanging protocols (SceneViews).
 - Status-request messaging for using current information from other applications in the workflow
-- Slicer Qt Image Display client and DICOM DB study list (same websocket client)
+- Slicer Qt Image Display client and DICOM DB study list (same python/websocket client)
 
-File transfer allows inference servers to send their results directly back to the viewers without storing them in PACS first. It also supports research file formats like NIfTI, NRRD, and Zarr; allowing image display clients to work directly with research servers and inference models.
+File transfer allows inference servers to send their results directly back to the viewers without having to archived them to PACS first. It also supports research file formats like NIfTI, NRRD, and Zarr.   Transfer is realized with multi-part POST to the hub and then GET retrieves from the receiving applications and service providers.  The file naming policy is decribed [here](docs/module/filename-policy.md). 
 
 
+The extension javascript client libraries can be used to participate in IHE reporting workflows but it  does not include a FHIR server or a FHIR Diagnostic Report Creator. 
+
+For open-source FHIRcast with a FHIR viewer (SMART launch and hub subscription), see the [OHIF FHIR Viewer](https://ohif.org/modes/fhir-viewer/) mode or [Medplum](https://www.medplum.com/docs/fhircast).
+
+ For an overview of common features and differences of the Slicer Hub vs FHIRcast see [docs/module/hub-description.md](docs/module/hub-description.md).
 
 ## Background
 
-Hub is an offshoot of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the standard replacing Epic’s file drop interface for integration with PACS and reporting systems. It provides a secure event messaging infrastructure using a hub with websocket subscriptions.
+Slicer Hub is an offshoot of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the standard replacing Epic’s file drop interface for integration with PACS and reporting systems. It provides a secure event messaging infrastructure using a hub with websocket subscriptions.
 
-[Interactive ImagingStudy-open event flow](docs/images/imagingstudy-open-flow-interactive.svg) — click to play each step of a FHIRcast ImagingStudy-open event distributed to all applications over low-latency websocket connections (worklist selection, HTTPS publish, hub fan-out, synchronized app updates).
+<p align="center">
+  <img src="docs/images/hub-admin.png" alt="Hub admin portal" width="100%">
+</p>
 
-You can test websocket subscription integration Slicer Hub example. Open several viewer instances, open a study in the worklist and use the “Open scene views” button to view cross-product multi-host display layouts:
+
+You can test websocket subscription integration with the Slicer Hub worklsit example. Open a study in the worklist here:
 
 [Open worklist demo](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/)
 
@@ -56,59 +62,25 @@ You can test websocket subscription integration Slicer Hub example. Open several
   </a>
 </p>
 
-The worklist example demonstrates:
-
-- **OHIF** — Open OHIF viewer instances that stay in sync with the worklist.
-- **SlicerLive** — Open a SlicerLive  instances that stay in sync with the worklist.-=
-- **VolView** — Open VolView instances that stay in sync with the worklist.
-- **Slim** — Open Slim instances that stay in sync with the worklist.
-
-
-  <p align="center">
-    <img src="docs/images/IDC_MCP_Server.png" alt="IDC MCP server" width="80%">
-  </p>
-
-- **Scene views** — Show each connected image display’s layout (including 3D Slicer on same or remote hosts).
-
-  <p align="center">
-    <img src="docs/images/sceneviews.png" alt="Scene views" width="80%">
-  </p>
-
-- **Total Segmentator** — From OHIF or VolView, send an MR or CT study to TotalSegmentator and receive segmentation results (SEG or RTSTRUCT). Connected to the hub as a service provider.
-
-  <p align="center">
-    <img src="docs/images/VolViewTotalSegmentator.png" alt="Total Segmentator in VolView" width="80%">
-  </p>
-
-- **Conferencing** — From worklist, Slim, OHIF, VolView, or 3D Slicer, use the radio icon to start a conference.
-
-  <p align="center">
-    <img src="docs/images/conference-icon.png" alt="Conferencing" width="40%">
-  </p>
-
-Hub has a context/content sharing strategy and hub architecture that differs somewhat from FHIRcast; see [docs/module/hub-description.md](docs/module/hub-description.md).
+And then open the DICOM SR and test interoperability with the visualtization controls.
 
 ## Extension Features
 
-The extension features a hub and two hub interfaces: one for connecting backend agents like Total Segmentator (service providers) and another to connect the Slicer viewer (Image Display client) to the hub.
+The extension features a hub and two hub interfaces: one for connecting inference models like Total Segmentator (service providers) and another to connect the 3D Slicer Qt viewer (Image Display client) and DICOM DB  to the hub.
 
 ### Hub
 
-The hub is the routing appliance that distributes messages and handles data transfer requests over the websocket to each client. It allows clients to connect to each other through a single connection instead of developing multiple interfaces.
+The hub is a stateless routing appliance that distributes messages and handles data transfer requests over the websocket and http to each client.
 
 <p align="center">
   <img src="docs/images/hub-ui.png" alt="Hub UI" width="80%">
-</p>
-
-<p align="center">
-  <img src="docs/images/hub-admin.png" alt="Hub portal" width="100%">
 </p>
 
 It can be used without the Slicer extension by running the `hub.py` script.
 
 ### Service Providers
 
-Service Providers are agents that provide backend services to desktop integration. This allows users to, for example, view AI results without having to send them to the archive first.
+Service Providers are scripts that typically connect inference servers to the hub using a websocket connection. This allows users to, for example, view results without having to send them to the PACS archive first.
 
 The service provider tab provides a visual description of how processing resources can be connected to the hub and made available to hub workflows.
 

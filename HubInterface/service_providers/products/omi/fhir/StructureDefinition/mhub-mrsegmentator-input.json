@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-mrsegmentator-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-mrsegmentator-input",
+  "name": "mhubmrsegmentatorinput",
+  "title": "MRSegmentator input parameters",
+  "status": "active",
+  "description": "Input contract for MRSegmentator (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

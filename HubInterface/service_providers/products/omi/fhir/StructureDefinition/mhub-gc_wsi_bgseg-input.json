@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_wsi_bgseg-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_wsi_bgseg-input",
+  "name": "mhubgcwsibgseginput",
+  "title": "Tissue-Background segmentation in histopathological whole-slide images input parameters",
+  "status": "active",
+  "description": "Input contract for Tissue-Background segmentation in histopathological whole-slide images (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

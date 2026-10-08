@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-bamf_nnunet_ct_kidney-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_ct_kidney-output",
+  "name": "mhubbamfnnunetctkidneyoutput",
+  "title": "BAMF CT Kidney Seg (nnU-Net) output parameters",
+  "status": "active",
+  "description": "Output contract for BAMF CT Kidney Seg (nnU-Net) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

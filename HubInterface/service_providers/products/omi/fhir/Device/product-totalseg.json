@@ -1,0 +1,156 @@
+{
+  "resourceType": "Device",
+  "id": "product-totalseg",
+  "meta": {
+    "profile": [
+      "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-totalseg-input"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-totalseg-output"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+      "extension": [
+        {
+          "url": "doi",
+          "valueUri": "https://pubs.rsna.org/doi/10.1148/ryai.230024"
+        },
+        {
+          "url": "citation",
+          "valueString": "Total Segmentator"
+        }
+      ]
+    }
+  ],
+  "identifier": [
+    {
+      "system": "http://slicerhub.org/fhir/sid/device",
+      "value": "953555c2-9a7c-44ca-a815-4b13062c7892"
+    }
+  ],
+  "status": "active",
+  "deviceName": [
+    {
+      "name": "Total Segmentator",
+      "type": "user-friendly-name"
+    },
+    {
+      "name": "TOTALSEG",
+      "type": "model-name"
+    }
+  ],
+  "version": [
+    {
+      "value": "0.1.0"
+    }
+  ],
+  "property": [
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "360037004",
+            "display": "Imaging modality"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://dicom.nema.org/resources/ontology/DCM",
+              "code": "CT",
+              "display": "Computed Tomography"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "360037004",
+            "display": "Imaging modality"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://dicom.nema.org/resources/ontology/DCM",
+              "code": "MR",
+              "display": "Magnetic Resonance"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "410656007",
+            "display": "Type of service"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+              "code": "segmentation",
+              "display": "Segmentation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "246102003",
+            "display": "Maturity level"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+              "code": "LVL3",
+              "display": "LEVEL 3"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "owner": {
+    "reference": "Organization/SlicerHub",
+    "display": "Slicer Hub"
+  },
+  "note": [
+    {
+      "text": "Whole-body CT/MR multi-organ segmentation."
+    },
+    {
+      "text": "Links: https://totalsegmentator.com/ · https://github.com/wasserth/TotalSegmentator"
+    }
+  ]
+}

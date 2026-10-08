@@ -1,0 +1,139 @@
+{
+  "resourceType": "Device",
+  "id": "mhub-gc_wsi_bgseg",
+  "meta": {
+    "profile": [
+      "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_wsi_bgseg-input"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_wsi_bgseg-output"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+      "extension": [
+        {
+          "url": "citation",
+          "valueString": "Bándi P, Balkenhol M, van Ginneken B, van der Laak J, Litjens G. 2019. Resolution-agnostic tissue segmentation in whole-slide histopathology images with convolutional neural networks. PeerJ 7:e8242"
+        }
+      ]
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+      "extension": [
+        {
+          "url": "license",
+          "valueString": "AGPL v3.0"
+        }
+      ]
+    }
+  ],
+  "identifier": [
+    {
+      "system": "http://slicerhub.org/fhir/sid/device",
+      "value": "4c5e058b-0c17-40da-a6cc-923411f581f0"
+    }
+  ],
+  "status": "active",
+  "deviceName": [
+    {
+      "name": "Tissue-Background segmentation in histopathological whole-slide images",
+      "type": "user-friendly-name"
+    },
+    {
+      "name": "gc_wsi_bgseg",
+      "type": "model-name"
+    }
+  ],
+  "version": [
+    {
+      "value": "0.1.0"
+    }
+  ],
+  "property": [
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "360037004",
+            "display": "Imaging modality"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://dicom.nema.org/resources/ontology/DCM",
+              "code": "SM",
+              "display": "Slide Microscopy"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "410656007",
+            "display": "Type of service"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+              "code": "diagnostics",
+              "display": "Diagnostics"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "246102003",
+            "display": "Maturity level"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+              "code": "LVL2",
+              "display": "LEVEL 2"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "owner": {
+    "reference": "Organization/SlicerHub",
+    "display": "Slicer Hub"
+  },
+  "note": [
+    {
+      "text": "This algorithm segments the background and tissue in histopathological whole-slide images."
+    },
+    {
+      "text": "Links: https://mhub.ai/models/gc_wsi_bgseg"
+    }
+  ]
+}

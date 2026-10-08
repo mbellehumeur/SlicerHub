@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-totalsegmentator-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-totalsegmentator-input",
+  "name": "mhubtotalsegmentatorinput",
+  "title": "TotalSegmentator input parameters",
+  "status": "active",
+  "description": "Input contract for TotalSegmentator (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

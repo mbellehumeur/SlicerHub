@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-bamf_pet_ct_lung_tumor-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_pet_ct_lung_tumor-input",
+  "name": "mhubbamfpetctlungtumorinput",
+  "title": "FDG PET/CT Lung and Lung Tumor Annotation input parameters",
+  "status": "active",
+  "description": "Input contract for FDG PET/CT Lung and Lung Tumor Annotation (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

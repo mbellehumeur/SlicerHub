@@ -1,0 +1,165 @@
+{
+  "resourceType": "Device",
+  "id": "mhub-gc_autopet_fpr",
+  "meta": {
+    "profile": [
+      "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+    ]
+  },
+  "extension": [
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_autopet_fpr-input"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+      "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_autopet_fpr-output"
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+      "extension": [
+        {
+          "url": "doi",
+          "valueUri": "https://arxiv.org/abs/2209.07705"
+        },
+        {
+          "url": "citation",
+          "valueString": "Y. Peng, J. Kim, D. Feng and L. Bi, 'Automatic Tumor Segmentation via False Positive Reduction Network for Whole-Body Multi-Modal PET/CT Images', In arXiv:2209.07705, doi: 10.48550/arXiv:2209.07705."
+        }
+      ]
+    },
+    {
+      "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+      "extension": [
+        {
+          "url": "license",
+          "valueString": "MIT"
+        }
+      ]
+    }
+  ],
+  "identifier": [
+    {
+      "system": "http://slicerhub.org/fhir/sid/device",
+      "value": "94d65396-76f9-4e2a-83c7-f2d5c2c6b9ac"
+    }
+  ],
+  "status": "active",
+  "deviceName": [
+    {
+      "name": "Second place in AutoPET challenge: False Positive Reduction Network",
+      "type": "user-friendly-name"
+    },
+    {
+      "name": "gc_autopet_fpr",
+      "type": "model-name"
+    }
+  ],
+  "version": [
+    {
+      "value": "0.1.0"
+    }
+  ],
+  "property": [
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "360037004",
+            "display": "Imaging modality"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://dicom.nema.org/resources/ontology/DCM",
+              "code": "PT",
+              "display": "Positron emission tomography"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "360037004",
+            "display": "Imaging modality"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://dicom.nema.org/resources/ontology/DCM",
+              "code": "CT",
+              "display": "Computed Tomography"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "410656007",
+            "display": "Type of service"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+              "code": "segmentation",
+              "display": "Segmentation"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": {
+        "coding": [
+          {
+            "system": "http://snomed.info/sct",
+            "code": "246102003",
+            "display": "Maturity level"
+          }
+        ]
+      },
+      "valueCode": [
+        {
+          "coding": [
+            {
+              "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+              "code": "LVL2",
+              "display": "LEVEL 2"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "owner": {
+    "reference": "Organization/SlicerHub",
+    "display": "Slicer Hub"
+  },
+  "note": [
+    {
+      "text": "This algorithm segments tumor lesions in whole-body FDG-PET/CT. To prevent over-segmenting tumor regions due to high-uptake organs or inflammations, the model uses a false positive reduction network. First a self-supervised pre-trained global segmentation module coarsely delineates the candidate tumor regions using a self-supervised pre-trained encoder. The candidate tumor regions are then refined by removing false positives via a local refinement module."
+    },
+    {
+      "text": "Links: https://mhub.ai/models/gc_autopet_fpr"
+    }
+  ]
+}

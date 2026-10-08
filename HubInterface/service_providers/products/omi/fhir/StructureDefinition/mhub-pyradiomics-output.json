@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-pyradiomics-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-pyradiomics-output",
+  "name": "mhubpyradiomicsoutput",
+  "title": "PyRadiomics output parameters",
+  "status": "active",
+  "description": "Output contract for PyRadiomics (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

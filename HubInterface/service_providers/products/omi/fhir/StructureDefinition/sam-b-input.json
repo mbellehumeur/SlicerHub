@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "sam-b-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/sam-b-input",
+  "name": "sambinput",
+  "title": "Segment Anything (SAM-B) input parameters",
+  "status": "active",
+  "description": "Input contract for Segment Anything (SAM-B) (sam).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "product-lung-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/product-lung-input",
+  "name": "productlunginput",
+  "title": "Lung Screening input parameters",
+  "status": "active",
+  "description": "Input contract for Lung Screening (product).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

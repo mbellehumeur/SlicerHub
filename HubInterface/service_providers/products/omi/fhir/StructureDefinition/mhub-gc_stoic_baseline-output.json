@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_stoic_baseline-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_stoic_baseline-output",
+  "name": "mhubgcstoicbaselineoutput",
+  "title": "STOIC2021 baseline output parameters",
+  "status": "active",
+  "description": "Output contract for STOIC2021 baseline (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

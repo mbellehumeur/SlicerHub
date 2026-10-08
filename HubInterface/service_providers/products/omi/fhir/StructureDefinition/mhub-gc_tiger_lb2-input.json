@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_tiger_lb2-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_tiger_lb2-input",
+  "name": "mhubgctigerlb2input",
+  "title": "TIGER challenge winner: Team VUNO input parameters",
+  "status": "active",
+  "description": "Input contract for TIGER challenge winner: Team VUNO (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

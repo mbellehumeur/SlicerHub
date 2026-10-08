@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-monai_prostate158-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-monai_prostate158-input",
+  "name": "mhubmonaiprostate158input",
+  "title": "Prostate Transitional and Peripheral Zone Seg (Prostate158) input parameters",
+  "status": "active",
+  "description": "Input contract for Prostate Transitional and Peripheral Zone Seg (Prostate158) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

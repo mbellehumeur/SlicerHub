@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "product-mhub-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/product-mhub-output",
+  "name": "productmhuboutput",
+  "title": "MHub models output parameters",
+  "status": "active",
+  "description": "Output contract for MHub models (product).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

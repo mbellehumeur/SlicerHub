@@ -34,8 +34,8 @@ The [official browser demo](https://flexray.csail.mit.edu/) is not DICOM: its
 & wrists**). Those files are not on IDC. This worklist instead picks IDC CR/DX
 series that cover the same anatomy the demo and paper emphasize (neck/C-spine,
 shoulder, chest including pediatric and ribs, abdomen, pelvis/hip, lumbar and
-thoracic spine, elbow, knee, femur, skull). **IDC has no public hand/wrist
-CR/DX series.**
+thoracic spine including L-spine AP, elbow, femur, skull). **IDC has no public
+hand/wrist CR/DX series.**
 
 Rebuild the frozen UID list (requires `idc-index`):
 
@@ -60,9 +60,9 @@ python packages/worklist/tools/build_flexray_worklist.py
 | C-spine LAT · DX | varepop_apollo | DX |
 | C-spine AP · DX | varepop_apollo | DX |
 | L-spine LAT · CR | cmb_mml | CR |
+| L-spine AP · CR | cmb_mml | CR |
 | T-spine LAT · CR | cmb_mml | CR |
 | Shoulder AP · DX | varepop_apollo | DX |
 | Elbow AP · CR | varepop_apollo | CR |
-| Knee AP · CR | varepop_apollo | CR |
 | Femur · CR | cmb_mml | CR |
 | Skull LAT · CR | cmb_mml | CR |

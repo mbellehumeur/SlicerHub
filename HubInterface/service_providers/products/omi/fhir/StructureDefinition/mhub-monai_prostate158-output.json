@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-monai_prostate158-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-monai_prostate158-output",
+  "name": "mhubmonaiprostate158output",
+  "title": "Prostate Transitional and Peripheral Zone Seg (Prostate158) output parameters",
+  "status": "active",
+  "description": "Output contract for Prostate Transitional and Peripheral Zone Seg (Prostate158) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

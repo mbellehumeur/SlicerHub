@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_picai_baseline-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_picai_baseline-output",
+  "name": "mhubgcpicaibaselineoutput",
+  "title": "PI-CAI challenge baseline output parameters",
+  "status": "active",
+  "description": "Output contract for PI-CAI challenge baseline (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-pyradiomics-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-pyradiomics-input",
+  "name": "mhubpyradiomicsinput",
+  "title": "PyRadiomics input parameters",
+  "status": "active",
+  "description": "Input contract for PyRadiomics (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

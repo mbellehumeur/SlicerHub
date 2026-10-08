@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_lunglobes-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_lunglobes-output",
+  "name": "mhubgclunglobesoutput",
+  "title": "Pulmonary Lobes Seg (RTSU-Net) output parameters",
+  "status": "active",
+  "description": "Output contract for Pulmonary Lobes Seg (RTSU-Net) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

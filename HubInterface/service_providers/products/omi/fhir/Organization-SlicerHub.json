@@ -1,0 +1,23 @@
+{
+  "resourceType": "Organization",
+  "id": "SlicerHub",
+  "meta": {
+    "profile": [
+      "http://omi.de/fhir/registry/StructureDefinition/omi-organization"
+    ]
+  },
+  "identifier": [
+    {
+      "system": "http://slicerhub.org/fhir/sid/organization",
+      "value": "slicerhub"
+    }
+  ],
+  "active": true,
+  "name": "Slicer Hub",
+  "telecom": [
+    {
+      "system": "url",
+      "value": "https://github.com/mbellehumeur/SlicerHub"
+    }
+  ]
+}

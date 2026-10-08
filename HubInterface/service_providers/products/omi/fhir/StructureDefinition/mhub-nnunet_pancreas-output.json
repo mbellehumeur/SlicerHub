@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-nnunet_pancreas-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_pancreas-output",
+  "name": "mhubnnunetpancreasoutput",
+  "title": "Pancreas Seg (nnU-Net) output parameters",
+  "status": "active",
+  "description": "Output contract for Pancreas Seg (nnU-Net) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

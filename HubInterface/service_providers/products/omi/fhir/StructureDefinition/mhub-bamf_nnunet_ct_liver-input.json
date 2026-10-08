@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-bamf_nnunet_ct_liver-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_ct_liver-input",
+  "name": "mhubbamfnnunetctliverinput",
+  "title": "BAMF CT Liver Seg (nnU-Net) input parameters",
+  "status": "active",
+  "description": "Input contract for BAMF CT Liver Seg (nnU-Net) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

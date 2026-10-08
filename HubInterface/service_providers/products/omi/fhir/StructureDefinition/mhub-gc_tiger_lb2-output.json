@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_tiger_lb2-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_tiger_lb2-output",
+  "name": "mhubgctigerlb2output",
+  "title": "TIGER challenge winner: Team VUNO output parameters",
+  "status": "active",
+  "description": "Output contract for TIGER challenge winner: Team VUNO (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-mrsegmentator-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-mrsegmentator-output",
+  "name": "mhubmrsegmentatoroutput",
+  "title": "MRSegmentator output parameters",
+  "status": "active",
+  "description": "Output contract for MRSegmentator (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

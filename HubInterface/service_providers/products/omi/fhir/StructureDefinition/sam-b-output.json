@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "sam-b-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/sam-b-output",
+  "name": "samboutput",
+  "title": "Segment Anything (SAM-B) output parameters",
+  "status": "active",
+  "description": "Output contract for Segment Anything (SAM-B) (sam).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

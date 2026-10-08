@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "product-dental-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/product-dental-input",
+  "name": "productdentalinput",
+  "title": "Dental Segmentator input parameters",
+  "status": "active",
+  "description": "Input contract for Dental Segmentator (product).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

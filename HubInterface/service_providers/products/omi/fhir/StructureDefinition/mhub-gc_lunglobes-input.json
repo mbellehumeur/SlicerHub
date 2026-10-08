@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_lunglobes-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_lunglobes-input",
+  "name": "mhubgclunglobesinput",
+  "title": "Pulmonary Lobes Seg (RTSU-Net) input parameters",
+  "status": "active",
+  "description": "Input contract for Pulmonary Lobes Seg (RTSU-Net) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

@@ -1,0 +1,5766 @@
+{
+  "resourceType": "Bundle",
+  "id": "slicerhub-omi-algorithm-registry",
+  "meta": {
+    "lastUpdated": "2026-10-07T10:54:17.670Z"
+  },
+  "type": "collection",
+  "timestamp": "2026-10-07T10:54:17.672Z",
+  "total": 39,
+  "entry": [
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Organization/SlicerHub",
+      "resource": {
+        "resourceType": "Organization",
+        "id": "SlicerHub",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/omi-organization"
+          ]
+        },
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/organization",
+            "value": "slicerhub"
+          }
+        ],
+        "active": true,
+        "name": "Slicer Hub",
+        "telecom": [
+          {
+            "system": "url",
+            "value": "https://github.com/mbellehumeur/SlicerHub"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-bamf_nnunet_ct_kidney",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-bamf_nnunet_ct_kidney",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_ct_kidney-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_ct_kidney-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2310.14897"
+              },
+              {
+                "url": "citation",
+                "valueString": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023)."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "3c88e603-8c0a-496b-b534-1e38a5cb9c91"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "BAMF CT Kidney Seg (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "bamf_nnunet_ct_kidney",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "An nnU-Net based model to segment kidney from CT scans"
+          },
+          {
+            "text": "Links: https://mhub.ai/models/bamf_nnunet_ct_kidney"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-bamf_nnunet_ct_liver",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-bamf_nnunet_ct_liver",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_ct_liver-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_ct_liver-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2310.14897"
+              },
+              {
+                "url": "citation",
+                "valueString": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023)."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "06d9e4d7-7041-4e16-b426-eb3f96ad42ef"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "BAMF CT Liver Seg (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "bamf_nnunet_ct_liver",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "An nnU-Net based model to segment liver from CT scans"
+          },
+          {
+            "text": "Links: https://mhub.ai/models/bamf_nnunet_ct_liver"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-bamf_nnunet_mr_liver",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-bamf_nnunet_mr_liver",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_mr_liver-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_mr_liver-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2310.14897"
+              },
+              {
+                "url": "citation",
+                "valueString": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023)."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "0febf273-bbce-40c0-b306-7ff3211dbd13"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "BAMF MR Liver Seg (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "bamf_nnunet_mr_liver",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "An nnU-Net based model to segment liver from T1 weighted MRI scans"
+          },
+          {
+            "text": "Links: https://mhub.ai/models/bamf_nnunet_mr_liver"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-bamf_nnunet_mr_prostate",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-bamf_nnunet_mr_prostate",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_mr_prostate-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_nnunet_mr_prostate-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2310.14897"
+              },
+              {
+                "url": "citation",
+                "valueString": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023)."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "452e74f8-b869-4fea-9160-357b7a89157b"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "BAMF MR Prostate Seg (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "bamf_nnunet_mr_prostate",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "bamf_nnunet_mr_prostate model is a semantic segmentation model where an NNUnet model is finetuned for MR images"
+          },
+          {
+            "text": "Links: https://mhub.ai/models/bamf_nnunet_mr_prostate"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-bamf_pet_ct_breast_tumor",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-bamf_pet_ct_breast_tumor",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_pet_ct_breast_tumor-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_pet_ct_breast_tumor-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2310.14897"
+              },
+              {
+                "url": "citation",
+                "valueString": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023)."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "0a4674e6-7007-43ae-81c2-d0c5d5b5e420"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "BAMF PET CT Breast Seg (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "bamf_pet_ct_breast_tumor",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "PT",
+                    "display": "Positron emission tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This model used to detect FDG-avid lesions in breast from FDG PET/CT scans"
+          },
+          {
+            "text": "Links: https://mhub.ai/models/bamf_pet_ct_breast_tumor"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-bamf_pet_ct_lung_tumor",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-bamf_pet_ct_lung_tumor",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_pet_ct_lung_tumor-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_pet_ct_lung_tumor-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2310.14897"
+              },
+              {
+                "url": "citation",
+                "valueString": "Murugesan, Gowtham Krishnan, Diana McCrumb, Mariam Aboian, Tej Verma, Rahul Soni, Fatima Memon, and Jeff Van Oss. The AIMI Initiative: AI-Generated Annotations for Imaging Data Commons Collections. arXiv preprint arXiv:2310.14897 (2023)."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "8254f74f-c2f3-476f-a828-dfc980ea012e"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "FDG PET/CT Lung and Lung Tumor Annotation",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "bamf_pet_ct_lung_tumor",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "PT",
+                    "display": "Positron emission tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "An nnU-Net based model to segment Lung and FDG-avid lesions in the lung from FDG PET/CT scans"
+          },
+          {
+            "text": "Links: https://mhub.ai/models/bamf_pet_ct_lung_tumor"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-casust",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-casust",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-casust-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-casust-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Nürnberg, L, Bontempi, D, De Ruysscher, D, et al. Deep learning segmentation of heart substructures in radiotherapy treatment planning. Physica Medica: European journal of medical physics, 2022"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "ded31953-17a7-4cfb-95f6-7b3c1ad069d9"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "CaSuSt",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "casust",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "A deep learning model for cardiac sub-structure delineation on planning CT scans. The model delineates the heart contours and seven cardiac substructures based on individually trained binary models."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/casust"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-fmcib_radiomics",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-fmcib_radiomics",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-fmcib_radiomics-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-fmcib_radiomics-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://doi.org/10.1038/s42256-024-00807-9"
+              },
+              {
+                "url": "citation",
+                "valueString": "Pai, S., Bontempi, D., Hadzic, I. et al. Foundation model for cancer imaging biomarkers. Nat Mach Intell (2024). https://doi.org/10.1038/s42256-024-00807-9"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "6ebadbf2-f895-43d8-a9b4-ea2d53d8e6a9"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Foundation Model for Cancer Imaging Biomarkers",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "fmcib_radiomics",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "SEG",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "A foundation model for cancer imaging biomarker discovery trained through self-supervised learning using a dataset of 11,467 radiographic lesions. The model features can be used as a data-driven substitute for classical radiomic features"
+          },
+          {
+            "text": "Links: https://mhub.ai/models/fmcib_radiomics"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_autopet_fpr",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_autopet_fpr",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_autopet_fpr-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_autopet_fpr-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2209.07705"
+              },
+              {
+                "url": "citation",
+                "valueString": "Y. Peng, J. Kim, D. Feng and L. Bi, 'Automatic Tumor Segmentation via False Positive Reduction Network for Whole-Body Multi-Modal PET/CT Images', In arXiv:2209.07705, doi: 10.48550/arXiv:2209.07705."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "94d65396-76f9-4e2a-83c7-f2d5c2c6b9ac"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Second place in AutoPET challenge: False Positive Reduction Network",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_autopet_fpr",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "PT",
+                    "display": "Positron emission tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This algorithm segments tumor lesions in whole-body FDG-PET/CT. To prevent over-segmenting tumor regions due to high-uptake organs or inflammations, the model uses a false positive reduction network. First a self-supervised pre-trained global segmentation module coarsely delineates the candidate tumor regions using a self-supervised pre-trained encoder. The candidate tumor regions are then refined by removing false positives via a local refinement module."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_autopet_fpr"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_grt123_lung_cancer",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_grt123_lung_cancer",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_grt123_lung_cancer-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_grt123_lung_cancer-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://doi.org/10.1109/TNNLS.2019.2892409"
+              },
+              {
+                "url": "citation",
+                "valueString": "F. Liao, M. Liang, Z. Li, X. Hu and S. Song, 'Evaluate the Malignancy of Pulmonary Nodules Using the 3D Deep Leaky Noisy-or Network', in IEEE Transactions on Neural Networks and Learning Systems, vol. 30, no. 11, pp. 3484-3495, Nov. 2019, doi: 10.1109/TNNLS.2019.2892409."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "47a681d3-09cb-4e78-8a96-a3cd2114314e"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "CT Lung cancer risk prediction",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_grt123_lung_cancer",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This algorithm analyzes non-contrast CT scans of the thorax and predicts the lung cancer risk. The model consists of two modules. The first one is a 3D region proposal network for nodule detection, which outputs all suspicious nodules for a subject. The second one selects the top five nodules based on the detection confidence, evaluates their cancer probabilities and combines them with a leaky noisy-or gate to obtain the probability of lung cancer for the subject. This model was the winner of the Data Science Bowl 2017 competition hosted on Kaggle."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_grt123_lung_cancer"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_lunglobes",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_lunglobes",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_lunglobes-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_lunglobes-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://doi.org/10.1109/TMI.2020.2995108"
+              },
+              {
+                "url": "citation",
+                "valueString": "W. Xie, C. Jacobs, J. -P. Charbonnier and B. van Ginneken, 'Relational Modeling for Robust and Efficient Pulmonary Lobe Segmentation in CT Scans,' in IEEE Transactions on Medical Imaging, vol. 39, no. 8, pp. 2664-2675, Aug. 2020, doi: 10.1109/TMI.2020.2995108."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "b533ed49-3e76-4aa8-bd92-264810f00a86"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Pulmonary Lobes Seg (RTSU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_lunglobes",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "RTSU-Net is an AI-based pipeline for the automated pulmonary lobes segmentation in CT (robust to the presence of severe pathologies)."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_lunglobes"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_nnunet_pancreas",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_nnunet_pancreas",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_nnunet_pancreas-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_nnunet_pancreas-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://doi.org/10.3390/cancers14020376"
+              },
+              {
+                "url": "citation",
+                "valueString": "Alves N, Schuurmans M, Litjens G, Bosma JS, Hermans J, Huisman H. Fully Automatic Deep Learning Framework for Pancreatic Ductal Adenocarcinoma Detection on Computed Tomography. Cancers (Basel). 2022 Jan 13;14(2):376. doi: 10.3390/cancers14020376. PMID: 35053538; PMCID: PMC8774174."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "9c6f5755-248d-48fc-8bee-1669438b3733"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Pancreatic Ductal Adenocarcinoma Detection in CT",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_nnunet_pancreas",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This algorithm produces a tumor likelihood heatmap for the presence of pancreatic ductal adenocarcinoma (PDAC) in an input venous-phase contrast-enhanced computed tomography scan (CECT). Additionally, the algorithm provides the segmentation of multiple surrounding anatomical structures such as the pancreatic duct, common bile duct, veins and arteries. The heatmap and segmentations are resampled to the same spatial resolution and physical dimensions as the input CECT image for easier visualisation."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_nnunet_pancreas"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_node21_baseline",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_node21_baseline",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_node21_baseline-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_node21_baseline-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://doi.org/10.1109/TMI.2024.3382042"
+              },
+              {
+                "url": "citation",
+                "valueString": "E. Sogancioglu et al., Nodule detection and generation on chest X-rays: NODE21 Challenge, in IEEE Transactions on Medical Imaging, doi: 10.1109/TMI.2024.3382042."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "2dcad3d3-b056-4e02-bad6-37e250945843"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Chest Radiograph Nodule Locator (NODE21 Baseline)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_node21_baseline",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CR",
+                    "display": "Computed Radiography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This model detects the location of nodules in Chest radiographs, and generates bounding boxes around these nodules."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_node21_baseline"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_picai_baseline",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_picai_baseline",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_picai_baseline-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_picai_baseline-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://doi.org/10.1148/ryai.230031"
+              },
+              {
+                "url": "citation",
+                "valueString": "J. S. Bosma, A. Saha, M. Hosseinzadeh, I. Slootweg, M. de Rooij, and H. Huisman, \"Semisupervised Learning with Report-guided Pseudo Labels for Deep Learning–based Prostate Cancer Detection Using Biparametric MRI\", Radiology: Artificial Intelligence, 230031, 2023. DOI: 10.1148/ryai.230031"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "dd698600-045c-442d-84f3-9b0a4067f362"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "PI-CAI challenge baseline",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_picai_baseline",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This algorithm predicts a detection map for the likelihood of clinically significant prostate cancer (csPCa) using biparametric MRI (bpMRI). The algorithm ensembles 5-fold cross-validation models that were trained on the PI-CAI: Public Training and Development Dataset v2.0. The detection map is at the same spatial resolution and physical dimensions as the input axial T2-weighted image. This model algorithm was used as a baseline for the PI-CAI challenge hosted on Grand Challenge."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_picai_baseline"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_spider_baseline",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_spider_baseline",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_spider_baseline-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_spider_baseline-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://doi.org/10.1038/s41597-024-03090-w"
+              },
+              {
+                "url": "citation",
+                "valueString": "van der Graaf, J.W., van Hooff, M.L., Buckens, C.F.M. et al. Lumbar spine segmentation in MR images: a dataset and a public benchmark. Sci Data 11, 264 (2024). doi: 10.1038/s41597-024-03090-w"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "e08b7733-af46-4882-ba35-3c7d93be052c"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Spine Seg (SPIDER Baseline)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_spider_baseline",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This model segments three anatomical structures in lumbar spine MRI: vertebrae, intervertebral discs (IVDs), and spinal canal. Each vertebrae and IVD is labeled according to standard naming convention."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_spider_baseline"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_stoic_baseline",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_stoic_baseline",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_stoic_baseline-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_stoic_baseline-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2306.10484v2"
+              },
+              {
+                "url": "citation",
+                "valueString": "Luuk H. Boulogne, Julian Lorenz, Daniel Kienzle, Robin Schon, Katja Ludwig, Rainer Lienhart, Simon Jegou, Guang Li, Cong Chen, Qi Wang, Derik Shi, Mayug Maniparambil, Dominik Muller, Silvan Mertes, Niklas Schroter, Fabio Hellmann, Miriam Elia, Ine Dirks, Matias Nicolas Bossa, Abel Diaz Berenguer, Tanmoy Mukherjee, Jef Vandemeulebroucke, Hichem Sahli, Nikos Deligiannis, Panagiotis Gonidakis, Ngoc Dung Huynh, Imran Razzak, Reda Bouadjenek, Mario Verdicchio, Pasquale Borrelli, Marco Aiello, James A. Meakin, Alexander Lemm, Christoph Russ, Razvan Ionasec, Nikos Paragios, Bram van Ginneken, Marie-Pierre Revel Dubois, The STOIC2021 COVID-19 AI challenge: applying reusable training methodologies to private data, arXiv:2306.10484, 2023, https://arxiv.org/abs/2306.10484v2"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT license"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "49f7d1e4-7aa9-4cb4-9f18-a1eb811cd929"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "STOIC2021 baseline",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_stoic_baseline",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This model predicts the probability and severity of COVID-19 in lung-CT scans. Severe COVID-19 is defined as patient intubation or death within one month from the acquisition of the CT scan."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_stoic_baseline"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_tiger_lb2",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_tiger_lb2",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_tiger_lb2-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_tiger_lb2-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "5852dcde-5da1-4371-9760-59c8979034d8"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "TIGER challenge winner: Team VUNO",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_tiger_lb2",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "SM",
+                    "display": "Slide Microscopy"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This algorithm predicts the percentage of stromal area covered by tumour infiltrating lymphocytes (TIL) on H&E-stained whole-slide images of breast cancer histopathology. This algorithm first segments invasive tumor and tumor-associated stroma and subsequently detects lymphocytes and plasma cells, which are finally combined to estimate the relevant regions for TIL estimation. This model algorithm was the challenge winner of the TIGER challenge hosted on Grand Challenge."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_tiger_lb2"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-gc_wsi_bgseg",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-gc_wsi_bgseg",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_wsi_bgseg-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_wsi_bgseg-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Bándi P, Balkenhol M, van Ginneken B, van der Laak J, Litjens G. 2019. Resolution-agnostic tissue segmentation in whole-slide histopathology images with convolutional neural networks. PeerJ 7:e8242"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "AGPL v3.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "4c5e058b-0c17-40da-a6cc-923411f581f0"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Tissue-Background segmentation in histopathological whole-slide images",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "gc_wsi_bgseg",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "SM",
+                    "display": "Slide Microscopy"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "This algorithm segments the background and tissue in histopathological whole-slide images."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/gc_wsi_bgseg"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-lungmask",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-lungmask",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-lungmask-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-lungmask-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://doi.org/10.1186/s41747-020-00173-2"
+              },
+              {
+                "url": "citation",
+                "valueString": "Hofmanninger, J., Prayer, F., Pan, J. et al. Automatic lung segmentation in routine imaging is primarily a data diversity problem, not a methodology problem. Eur Radiol Exp 4, 50 (2020). https://doi.org/10.1186/s41747-020-00173-2"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "ffbd6419-5c10-44d2-a786-ac1bbc3abd1b"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "LungMask",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "lungmask",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "LungMask is an AI-based pipeline for the automated lungs and pulmonary lobes segmentation in CT (robust to the presence of severe pathologies)."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/lungmask"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-monai_prostate158",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-monai_prostate158",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-monai_prostate158-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-monai_prostate158-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Lisa C. Adams and Marcus R. Makowski and Günther Engel and Maximilian Rattunde and Felix Busch and Patrick Asbach and Stefan M. Niehues and Shankeeth Vinayahalingam and Bram {van Ginneken} and Geert Litjens and Keno K. Bressem, Prostate158 - An expert-annotated 3T MRI dataset and algorithm for prostate cancer detection"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "MIT"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "dbd48853-3359-406f-a545-8a0a7be5e102"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Prostate Transitional and Peripheral Zone Seg (Prostate158)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "monai_prostate158",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Prostate158 is a zonal prostate segmentation model, a multi-modality input AI-based pipeline for the automated segmentation of the peripheral and central gland of the prostate on MRI T2 axial scans."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/monai_prostate158"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-mrsegmentator",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-mrsegmentator",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-mrsegmentator-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-mrsegmentator-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Hartmut Häntze, Lina Xu, Felix J. Dorfner, Leonhard Donle, Daniel Truhn, Hugo Aerts, Mathias Prokop, Bram van Ginneken, Alessa Hering, Lisa C. Adams, and Keno K. Bressem. MRSegmentator: Robust multi-modality segmentation of 40 classes in MRI and CT sequences. arXiv, 2024."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "181b26fa-466d-400e-a7ec-f691465caca1"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "MRSegmentator",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "mrsegmentator",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MRI|CT",
+                    "display": "MRI|CT"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "MRSegmentator is an AI-based pipeline for the segmentation of 40 anatomical structures in MR images (with and without contrast)."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/mrsegmentator"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-msk_smit_lung_gtv",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-msk_smit_lung_gtv",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-msk_smit_lung_gtv-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-msk_smit_lung_gtv-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Jiang, Jue, and Harini Veeraraghavan. Self-supervised pretraining in the wild imparts image acquisition robustness to medical image transformers: an application to lung cancer segmentation. Proceedings of machine learning research 250 (2024): 708."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "GNU General Public License"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "94238316-2e4b-4084-a74d-d34aaf9ef9b8"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "SMIT Self-supervised Lung GTV Segmentation",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "msk_smit_lung_gtv",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "A Lung GTV segmentation model, fine-tuned from a foundation model pretrained with 10K CT scans"
+          },
+          {
+            "text": "Links: https://mhub.ai/models/msk_smit_lung_gtv"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-nnunet_liver",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-nnunet_liver",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_liver-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_liver-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "c8031a73-58f2-469f-bad0-189d3c7591f9"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "CT Liver Seg (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "nnunet_liver",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "nnU-Net's liver segmentation model is an AI-based pipeline for the automated segmentation of the liver and liver cancer in portal venous phase CT scans."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/nnunet_liver"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-nnunet_pancreas",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-nnunet_pancreas",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_pancreas-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_pancreas-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "ae36a4f1-941e-4fb4-b004-b029e67915d8"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Pancreas Seg (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "nnunet_pancreas",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "nnU-Net's pancreas segmentation model is an AI-based pipeline for the automated segmentation of the pancreas and pancreatic cancer in portal venous phase CT scans."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/nnunet_pancreas"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-nnunet_prostate_task24",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-nnunet_prostate_task24",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_prostate_task24-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_prostate_task24-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "3620b39a-9d0a-4bed-9953-e685198196af"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Whole Prostate Seg (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "nnunet_prostate_task24",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "nnU-Net's whole prostate segmentation model is a single-modality (i.e. T2) input AI-based pipeline for the automated segmentation of the whole prostate on MRI scans."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/nnunet_prostate_task24"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-nnunet_prostate_zonal_task05",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-nnunet_prostate_zonal_task05",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_prostate_zonal_task05-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_prostate_zonal_task05-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "dcdf3ad3-39e5-4e60-bc08-8487b30e0e15"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Prostate Transitional and Peripheral Zone Seg (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "nnunet_prostate_zonal_task05",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "nnU-Net's zonal prostate segmentation model is a multi-modality input AI-based pipeline for the automated segmentation of the peripheral and transition zone of the prostate on MRI scans."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/nnunet_prostate_zonal_task05"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-nnunet_segthor",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-nnunet_segthor",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_segthor-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-nnunet_segthor-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2020). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature Methods, 1-9."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "2b94fadd-6dd2-430f-aa8e-8b568e2e6572"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Thoracic OAR (nnU-Net)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "nnunet_segthor",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "nnU-Net's thoracic OAR segmentation model is an AI-based pipeline for the automated segmentation of the heart, the aorta, the esophagus and the trachea in CT scans (with and without contrast)."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/nnunet_segthor"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-platipy",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-platipy",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-platipy-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-platipy-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Finnegan, R.N., Chin, V., Chlap, P. et al. Open-source, fully-automated hybrid cardiac substructure segmentation: development and optimisation. Phys Eng Sci Med 46, 377–393 (2023)."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "949a4d5d-b022-48d3-bfb0-c9ae72f7c1cb"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Platipy",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "platipy",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Platipy's cardiac substructures segmentation model is a hybrid pipeline (AI- and atlas-based) for the automated segmentation of 16 cardiac substructures in CT scans (with and without contrast)."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/platipy"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-pyradiomics",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-pyradiomics",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-pyradiomics-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-pyradiomics-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://doi.org/10.1158/0008-5472.CAN-17-0339"
+              },
+              {
+                "url": "citation",
+                "valueString": "van Griethuysen JJM, Fedorov A, Parmar C, Hosny A, Aucoin N, Narayan V, Beets-Tan RGH, Fillion-Robin JC, Pieper S, Aerts HJWL. Computational Radiomics System to Decode the Radiographic Phenotype. Cancer Res. 2017 Nov 1;77(21):e104-e107. doi: 10.1158/0008-5472.CAN-17-0339. PMID: 29092951; PMCID: PMC5672828."
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "2f7659cf-d739-4736-a8f8-dc5b2ce060a5"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "PyRadiomics",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "pyradiomics",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "SEG",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Run PyRadiomics directly on DICOM files with MHub."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/pyradiomics"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/mhub-totalsegmentator",
+      "resource": {
+        "resourceType": "Device",
+        "id": "mhub-totalsegmentator",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-totalsegmentator-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/mhub-totalsegmentator-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "citation",
+                "valueString": "Jakob Wasserthal, Hanns-Christian Breit, Manfred T. Meyer, Maurice Pradella, Daniel Hinck, Alexander W. Sauter, Tobias Heye, Daniel T. Boll, Joshy Cyriac, Shan Yang, Michael Bach, and Martin Segeroth (2023). TotalSegmentator: Robust Segmentation of 104 Anatomic Structures in CT Images. Radiology Artificial Intelligence, 5:5"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache 2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "443b5697-69c0-4fdd-829f-82673cdc2887"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "TotalSegmentator",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "totalsegmentator",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL2",
+                    "display": "LEVEL 2"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "TotalSegmentator is an AI-based pipeline for the segmentation of 104 anatomical structures in CT images (with and without contrast)."
+          },
+          {
+            "text": "Links: https://mhub.ai/models/totalsegmentator"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/product-dental",
+      "resource": {
+        "resourceType": "Device",
+        "id": "product-dental",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-dental-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-dental-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "Apache-2.0"
+              },
+              {
+                "url": "licenseUrl",
+                "valueUri": "https://www.apache.org/licenses/LICENSE-2.0"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "a574be2f-1d9a-42b3-957a-aa784d3f28b0"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Dental Segmentator",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "DENTAL_SEG",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL3",
+                    "display": "LEVEL 3"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Fully automatic CT/CBCT dental segmentation (maxilla, mandible, upper/lower teeth, mandibular canal)."
+          },
+          {
+            "text": "Links: https://www.kitware.com/dental-segmentator/ · https://github.com/gaudot/SlicerDentalSegmentator"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/product-flexray",
+      "resource": {
+        "resourceType": "Device",
+        "id": "product-flexray",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-flexray-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-flexray-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2609.26756"
+              },
+              {
+                "url": "citation",
+                "valueString": "Victor Ion Butoi, Vivek Gopalakrishnan, John V. Guttag, Adrian V. Dalca, and Neel Dey (2026). FleXray: Universal Clinical X-ray Segmentation. arXiv:2609.26756"
+              }
+            ]
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/software-license-extension",
+            "extension": [
+              {
+                "url": "license",
+                "valueString": "CC-BY-NC-4.0"
+              },
+              {
+                "url": "licenseUrl",
+                "valueUri": "https://creativecommons.org/licenses/by-nc/4.0/"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "ce3707cc-b67e-466f-ad6a-0dee9329aad4"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "FleXray",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "FLEXRAY",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CR",
+                    "display": "Computed Radiography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "DX",
+                    "display": "Digital Radiography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL3",
+                    "display": "LEVEL 3"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Foundation model for universal clinical X-ray anatomy segmentation (60 structures) across body regions, views, and acquisition settings. Designed for on-device / local inference."
+          },
+          {
+            "text": "Links: https://flexray.csail.mit.edu/ · https://github.com/VictorButoi/FleXray"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/product-lung",
+      "resource": {
+        "resourceType": "Device",
+        "id": "product-lung",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-lung-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-lung-output"
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "c862f662-188c-4afb-9626-2109efb97b52"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Lung Screening",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "LUNGSCREENING",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL1",
+                    "display": "LEVEL 1"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "CT lung screening."
+          },
+          {
+            "text": "Links: https://projectweek.na-mic.org/PW45_2026_Boston/Projects/ExtractingDeepLearningFeaturesFromCtImagesOfTheThoracicRegionForLungCancerApplications/ · https://github.com/rphellan/slicerW45"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/product-mhub",
+      "resource": {
+        "resourceType": "Device",
+        "id": "product-mhub",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-mhub-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-mhub-output"
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "dab86492-2bd7-4e5d-bc7e-3be21e908e97"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "MHub models",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "MHUB",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "PT",
+                    "display": "Positron emission tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CR",
+                    "display": "Computed Radiography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "SM",
+                    "display": "Slide Microscopy"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL1",
+                    "display": "LEVEL 1"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Medical Imaging Model Hub — peer-reviewed deep learning models via standardized Docker I/O."
+          },
+          {
+            "text": "Links: https://mhub.ai · https://github.com/MHubAI/"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/product-neuro",
+      "resource": {
+        "resourceType": "Device",
+        "id": "product-neuro",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-neuro-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-neuro-output"
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "765b2675-b3b7-4951-847f-268fe3e162d8"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Subcortical segmentation",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "NEURO_SEG",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL1",
+                    "display": "LEVEL 1"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Neuro / subcortical segmentation. Improved white and pial surfaces and parcellation (aparc+aseg) from recon-all pipeline (FreeSurfer 7.4.1) through added dataset"
+          },
+          {
+            "text": "Links: https://projectweek.na-mic.org/PW45_2026_Boston/Projects/ReconAllCorrectionScriptBasedOnManualSubcorticalSegmentationFiles/"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/product-totalseg",
+      "resource": {
+        "resourceType": "Device",
+        "id": "product-totalseg",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-totalseg-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-totalseg-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://pubs.rsna.org/doi/10.1148/ryai.230024"
+              },
+              {
+                "url": "citation",
+                "valueString": "Total Segmentator"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "953555c2-9a7c-44ca-a815-4b13062c7892"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Total Segmentator",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "TOTALSEG",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL3",
+                    "display": "LEVEL 3"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Whole-body CT/MR multi-organ segmentation."
+          },
+          {
+            "text": "Links: https://totalsegmentator.com/ · https://github.com/wasserth/TotalSegmentator"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/product-txrv",
+      "resource": {
+        "resourceType": "Device",
+        "id": "product-txrv",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-txrv-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/product-txrv-output"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/doi-extension",
+            "extension": [
+              {
+                "url": "doi",
+                "valueUri": "https://arxiv.org/abs/2111.00595"
+              },
+              {
+                "url": "citation",
+                "valueString": "Cohen et al., TorchXRayVision: A library of chest X-ray datasets and models, MIDL 2022"
+              }
+            ]
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "973d09a6-71d4-4e61-aec4-0ddaf656f94d"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "TorchXRayVision",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "TORCHXRAYVISION",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "0.1.0"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CR",
+                    "display": "Computed Radiography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "DX",
+                    "display": "Digital Radiography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "diagnostics",
+                    "display": "Diagnostics"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL1",
+                    "display": "LEVEL 1"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Chest X-ray pathology classification (18 findings) and lung/heart anatomy segmentation."
+          },
+          {
+            "text": "Links: https://mlmed.org/torchxrayvision/ · https://github.com/mlmed/torchxrayvision"
+          }
+        ]
+      }
+    },
+    {
+      "fullUrl": "http://slicerhub.org/fhir/Device/sam-b",
+      "resource": {
+        "resourceType": "Device",
+        "id": "sam-b",
+        "meta": {
+          "profile": [
+            "http://omi.de/fhir/registry/StructureDefinition/algorithm-device"
+          ]
+        },
+        "extension": [
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/input-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/sam-b-input"
+          },
+          {
+            "url": "http://omi.de/fhir/registry/StructureDefinition/output-parameter-extension",
+            "valueCanonical": "http://slicerhub.org/fhir/StructureDefinition/sam-b-output"
+          }
+        ],
+        "identifier": [
+          {
+            "system": "http://slicerhub.org/fhir/sid/device",
+            "value": "f8948a8b-7dde-4359-a7bd-f74ce4c230ed"
+          }
+        ],
+        "status": "active",
+        "deviceName": [
+          {
+            "name": "Segment Anything (SAM-B)",
+            "type": "user-friendly-name"
+          },
+          {
+            "name": "sam_b",
+            "type": "model-name"
+          }
+        ],
+        "version": [
+          {
+            "value": "sam_vit_b_01ec64-fp16"
+          }
+        ],
+        "property": [
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CT",
+                    "display": "Computed Tomography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "MR",
+                    "display": "Magnetic Resonance"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "CR",
+                    "display": "Computed Radiography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "DX",
+                    "display": "Digital Radiography"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "360037004",
+                  "display": "Imaging modality"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://dicom.nema.org/resources/ontology/DCM",
+                    "code": "US",
+                    "display": "Ultrasound"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "410656007",
+                  "display": "Type of service"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/ai-service-type-codesystem",
+                    "code": "segmentation",
+                    "display": "Segmentation"
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "type": {
+              "coding": [
+                {
+                  "system": "http://snomed.info/sct",
+                  "code": "246102003",
+                  "display": "Maturity level"
+                }
+              ]
+            },
+            "valueCode": [
+              {
+                "coding": [
+                  {
+                    "system": "http://omi.de/fhir/registry/CodeSystem/maturity-level-codesystem",
+                    "code": "LVL3",
+                    "display": "LEVEL 3"
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "owner": {
+          "reference": "Organization/SlicerHub",
+          "display": "Slicer Hub"
+        },
+        "note": [
+          {
+            "text": "Interactive marker-guided segmentation via SAM ViT-B ONNX encoder/decoder (OHIF Cornerstone AI)."
+          },
+          {
+            "text": "Links: https://segment-anything.com/ · https://github.com/facebookresearch/segment-anything"
+          }
+        ]
+      }
+    }
+  ]
+}

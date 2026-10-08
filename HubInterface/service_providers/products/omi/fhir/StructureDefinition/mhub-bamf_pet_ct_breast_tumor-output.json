@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-bamf_pet_ct_breast_tumor-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-bamf_pet_ct_breast_tumor-output",
+  "name": "mhubbamfpetctbreasttumoroutput",
+  "title": "BAMF PET CT Breast Seg (nnU-Net) output parameters",
+  "status": "active",
+  "description": "Output contract for BAMF PET CT Breast Seg (nnU-Net) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

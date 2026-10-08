@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_spider_baseline-input",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_spider_baseline-input",
+  "name": "mhubgcspiderbaselineinput",
+  "title": "Spine Seg (SPIDER Baseline) input parameters",
+  "status": "active",
+  "description": "Input contract for Spine Seg (SPIDER Baseline) (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-input-parameter",
+  "derivation": "constraint"
+}

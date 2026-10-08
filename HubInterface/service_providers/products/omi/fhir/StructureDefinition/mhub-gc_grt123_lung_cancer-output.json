@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-gc_grt123_lung_cancer-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-gc_grt123_lung_cancer-output",
+  "name": "mhubgcgrt123lungcanceroutput",
+  "title": "CT Lung cancer risk prediction output parameters",
+  "status": "active",
+  "description": "Output contract for CT Lung cancer risk prediction (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}

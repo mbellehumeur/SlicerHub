@@ -1,0 +1,15 @@
+{
+  "resourceType": "StructureDefinition",
+  "id": "mhub-fmcib_radiomics-output",
+  "url": "http://slicerhub.org/fhir/StructureDefinition/mhub-fmcib_radiomics-output",
+  "name": "mhubfmcibradiomicsoutput",
+  "title": "Foundation Model for Cancer Imaging Biomarkers output parameters",
+  "status": "active",
+  "description": "Output contract for Foundation Model for Cancer Imaging Biomarkers (mhub).",
+  "fhirVersion": "4.0.1",
+  "kind": "resource",
+  "abstract": false,
+  "type": "Parameters",
+  "baseDefinition": "http://omi.de/fhir/registry/StructureDefinition/omi-service-output-parameter",
+  "derivation": "constraint"
+}
