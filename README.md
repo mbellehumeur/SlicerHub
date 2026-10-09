@@ -4,11 +4,13 @@
   <img src="docs/images/banner.png" alt="Slicer Hub Banner" width="100%">
 </p>
 
-Slicer Hub is a [WebSub](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern) messaging infrastructure for desktop integration of medical imaging application used by healthcare providers, educators and researchers.
+The Slicer Hub extension is  an open-source, MIT licensed, [WebSub-based](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern)  desktop integration messaging infrastructure that connects users of image displays, worklists, reporting tools, conferencing tools, remote inference models and AI Orchestrators.
+
+Try the [online example worklist client](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/) or watch the [classroom vanishing brush tool](https://youtu.be/xKQEOs1_9Bg) along with this documentation to find out more.
 
 ## Overview
 
-Slicer Hub aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original intent was to support the [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow; currently [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results) is also in focus.
+Slicer Hub aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original intent was to support the [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow; currently [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results) is more in focus.
  
 This python extension supplies the **HUB**, service provider example scrips, and the Slicer Qt **Image Display** client. Together with its sister repository of [javascript clients](https://github.com/mbellehumeur/SlicerHub-js-clients), the system includes:
 
