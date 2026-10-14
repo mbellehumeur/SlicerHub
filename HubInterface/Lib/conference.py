@@ -18,7 +18,6 @@ HUB_CONFERENCE_EXIT_ACK_MS = 1200
 
 HUB_CONFERENCE_TITLE_PRESETS = [
     "Test conference",
-    "US annotations",
     "Tumor Board",
     "Case discussion",
     "Pedicle screw",

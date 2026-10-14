@@ -105,7 +105,7 @@ class ConferenceDialog(qt.QDialog):
         for preset in HUB_CONFERENCE_TITLE_PRESETS:
             self._title_combo.addItem(preset, preset)
         self._title_combo.addItem(_("Other…"), "other")
-        default_index = self._title_combo.findData("US annotations")
+        default_index = self._title_combo.findData("Tumor Board")
         if default_index >= 0:
             self._title_combo.setCurrentIndex(default_index)
         self._title_combo.currentIndexChanged.connect(self._on_title_preset_changed)

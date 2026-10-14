@@ -2,7 +2,7 @@
   "id": "flexray",
   "product": "FLEXRAY",
   "title": "FleXray",
-  "location": "Cambridge, MA, USA",
+  "location": "local - in browser",
   "summary": "Foundation model for universal clinical X-ray anatomy segmentation (60 structures) across body regions, views, and acquisition settings. Designed for on-device / local inference.",
   "websiteUrl": "https://flexray.csail.mit.edu/",
   "githubUrl": "https://github.com/VictorButoi/FleXray",

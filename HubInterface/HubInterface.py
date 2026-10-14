@@ -22,28 +22,28 @@ from Lib.ServiceProviders import ServiceProvidersWidget
 class HubInterface(ScriptedLoadableModule):
     def __init__(self, parent):
         ScriptedLoadableModule.__init__(self, parent)
-        self.parent.title = _("Slicer Hub")
+        self.parent.title = _("Hub server")
         self.parent.categories = [_("Informatics")]
         self.parent.dependencies = []
-        self.parent.contributors = ["ProjectWeek45"]
+        self.parent.contributors = ["Martin Bellehumeur"]
         self.parent.helpText = _(
             """
-            Slicer Hub for 3D Slicer: Hub, Service Providers and  Image Display client .<br><br>
-            Service Providers:
-            Service providers subscribe to all user topics for dicom events and send back results to the user.
-            Each service provider connects with its own product name and onMessage script.
-            The script handles producing the results from the DICOM files received.
-            <br><br>
-            Image Display Client:
-            The image display client provide a PACS client type interface to the 3D slicer viewer.  Supported events are ImagingStudy-open, ImagingStudy-close, and status-request.
-            <br><br>
+            Hub server for 3D Slicer: Hub, Service Providers and  Image Display client .<br><br>
             Hub:
             The hub is the server that distributes the messages and handles the data transfer requests over the websocket connection to each client.
+            
+            Service Providers:
+            A service provider is a python script that runs on the same server as the inference model or AI orchestrator.  
+            It subscribes are  to all user topics  and can send back results directly to the users through its connection to the hub.
+            <br><br>
+            Image Display Client:
+            The image display client python script provide connects to the hub to communicate to the 3D Slicer Qt client. 
+            <br><br>
+
             """
         )
         self.parent.acknowledgementText = _(
             """
-            Hub client protocol aligned with vtk-js HubClient. <br>
             The Slicer hub server lives in <code>HubInterface/hub/</code> (port 2018).<br>
             Standalone run: <code>python HubInterface/hub/hub.py --port 2018</code>.<br><br>
             Distributed under the MIT License.<br><br>

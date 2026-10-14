@@ -10,20 +10,21 @@ Try the [online example worklist client](https://slicerhub-azejffgnb7dve8es.cana
 
 ## Overview
 
-Slicer Hub aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original intent was to support the [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow; currently [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results) is more in focus.
+Slicer Hub aims to  promote, train, develop, and demonstrate interoperability in medical imaging applications. Its original intent was to support the [IHE Integrated Reporting Application](https://profiles.ihe.net/RAD/IRA/) workflow; currently [IHE AI Results](https://wiki.ihe.net/index.php/AI_Results) and the needs or researchers adn educators are more in focus.
  
-This python extension supplies the **HUB**, service provider example scrips, and the Slicer Qt **Image Display** client. Together with its sister repository of [javascript clients](https://github.com/mbellehumeur/SlicerHub-js-clients), the system includes:
+This python extension supplies the **HUB**, service provider example scripts, and the Slicer Qt **Image Display** client connection. Together with its sister repository of [javascript clients](https://github.com/mbellehumeur/SlicerHub-js-clients), the system includes:
 
 - a WebSub hub (**HUB** actor) for communication between applications and users
-- a worklist application (**WORKLIST_CLIENT** actor) 
-- open-source medical imaging viewers (**IMAGE_DISPLAY** actors)
-- open-source medical imaging inference models (**EVIDENCE_CREATOR** actors)
+- a Worklist application (**WORKLIST_CLIENT** actor) 
+- Open-source medical imaging viewers (**IMAGE_DISPLAY** actors)
+- Open-source medical imaging inference models (**EVIDENCE_CREATOR** actors)
 - a DICOM SR reporting example (**REPORT_CREATOR** actor - WIP)
 - the [Imaging Data Commons](https://imaging.datacommons.cancer.gov/) and the [3D Slicer](https://www.slicer.org/) DICOM DB as read-only image archives (**IMAGE_ARCHIVE** actor)
-- an authentication / identity provider with integration to the hub OIDC endpoints or built-in hub anonymous/mock authentication
+- an Authentication / identity provider with integration to the hub OIDC endpoints or built-in hub anonymous/mock authentication
 
 The extension also includes features for education that are independent of the IHE Integrated Reporting workflow:
 
+- an example classroom application
 - creating, saving, and uploading teaching files and cohorts for class preparation
 - conferencing for collaborative viewing and teaching
 - a [vanishing brush tool](https://youtu.be/xKQEOs1_9Bg?si=-gtvlB3aeq3KF-dX) for temporary annotations during conferencing
@@ -32,11 +33,12 @@ The extension also includes features for education that are independent of the I
 Research and 3D Slicer functionalities, also independent of IHE, are included:
 
 - File transfer between applications 
-- Medical Reality scenes communication with the long term goal of inference of multi-application hanging protocols (SceneViews).
+- Medical Reality scenes communication for conferencing
+- SceneViews status on request with the long term goal of inference for multi-application hanging protocols.
 - Status-request messaging for using current information from other applications in the workflow
 - Slicer Qt Image Display client and DICOM DB study list (same python/websocket client)
 
-File transfer allows inference servers to send their results directly back to the viewers without having to archived them to PACS first. It also supports research file formats like NIfTI, NRRD, and Zarr.   Transfer is realized with multi-part POST to the hub and then GET retrieves from the receiving applications and service providers.  The file naming policy is decribed [here](docs/module/filename-policy.md). 
+File transfer allows inference servers to send their results directly back to the viewers without having to archived them to PACS first.  Research file formats like NIfTI, NRRD, and Zarr can be used.   Transfer is realized with multi-part POST to the hub and then GET retrieves from the receiving applications and service providers.  The file naming policy is decribed [here](docs/module/filename-policy.md). 
 
 
 The extension javascript client libraries can be used to participate in IHE reporting workflows but it  does not include a FHIR server or a FHIR Diagnostic Report Creator. 
@@ -47,14 +49,14 @@ For open-source FHIRcast with a FHIR viewer (SMART launch and hub subscription),
 
 ## Background
 
-Slicer Hub is an offshoot of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the standard replacing Epic’s file drop interface for integration with PACS and reporting systems. It provides a secure event messaging infrastructure using a hub with websocket subscriptions.
+Slicer Hub is an extension of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the standard replacing Epic’s file drop interface for integration with PACS and reporting systems. It provides a secure event messaging infrastructure using a hub with websocket subscriptions.  The Slicer Hub expands on the initial FHIRcast design to support research and education and utilize more of the built-in capabilities of the WebSub infracstructure.
 
 <p align="center">
   <img src="docs/images/hub-admin.png" alt="Hub admin portal" width="100%">
 </p>
 
 
-You can test websocket subscription integration with the Slicer Hub worklsit example. Open a study in the worklist here:
+You can test websocket subscription integration with the Slicer Hub worklist example. Open a study in the worklist here:
 
 [Open worklist demo](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/)
 
