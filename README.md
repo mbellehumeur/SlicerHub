@@ -24,7 +24,7 @@ This python extension supplies the **HUB**, service provider example scripts, an
 
 The extension also includes features for education that are independent of the IHE Integrated Reporting workflow:
 
-- an example classroom application
+- an example [classroom application](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/classroom-client/)
 - creating, saving, and uploading teaching files and cohorts for class preparation
 - conferencing for collaborative viewing and teaching
 - a [vanishing brush tool](https://youtu.be/xKQEOs1_9Bg?si=-gtvlB3aeq3KF-dX) for temporary annotations during conferencing
@@ -43,22 +43,20 @@ File transfer allows inference servers to send their results directly back to th
 
 The extension javascript client libraries can be used to participate in IHE reporting workflows but it  does not include a FHIR server or a FHIR Diagnostic Report Creator. 
 
-For open-source FHIRcast with a FHIR viewer (SMART launch and hub subscription), see the [OHIF FHIR Viewer](https://ohif.org/modes/fhir-viewer/) mode or [Medplum](https://www.medplum.com/docs/fhircast).
+For open-source FHIRcast with a FHIR viewer and SMART authorization server, see the [OHIF FHIR Viewer](https://ohif.org/modes/fhir-viewer/) mode or [Medplum](https://www.medplum.com/docs/fhircast).
 
  For an overview of common features and differences of the Slicer Hub vs FHIRcast see [docs/module/hub-description.md](docs/module/hub-description.md).
 
 ## Background
 
-Slicer Hub is an extension of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the standard replacing Epic’s file drop interface for integration with PACS and reporting systems. It provides a secure event messaging infrastructure using a hub with websocket subscriptions.  The Slicer Hub expands on the initial FHIRcast design to support research and education and utilize more of the built-in capabilities of the WebSub infracstructure.
+Slicer Hub is an extension of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the standard replacing Epic’s file drop interface for integration with PACS and reporting systems. It provides a secure event messaging infrastructure using a hub with websocket subscriptions.  The Slicer Hub expands on the initial FHIRcast design to support research and education and utilize more of the built-in capabilities of the WebSub infrastructure.
 
 <p align="center">
   <img src="docs/images/hub-admin.png" alt="Hub admin portal" width="100%">
 </p>
 
 
-You can test websocket subscription integration with the Slicer Hub worklist example. Open a study in the worklist here:
-
-[Open worklist demo](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/)
+You can test websocket subscription integration with the [Slicer Hub worklist example](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/). 
 
 <p align="center">
   <a href="https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/">
@@ -66,7 +64,7 @@ You can test websocket subscription integration with the Slicer Hub worklist exa
   </a>
 </p>
 
-And then open the DICOM SR and test interoperability with the visualtization controls.
+
 
 ## Extension Features
 
