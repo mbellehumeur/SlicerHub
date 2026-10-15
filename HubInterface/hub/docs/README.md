@@ -11,6 +11,25 @@ pip install -r requirements.txt
 python hub.py --port 2018
 ```
 
+### Marketing site at `/`
+
+Hub can serve the Bellehumeur Engineering static site at `GET /` (SPA clients stay under `/worklist-client/`, `/ohif/`, etc.).
+
+**Local (point at a built `dist/`):**
+
+```bash
+# In bellehumeur-website
+python build.py
+
+# Then start hub with:
+export HUB_WEBSITE_ROOT="/path/to/bellehumeur-website/dist"
+python hub.py --port 2018
+```
+
+Open `http://127.0.0.1:2018/`.
+
+**Packaged zip:** `make_zip.py` syncs `bellehumeur-website/dist` → `hub/website/` (gitignored). A zip that includes `website/index.html` serves `/` without `HUB_WEBSITE_ROOT`. Build the site first (`python build.py`) or pass `--website-dist`.
+
 Or with VolView RPC:
 
 ```bash
@@ -115,7 +134,7 @@ sequenceDiagram
 
 ### `subscription-removed` (hub lifecycle)
 
-When a subscription is removed (explicit unsubscribe, WebSocket disconnect, or send failure), the hub fans out a **`subscription-removed`** event to other subscribers on the same topic (same matching rules as publish). The removed peer does not receive the notification.
+When a subscription is removed (explicit unsubscribe, WebSocket disconnect, send failure, or replaced by a resubscribe for the same `subscriber.name` + topic), the hub fans out a **`subscription-removed`** event to other subscribers on the same topic (same matching rules as publish). The removed peer does not receive the notification.
 
 | Field | Description |
 | --- | --- |
@@ -123,7 +142,7 @@ When a subscription is removed (explicit unsubscribe, WebSocket disconnect, or s
 | `event.hub.topic` | Topic of the removed subscription |
 | `subscriber.name` | Removed subscriber |
 | `subscriber.product.name` | Optional product from subscription `client_info` |
-| `event.context.reason` | `unsubscribe`, `websocket-disconnect`, or `send-failure` |
+| `event.context.reason` | `unsubscribe`, `websocket-disconnect`, `send-failure`, or `resubscribe` |
 | `event.context.subscriber` | Same as `subscriber.name` |
 
 Subscribe with `subscription-removed` in `hub.events` (or `*`) to receive these notifications.

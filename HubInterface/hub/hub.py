@@ -820,8 +820,44 @@ SPA_CLIENTS = [
     ("ohif", "OHIF-client"),
 ]
 
-# Legacy: OHIF used to be served at hub root. Prefer SPA_CLIENTS entry ``ohif``.
-HUB_ROOT_SPA_FOLDER = ""
+# Optional folder under hub/ for a site at ``/`` (e.g. ``website`` after make_zip).
+# Prefer ``HUB_WEBSITE_ROOT`` (absolute/relative path to a built dist with index.html).
+HUB_ROOT_SPA_FOLDER = os.environ.get("HUB_ROOT_SPA_FOLDER", "").strip()
+
+
+def _path_is_under(path: str, root: str) -> bool:
+    """True when ``path`` is ``root`` or a file/dir inside it."""
+    try:
+        path_abs = os.path.abspath(path)
+        root_abs = os.path.abspath(root)
+        return os.path.commonpath([path_abs, root_abs]) == root_abs
+    except ValueError:
+        return False
+
+
+def _resolve_hub_root_site_dir() -> Optional[str]:
+    """Directory for GET ``/`` marketing/static site, or None if disabled."""
+    env_root = os.environ.get("HUB_WEBSITE_ROOT", "").strip()
+    if env_root:
+        path = os.path.abspath(env_root)
+        if os.path.isfile(os.path.join(path, "index.html")):
+            return path
+        hub_logger.warning(
+            "HUB_WEBSITE_ROOT set but index.html missing: %s", path
+        )
+        return None
+    bundled = os.path.join(base_dir, "website")
+    if os.path.isfile(os.path.join(bundled, "index.html")):
+        return bundled
+    folder = HUB_ROOT_SPA_FOLDER
+    if not folder:
+        return None
+    path = folder if os.path.isabs(folder) else os.path.join(base_dir, folder)
+    path = os.path.abspath(path)
+    if os.path.isfile(os.path.join(path, "index.html")):
+        return path
+    return None
+
 
 # Known crawler / spiderbot User-Agent substrings (matched case-insensitively).
 _SPIDER_BOT_UA_MARKERS = frozenset(
@@ -928,12 +964,9 @@ def _register_spa_client(app, mount_path: str, client_folder: str) -> bool:
     return True
 
 
-def _register_hub_root_spa(app, client_folder: str) -> bool:
-    """Optional SPA at hub ``/`` (GET). Unused when OHIF is under ``/ohif/``."""
-    client_folder = str(client_folder or "").strip()
-    if not client_folder:
-        return False
-    client_dir = os.path.join(base_dir, client_folder)
+def _register_hub_root_spa(app, client_dir: str) -> bool:
+    """Serve a built static site (index.html + assets) at hub ``/`` (GET)."""
+    client_dir = os.path.abspath(str(client_dir or "").strip())
     index_path = os.path.join(client_dir, "index.html")
     if not os.path.isdir(client_dir) or not os.path.isfile(index_path):
         return False
@@ -949,9 +982,15 @@ def _register_hub_root_spa(app, client_folder: str) -> bool:
     async def hub_root_spa(full_path: str = ""):
         relative = full_path.lstrip("/")
         if relative:
-            requested_file = os.path.join(client_dir, relative)
+            requested_file = os.path.normpath(os.path.join(client_dir, relative))
+            if not _path_is_under(requested_file, client_dir):
+                raise HTTPException(status_code=404, detail="Not found")
             if os.path.isfile(requested_file):
                 return FileResponse(requested_file)
+            # Missing css/js/images/etc. → 404 (do not fall back to index.html).
+            _stem, ext = os.path.splitext(relative)
+            if ext:
+                raise HTTPException(status_code=404, detail="Not found")
         return FileResponse(index_path)
 
     app.add_api_route("/", hub_root_spa, methods=["GET"], name="hub_root_spa_index")
@@ -1319,6 +1358,14 @@ class Hub:
             
             websocket_url = f"{protocol}://{request_host}/bind/{websocket_endpoint}"
             
+            replaced_subscriptions: List[Dict] = []
+            if channel_type == "websocket":
+                replaced_subscriptions = (
+                    self._take_matching_websocket_subscriptions(
+                        subscriber_name, hub_topic
+                    )
+                )
+
             subscription = {
                 "channel": channel_type,
                 "endpoint": websocket_url if channel_type == "websocket" else hub_callback,
@@ -1353,7 +1400,8 @@ class Hub:
 
             return {
                 "subscription": subscription,
-                "websocket_url": websocket_url if channel_type == "websocket" else None
+                "websocket_url": websocket_url if channel_type == "websocket" else None,
+                "replaced_subscriptions": replaced_subscriptions,
             }
         
         elif hub_mode == "unsubscribe":
@@ -1392,6 +1440,73 @@ class Hub:
     
     def _copy_subscription_record(self, sub: Dict) -> Dict:
         return copy.deepcopy(sub)
+
+    def _take_matching_websocket_subscriptions(
+        self, subscriber: str, topic: str
+    ) -> List[Dict]:
+        """Remove websocket rows for the same subscriber+topic (resubscribe replace).
+
+        Matching is case-insensitive on ``subscriber`` and exact on ``topic``.
+        Returns deep copies of removed records for fan-out. Does not close bind
+        sockets; the caller must close endpoints separately.
+        """
+        subscriber_key = (subscriber or "").strip().lower()
+        topic_key = topic or ""
+        if not subscriber_key:
+            return []
+
+        taken: List[Dict] = []
+        for sub in self.subscriptions[:]:
+            if sub.get("channel") != "websocket":
+                continue
+            if sub.get("topic") != topic_key:
+                continue
+            if str(sub.get("subscriber") or "").strip().lower() != subscriber_key:
+                continue
+            client_info = (
+                sub.get("client_info")
+                if isinstance(sub.get("client_info"), dict)
+                else {}
+            )
+            self.log(
+                _subscription_log_message(
+                    "replaced",
+                    subscriber_name=str(sub.get("subscriber") or "unknown"),
+                    hub_topic=str(sub.get("topic") or ""),
+                    channel_type=str(sub.get("channel") or ""),
+                    hub_events=sub.get("events"),
+                    subscriber_actors=sub.get("actors") or [],
+                    subscriber_product=str(client_info.get("productName") or ""),
+                    subscriber_version=str(client_info.get("version") or ""),
+                    websocket_endpoint=str(sub.get("websocket_endpoint") or ""),
+                )
+            )
+            taken.append(self._copy_subscription_record(sub))
+            self.subscriptions.remove(sub)
+
+        if taken:
+            self.log(
+                f"Subscription replace: removed={len(taken)} "
+                f"remaining={len(self.subscriptions)} "
+                f"subscriber={subscriber!r} topic={topic_key!r}"
+            )
+        return taken
+
+    async def close_websocket_endpoints(self, endpoints: List[str]) -> None:
+        """Pop and close bind sockets without touching the subscription list."""
+        for endpoint in endpoints:
+            if not endpoint:
+                continue
+            websocket = self.websocket_connections.pop(endpoint, None)
+            if websocket is None:
+                continue
+            try:
+                await websocket.close()
+                self.log(f"WebSocket closed for replaced endpoint: {endpoint}")
+            except Exception as e:
+                self.log(
+                    f"Error closing replaced WebSocket {endpoint}: {e}"
+                )
 
     async def broadcast_subscription_removed(
         self, removed_subs: List[Dict], reason: str
@@ -4142,7 +4257,18 @@ async def post_hub(request: Request):
                 return {"status": "unsubscribed", "removed": result.get("removed", 0)}
             # Handle subscribe
             result = hub.add_subscription(subscription_data)
-            
+            replaced_subs = result.get("replaced_subscriptions") or []
+            if replaced_subs:
+                await hub.close_websocket_endpoints(
+                    [
+                        str(sub.get("websocket_endpoint") or "")
+                        for sub in replaced_subs
+                    ]
+                )
+                await hub.broadcast_subscription_removed(
+                    replaced_subs, "resubscribe"
+                )
+
             # Return appropriate response - 202 Accepted for subscription requests
             if result.get("websocket_url"):
                 return JSONResponse(
@@ -4668,9 +4794,12 @@ async def post_oauth_token(request: Request):
     return response
 
 
-# Optional hub-root SPA (none by default; OHIF is at /ohif/).
-if HUB_ROOT_SPA_FOLDER and _register_hub_root_spa(app, HUB_ROOT_SPA_FOLDER):
-    _registered_spa_clients.append(f"/ ({HUB_ROOT_SPA_FOLDER})")
+# Optional marketing/static site at hub ``/`` (HUB_WEBSITE_ROOT or hub/website/).
+_hub_root_site_dir = _resolve_hub_root_site_dir()
+if _hub_root_site_dir and _register_hub_root_spa(app, _hub_root_site_dir):
+    _registered_spa_clients.append(f"/ ({_hub_root_site_dir})")
+else:
+    _hub_root_site_dir = None
 
 
 def main():
@@ -4689,6 +4818,8 @@ def main():
     print("=" * 60)
     print(f"Server running on http://{args.host}:{args.port}")
     print(f"Hub API endpoint: http://{args.host}:{args.port}/api/hub/")
+    if _hub_root_site_dir:
+        print(f"Marketing site: http://{args.host}:{args.port}/")
     if any(entry.startswith("/ohif") for entry in _registered_spa_clients):
         print(f"OHIF viewer: http://{args.host}:{args.port}/ohif/")
     print("")
