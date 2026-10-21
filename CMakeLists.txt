@@ -9,7 +9,7 @@ set(EXTENSION_CONTRIBUTORS "Martin Bellehumeur")
 set(EXTENSION_DESCRIPTION "Desktop Integration for Healthcare PRoviders, Educators  and Researchers.")
 set(EXTENSION_ICONURL "https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/HubInterfaceExtensionLogo.png")
 set(EXTENSION_SCREENSHOTURLS
-  "https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/banner.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/hub-admin.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/worklist-client.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/Screenshot-SlicerHubQt.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/Screenshot-classroom.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/Screenshot-evidence-creators.png"
+  "https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/HubServerLogo.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/hub-admin.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/worklist-client.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/Screenshot-SlicerHubQt.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/Screenshot-classroom.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/Screenshot-evidence-creators.png"
   )
 set(EXTENSION_DEPENDS "NA")
 
