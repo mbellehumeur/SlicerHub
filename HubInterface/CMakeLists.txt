@@ -34,8 +34,7 @@ set(_HUB_INSTALL_EXCLUDES
   PATTERN "*.pyc" EXCLUDE
   PATTERN "*.pyo" EXCLUDE
   PATTERN "volview-client" EXCLUDE
-  PATTERN "vtkjs-worklist-client" EXCLUDE
-  PATTERN "hub-worklist-example" EXCLUDE
+  PATTERN "worklist-example" EXCLUDE
   PATTERN "OHIF-client" EXCLUDE
   PATTERN "slim" EXCLUDE
   PATTERN "deploy" EXCLUDE

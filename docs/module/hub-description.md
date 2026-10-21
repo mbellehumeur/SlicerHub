@@ -1,26 +1,18 @@
 # Hub description
 
 
-In addition to distributing FHIRcast events, slicer hub allows the following:
+In addition to distributing FHIRcast events, Slicer Hub supports:
 
- - Request data from applications.
- - File transfer.
- - Service providers for remote inference and AI orchestrators.
- - Conferencing.
- - IHE actor naming for advanced message routing.
- - Three additional subscription fields:
-     - subscriber.product.name,
-     - subscriber.product.version,
-     - subscriber.actors (list)
- - Four additional event fields:
-     - subscriber.name
-     - subscriber.actor
-     - target.actor
-     - target.product.name
+- Requesting data from applications (collated request/response)
+- Binary file transfer (ephemeral payloads; not a durable store)
+- Service providers for remote inference and AI orchestration
+- Conferencing
+- IHE actor naming for advanced message routing
+- Extra subscription fields: `subscriber.product.name`, `subscriber.product.version`, `subscriber.actors`
+- Extra event fields: `subscriber.name`, `subscriber.actor`, `target.actor`, `target.product.name`
+- Hub-generated `subscription-removed` when a subscriber leaves, disconnects, fails delivery, or is replaced by resubscribe
 
- - Additional hub-generated `subscription-removed` event when an application disconnects  from the WebSocket.
-
-The hub has no file storage or database.  It is strictly dedicated to message routing and does not look at the data or event names.
+The hub has no persistent database. It is dedicated to message routing and does not inspect event data beyond matching and delivery.
 
 
 ## How does the request work?
