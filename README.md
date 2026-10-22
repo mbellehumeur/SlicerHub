@@ -38,13 +38,13 @@ Research and 3D Slicer functionalities, also independent of IHE, are included:
 - Status-request messaging for using current information from other applications in the workflow
 - Slicer Qt Image Display client and DICOM DB study list (same python/websocket client)
 
-File transfer allows inference servers to send their results directly back to the viewers without having to archived them to PACS first.  Research file formats like NIfTI, NRRD, and Zarr can be used.   Transfer is realized with multi-part POST to the hub and then GET retrieves from the receiving applications and service providers.  The file naming policy is decribed [here](docs/module/filename-policy.md). 
+File transfer allows inference servers to send their results directly back to the viewers without having to archive them to PACS first.  Research file formats like NIfTI, NRRD, and Zarr can be used.   Transfer is realized with multi-part POST to the hub and then GET retrieves from the receiving applications and service providers.  The file naming policy is decribed [here](docs/module/filename-policy.md). 
 
 
 
 ## Background
 
-Slicer Hub is an extension of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the standard replacing Epic’s file drop interface for integration with PACS and reporting systems. It provides a secure event messaging infrastructure using a hub with websocket subscriptions.  The Slicer Hub expands on the initial FHIRcast design to support research and education with additional data types and it utilizes more of the built-in capabilities of the WebSub infrastructure such as conferencing and chat.For an overview of common features and differences of the Slicer Hub vs FHIRcast see [docs/module/hub-description.md](docs/module/hub-description.md).
+Slicer Hub is an extension of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the standard replacing Epic’s file drop interface for integration with PACS and reporting systems. It provides a secure event messaging infrastructure using a hub with websocket subscriptions.  The hub expands on the initial FHIRcast design to support research and education with additional data types and it utilizes more of the built-in capabilities of the WebSub infrastructure such as conferencing and chat.  For an overview of common features and differences with FHIRcast see [docs/module/hub-description.md](docs/module/hub-description.md).
 
 
 <p align="center">
@@ -78,7 +78,7 @@ It can be used without the Slicer extension by running the `hub.py` script.
 
 ### Service Providers
 
-Service Providers are scripts that typically connect inference servers to the hub using a websocket connection. This allows users to, for example, view results without having to send them to the PACS archive first.
+Service Providers are scripts that typically run on inference servers to connect them the hub with a websocket connection. The provider will receive instructions over the websocket to process a dataset with specific options, download the data, process and return result to the viewer.  This allows users to view results without having to send them to the PACS archive first.  The service can run on a local machin (only the hub needs to be on the internet with a domain name) therefore avoiding cloud GPU costs. 
 
 The service provider tab provides a visual description of how processing resources can be connected to the hub and made available to hub workflows.
 
