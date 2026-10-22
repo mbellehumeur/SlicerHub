@@ -15,11 +15,6 @@
   function applyMode(mode) {
     document.documentElement.dataset.mode = mode;
 
-    var banner = document.getElementById('site-banner');
-    if (banner && banner.dataset.light && banner.dataset.dark) {
-      banner.src = mode === 'dark' ? banner.dataset.dark : banner.dataset.light;
-    }
-
     var btn = document.getElementById('theme-toggle');
     if (btn) {
       var toLight = mode === 'dark';
