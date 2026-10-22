@@ -4,15 +4,18 @@
 In addition to distributing FHIRcast events, Slicer Hub supports:
 
 - Requesting data from applications (collated request/response)
-- Binary file transfer (ephemeral payloads; not a durable store)
+- Binary file transfer (ephemeral payloads through the hub with multi-part POST/GET)
 - Service providers for remote inference and AI orchestration
 - Conferencing
 - IHE actor naming for advanced message routing
 - Extra subscription fields: `subscriber.product.name`, `subscriber.product.version`, `subscriber.actors`
 - Extra event fields: `subscriber.name`, `subscriber.actor`, `target.actor`, `target.product.name`
-- Hub-generated `subscription-removed` when a subscriber leaves, disconnects, fails delivery, or is replaced by resubscribe
+- Hub-generated `subscription-removed` event when a subscriber leaves, disconnects, fails delivery, or is replaced by resubscribe
 
-The hub has no persistent database. It is dedicated to message routing and does not inspect event data beyond matching and delivery.
+The hub has no persistent database or disk storage. It is dedicated to message routing and does not inspect event data beyond matching and delivery.
+
+The extension javascript client libraries has been used in IHE connectathons to participate in the IRA reporting workflows.  The extension does not include a FHIR server or a DiagnosticReport resource creator.  For FHIRcast with a FHIR viewer and SMART authorization server, see the [OHIF FHIR Viewer](https://ohif.org/modes/fhir-viewer/) mode or [Medplum](https://www.medplum.com/docs/fhircast). 
+
 
 
 ## How does the request work?
