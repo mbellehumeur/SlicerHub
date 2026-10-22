@@ -6,7 +6,7 @@ project(HubInterface)
 # Extension meta-information
 set(EXTENSION_HOMEPAGE "https://github.com/mbellehumeur/SlicerHub")
 set(EXTENSION_CONTRIBUTORS "Martin Bellehumeur")
-set(EXTENSION_DESCRIPTION "Desktop Integration for Healthcare PRoviders, Educators  and Researchers.")
+set(EXTENSION_DESCRIPTION "WebSub infrastructure for Healthcare Providers, Educators and Researchers.")
 set(EXTENSION_ICONURL "https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/HubServerLogo.png")
 set(EXTENSION_SCREENSHOTURLS
   "https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/HubServerLogo.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/hub-admin.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/worklist-client.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/Screenshot-SlicerHubQt.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/Screenshot-classroom.png https://raw.githubusercontent.com/mbellehumeur/SlicerHub/main/docs/images/Screenshot-evidence-creators.png"

@@ -91,7 +91,7 @@ class HubInterface(ScriptedLoadableModule):
             """
             <b>License</b><br>
             Slicer Hub is distributed under the
-            <a href="https://github.com/mbellehumeur/SlicerHub/blob/main/LICENSE">MIT License</a>.<br><br>
+            <a href="https://github.com/mbellehumeur/SlicerHub/blob/main/LICENSE.txt">MIT License</a>.<br><br>
             <b>Acknowledgements</b><br>
             <b>3D Slicer</b> &mdash; open-source platform for medical image computing from the
             <a href="https://www.slicer.org/">3D Slicer community</a>.

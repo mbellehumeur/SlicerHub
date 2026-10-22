@@ -33,7 +33,6 @@ set(_HUB_INSTALL_EXCLUDES
   PATTERN "__pycache__" EXCLUDE
   PATTERN "*.pyc" EXCLUDE
   PATTERN "*.pyo" EXCLUDE
-  PATTERN "volview-client" EXCLUDE
   PATTERN "worklist-example" EXCLUDE
   PATTERN "OHIF-client" EXCLUDE
   PATTERN "slim" EXCLUDE

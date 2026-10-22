@@ -184,7 +184,7 @@ Override module root at runtime with `HUB_REPO_ROOT` when needed.
 
 ## License
 
-Slicer Hub is distributed under the [MIT License](LICENSE).
+Slicer Hub is distributed under the [MIT License](LICENSE.txt).
 
 ## Acknowledgements
 
