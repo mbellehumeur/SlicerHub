@@ -4,7 +4,7 @@
   <img src="docs/images/banner.jpg" alt="Slicer Hub Banner" width="100%">
 </p>
 
-The Slicer Hub extension is a [WebSub](https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern)  messaging infrastructure that connects users of image displays, worklists, reporting tools, conferencing tools, remote inference models and AI Orchestrators.
+The Slicer Hub extension is a [WebSub](https://www.w3.org/TR/websub/)  messaging infrastructure that connects users of image displays, worklists, reporting tools, conferencing tools, remote inference models and AI Orchestrators.
 
 Try the [online example worklist client](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/) or watch the [classroom vanishing brush tool](https://youtu.be/xKQEOs1_9Bg) along with this documentation to find out more.
 
@@ -41,22 +41,19 @@ Research and 3D Slicer functionalities, also independent of IHE, are included:
 File transfer allows inference servers to send their results directly back to the viewers without having to archived them to PACS first.  Research file formats like NIfTI, NRRD, and Zarr can be used.   Transfer is realized with multi-part POST to the hub and then GET retrieves from the receiving applications and service providers.  The file naming policy is decribed [here](docs/module/filename-policy.md). 
 
 
-The extension javascript client libraries can be used to participate in IHE reporting workflows but it  does not include a FHIR server or a FHIR Diagnostic Report Creator. 
-
-For open-source FHIRcast with a FHIR viewer and SMART authorization server, see the [OHIF FHIR Viewer](https://ohif.org/modes/fhir-viewer/) mode or [Medplum](https://www.medplum.com/docs/fhircast).
-
- For an overview of common features and differences of the Slicer Hub vs FHIRcast see [docs/module/hub-description.md](docs/module/hub-description.md).
 
 ## Background
 
 Slicer Hub is an extension of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is the standard replacing Epic’s file drop interface for integration with PACS and reporting systems. It provides a secure event messaging infrastructure using a hub with websocket subscriptions.  The Slicer Hub expands on the initial FHIRcast design to support research and education and utilize more of the built-in capabilities of the WebSub infrastructure.
+The extension javascript client libraries can be used to participate in IHE reporting workflows but it  does not include a FHIR server or a FHIR Diagnostic Report Creator.  For FHIRcast with a FHIR viewer and SMART authorization server, see the [OHIF FHIR Viewer](https://ohif.org/modes/fhir-viewer/) mode or [Medplum](https://www.medplum.com/docs/fhircast). For an overview of common features and differences of the Slicer Hub vs FHIRcast see [docs/module/hub-description.md](docs/module/hub-description.md).
+
 
 <p align="center">
   <img src="docs/images/hub-admin.png" alt="Hub admin portal" width="100%">
 </p>
 
 
-You can test websocket subscription integration with the [Slicer Hub worklist example](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/). 
+You can try WebSub integration with the [Slicer Hub worklist example](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/). 
 
 <p align="center">
   <a href="https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/">
@@ -68,7 +65,7 @@ You can test websocket subscription integration with the [Slicer Hub worklist ex
 
 ## Extension Features
 
-The extension features a hub and two hub interfaces: one for connecting inference models like Total Segmentator (service providers) and another to connect the 3D Slicer Qt viewer (Image Display client) and DICOM DB  to the hub.
+The extension features a hub and two client interfaces interfaces: one for connecting inference models like Total Segmentator (service providers) and another to connect the 3D Slicer Qt viewer (Image Display client) and DICOM DB  to the hub.
 
 ### Hub
 
