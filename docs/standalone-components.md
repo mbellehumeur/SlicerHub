@@ -79,4 +79,4 @@ from hub_client import SlicerHubClient, HubConfig, SessionConfig
 
 ## Browser image display
 
-VolView and OHIF ship in the hub deploy zip (see `HubInterface/hub/make_zip.py`). For local dev, use vtk-js / VolView builds against the same hub port.
+VolView and OHIF ship in the hub deploy zip. For local dev, use vtk-js / VolView builds against the same hub port.

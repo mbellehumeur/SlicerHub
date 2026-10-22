@@ -8,6 +8,11 @@ dist/
 *.egg-info/
 .eggs/
 
+# Local-only (kept on disk, not in git)
+AGENTS.md
+HubInterface/hub/make_zip.py
+HubInterface/hub/build_clients.sh
+
 # Slicer hub deploy artifacts
 HubInterface/hub/slicer-hub.zip
 deploy/

@@ -173,13 +173,6 @@ See [docs/standalone-components.md](docs/standalone-components.md) for details.
 
 Build from this repo (`CMakeLists.txt` at repo root, module in `HubInterface/`). For dev, add the **repo root** to Additional module paths — Slicer discovers `HubInterface/HubInterface.py`.
 
-Optional sync into an installed module directory:
-
-```bash
-export SLICER_HUB_EXTENSION="/path/to/qt-scripted-modules/HubInterface"
-python tools/sync_extension.py --bundle
-```
-
 Override module root at runtime with `HUB_REPO_ROOT` when needed.
 
 ## License

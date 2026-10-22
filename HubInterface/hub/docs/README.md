@@ -28,7 +28,7 @@ python hub.py --port 2018
 
 Open `http://127.0.0.1:2018/`.
 
-**Packaged zip:** `make_zip.py` syncs `bellehumeur-website/dist` → `hub/website/` (gitignored). A zip that includes `website/index.html` serves `/` without `HUB_WEBSITE_ROOT`. Build the site first (`python build.py`) or pass `--website-dist`.
+**Packaged zip:** a deploy zip that includes `hub/website/index.html` (synced from `bellehumeur-website/dist`, gitignored) serves `/` without `HUB_WEBSITE_ROOT`.
 
 Or with VolView RPC:
 
