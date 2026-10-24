@@ -26,8 +26,10 @@ EMPTY_FHIRCAST_CONTEXT: Dict[str, Any] = {"context.type": "", "context": []}
 ID_ACTOR_KEYWORD = "ID"
 STATUS_DATA_TYPE = "STATUS"
 LIVESCENE_DATA_TYPE = "LIVESCENE"
+DICOM_DATA_TYPE = "DICOM"
 SCENEVIEW_BUILD_TIMEOUT_SECONDS = 9.0
 LIVESCENE_EXPORT_TIMEOUT_SECONDS = 120.0
+DICOM_EXPORT_TIMEOUT_SECONDS = 300.0
 
 
 def _normalize_target_actor(value: Any) -> str:
@@ -193,6 +195,10 @@ async def handle_hub_request(
         await handle_livescene_request(connection, client, message)
         return
 
+    if normalized == normalize_data_type(DICOM_DATA_TYPE):
+        await handle_dicom_request(connection, client, message)
+        return
+
     LOGGER.debug(
         "Ignoring unsupported request event=%s dataType=%s",
         hub_event,
@@ -260,6 +266,75 @@ async def handle_livescene_request(
                 "product": _resolve_product_name(connection),
                 "nodeCount": node_count,
                 "blobCount": blob_count,
+            },
+            _topic_from_message(message),
+        )
+
+
+def _dicom_request_uids(message: Dict[str, Any]) -> tuple[str, str]:
+    context = request_context(message)
+    study_uid = str(context.get("studyInstanceUID") or "").strip()
+    series_uid = str(context.get("seriesInstanceUID") or "").strip()
+    return study_uid, series_uid
+
+
+async def handle_dicom_request(
+    connection: "ImageDisplayClientConnection",
+    client: "SlicerHubClient",
+    message: Dict[str, Any],
+) -> None:
+    """Export local DICOM DB files and publish dicom-send for web viewers."""
+    correlation_id = _request_correlation_id(message)
+    topic = _topic_from_message(message) or connection.get_topic() or ""
+    study_uid, series_uid = _dicom_request_uids(message)
+
+    def export_on_main() -> tuple:
+        from local_dicom_export import export_local_dicom_send_message
+
+        return export_local_dicom_send_message(
+            topic=str(topic or ""),
+            study_instance_uid=study_uid,
+            series_instance_uid=series_uid,
+        )
+
+    try:
+        hub_message, resolved_study_uid, file_count = await asyncio.wait_for(
+            connection.run_on_main_thread(export_on_main),
+            timeout=DICOM_EXPORT_TIMEOUT_SECONDS,
+        )
+    except Exception as exc:
+        LOGGER.warning("dicom-request export failed: %s", exc)
+        if correlation_id:
+            client.send_hub_request_response(
+                correlation_id,
+                DICOM_DATA_TYPE,
+                {
+                    "source": "dicom",
+                    "ok": False,
+                    "error": str(exc).strip() or exc.__class__.__name__,
+                    "studyInstanceUID": study_uid,
+                },
+                _topic_from_message(message),
+            )
+        return
+
+    status = await client.publish(hub_message)
+    LOGGER.info(
+        "dicom-request: published dicom-send study=%s files=%d http=%s",
+        resolved_study_uid,
+        file_count,
+        status,
+    )
+    if correlation_id:
+        client.send_hub_request_response(
+            correlation_id,
+            DICOM_DATA_TYPE,
+            {
+                "source": "dicom",
+                "ok": True,
+                "product": _resolve_product_name(connection),
+                "fileCount": file_count,
+                "studyInstanceUID": resolved_study_uid,
             },
             _topic_from_message(message),
         )

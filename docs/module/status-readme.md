@@ -137,6 +137,25 @@ After WebSocket connect, image displays send `status-request` with `target.actor
 1. Load study from the worklist response (`context.type === 'ImagingStudy'`).
 2. Ignore other responders for study loading; their `sceneview` embed is for layout/status UI.
 
+## `local-dicom` → `dicom-request`
+
+3D Slicer Image Display advertises local DICOM database studies in STATUS
+`studies[]` with `openMode: "local-dicom"` (StudyInstanceUID only — no URLs).
+
+Worklist Open publishes `ImagingStudy-open` with that mode. QT Slicer loads from
+its own DICOM DB. Web image displays (OHIF, SlicerLive IRA) cannot read that DB;
+they pull bytes with a typed hub request:
+
+| Step | Actor | Event |
+|------|--------|--------|
+| 1 | OHIF / IRA | `dicom-request` (`dataType: DICOM`, `studyInstanceUID`, optional `seriesInstanceUID`), `target.actor: ID` |
+| 2 | 3D Slicer ID | Reads files from `slicer.dicomDatabase`, publishes multipart `dicom-send` |
+| 3 | 3D Slicer ID | Collated `dicom-response` `{ ok, fileCount, studyInstanceUID }` |
+| 4 | OHIF / IRA | Existing `dicom-send` ingest opens the study |
+
+Slicer ID must subscribe to `dicom-request` (same pattern as `livescene-request`).
+JS helper: `requestHubDicom` in `@slicer-hub/client`.
+
 ## `status-update` (one-way job log)
 
 Service providers can publish progress lines to a **single** subscriber without a

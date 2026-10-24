@@ -37,6 +37,7 @@ DISPLAY_EVENTS = [
     "imagingstudy-close",
     "status-request",
     "livescene-request",
+    "dicom-request",
     "scene-update",
     "annotation-update",
     "annotation-delete",

@@ -98,6 +98,11 @@ The image display client provides a PACS client type interface to the 3D Slicer 
   <img src="docs/images/ImageDisplayClient.png" alt="Image display client" width="80%">
 </p>
 
+It also forwards LiveScene events to the hub and provides access to DICOMDB to the worklist client. 
+Here is an example of its use:  
+https://youtu.be/rvaVWOaYgqU
+
+
 ### Simplified, secure deployment of medical imaging services
 
 This architecture protects service providers by eliminating direct inbound internet exposure entirely. No hostname is required and no changes to the networking environment are needed. No VPN or proxy to configure.

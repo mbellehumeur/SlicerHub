@@ -468,6 +468,70 @@ def force_image_display_render() -> None:
         LOGGER.warning("Image Display force render failed: %s", exc)
 
 
+def _first_scalar_volume_node(node_ids: Sequence[str]) -> Any:
+    for node_id in node_ids:
+        if not node_id:
+            continue
+        node = slicer.mrmlScene.GetNodeByID(node_id)
+        if node is None:
+            continue
+        if node.IsA("vtkMRMLScalarVolumeNode"):
+            return node
+    return None
+
+
+def show_loaded_volumes_in_viewports(node_ids: Sequence[str]) -> None:
+    """Show the first loaded scalar volume in three slices + 3D (volume rendering)."""
+    volume_node = _first_scalar_volume_node(node_ids)
+    if volume_node is None:
+        LOGGER.info("Image Display: no scalar volume to show in viewports")
+        return
+
+    try:
+        layout_manager = slicer.app.layoutManager()
+        if layout_manager is not None:
+            layout_manager.setLayout(
+                slicer.vtkMRMLLayoutNode.SlicerLayoutFourUpView
+            )
+    except Exception as exc:
+        LOGGER.warning("Image Display FourUp layout failed: %s", exc)
+
+    try:
+        slicer.util.setSliceViewerLayers(
+            background=volume_node,
+            foreground=None,
+            label=None,
+            fit=True,
+        )
+    except Exception as exc:
+        LOGGER.warning("Image Display slice layers failed: %s", exc)
+
+    try:
+        vr_logic = slicer.modules.volumerendering.logic()
+        display_node = vr_logic.CreateDefaultVolumeRenderingNodes(volume_node)
+        if display_node is not None:
+            display_node.SetVisibility(True)
+    except Exception as exc:
+        LOGGER.warning("Image Display volume rendering failed: %s", exc)
+
+    try:
+        layout_manager = slicer.app.layoutManager()
+        if layout_manager is not None:
+            three_d_widget = layout_manager.threeDWidget(0)
+            if three_d_widget is not None:
+                three_d_view = three_d_widget.threeDView()
+                three_d_view.resetFocalPoint()
+                three_d_view.resetCamera()
+    except Exception as exc:
+        LOGGER.warning("Image Display 3D camera reset failed: %s", exc)
+
+    force_image_display_render()
+    LOGGER.info(
+        "Image Display showed volume in FourUp + VR: %s",
+        volume_node.GetName() if hasattr(volume_node, "GetName") else "(volume)",
+    )
+
+
 def load_local_dicom_study(plan: ImagingStudyOpenPlan) -> Dict[str, Any]:
     """Load a study already present in ``slicer.dicomDatabase`` by StudyInstanceUID."""
     study_uid = str(plan.get("study_uid") or "").strip()
@@ -544,6 +608,8 @@ def load_imaging_study_open(context: Any) -> Dict[str, Any]:
             study_id or "(unknown)",
             len(result.get("loaded_node_ids") or []),
         )
+        if str(result.get("load_status") or "").strip() in ("", "loaded"):
+            show_loaded_volumes_in_viewports(result.get("loaded_node_ids") or [])
         return result
     except Exception as exc:
         message = str(exc).strip() or exc.__class__.__name__
