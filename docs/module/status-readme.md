@@ -142,7 +142,7 @@ After WebSocket connect, image displays send `status-request` with `target.actor
 3D Slicer Image Display advertises local DICOM database studies in STATUS
 `studies[]` with `openMode: "local-dicom"` (StudyInstanceUID only — no URLs).
 
-Worklist Open publishes `ImagingStudy-open` with that mode. QT Slicer loads from
+Worklist Open publishes `imagingstudy-open` with that mode. QT Slicer loads from
 its own DICOM DB. Web image displays (OHIF, SlicerLive IRA) cannot read that DB;
 they pull bytes with a typed hub request:
 

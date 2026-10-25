@@ -97,6 +97,7 @@ _lib_dir = os.path.join(_base_dir, "Lib")
 if _lib_dir not in sys.path:
     sys.path.insert(0, _lib_dir)
 from hub_client import (
+    SUBSCRIPTION_REMOVED,
     data_type_from_event_name,
     is_hub_binary_event,
     is_request_event,
@@ -136,7 +137,7 @@ from segment_label_translate import (
 HUB_REQUEST_TIMEOUT_SECONDS = float(os.getenv("HUB_REQUEST_TIMEOUT_SECONDS", "2"))
 
 # Hub-generated lifecycle event (not FHIRcast catalog); fan-out to peers on same topic.
-SUBSCRIPTION_REMOVED_EVENT = "subscription-removed"
+SUBSCRIPTION_REMOVED_EVENT = SUBSCRIPTION_REMOVED
 
 
 def _env_flag(name: str, default: bool = False) -> bool:

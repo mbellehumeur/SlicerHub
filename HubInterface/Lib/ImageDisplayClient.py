@@ -12,7 +12,7 @@ import qt
 import slicer
 from slicer.i18n import tr as _
 
-from hub_client import generate_subscriber_name
+from hub_client import IMAGINGSTUDY_OPEN, generate_subscriber_name
 from .conference import hub_endpoint_for_name
 from .ConferenceDialog import ConferenceDialog
 from .ServiceProviders import (
@@ -67,7 +67,7 @@ def _connected_status_text(detail: Dict[str, Any]) -> str:
         else:
             text = _("{base} — load failed").format(base=text)
     elif last_event:
-        if study_id and last_event == "imagingstudy-open":
+        if study_id and last_event == IMAGINGSTUDY_OPEN:
             text = _("{base} — loading {study}…").format(
                 base=text,
                 study=study_id,

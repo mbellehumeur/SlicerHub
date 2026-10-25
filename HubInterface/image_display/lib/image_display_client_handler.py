@@ -5,6 +5,7 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, TYPE_CHECKING
 
+from hub_client import IMAGINGSTUDY_CLOSE, IMAGINGSTUDY_OPEN
 from imaging_study_context import (
     extract_open_mode,
     extract_study_display_id,
@@ -110,7 +111,7 @@ def handle_imaging_study_open(
     _schedule_load(connection, list(context), load_generation)
     return {
         "last_open_context": list(context),
-        "last_event": "imagingstudy-open",
+        "last_event": IMAGINGSTUDY_OPEN,
         "open_study_id": study_id,
         "open_mode": open_mode,
     }
@@ -130,7 +131,7 @@ def handle_imaging_study_close(
     _schedule_clear(connection)
     return {
         "last_open_context": [],
-        "last_event": "imagingstudy-close",
+        "last_event": IMAGINGSTUDY_CLOSE,
         "open_study_id": "",
         "open_mode": "",
         "load_status": "",

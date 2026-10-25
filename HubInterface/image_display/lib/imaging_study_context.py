@@ -1,4 +1,4 @@
-"""FHIRcast ImagingStudy-open context extractors (aligned with vtk-js imagingStudyContext.js)."""
+"""FHIRcast imagingstudy-open context extractors (aligned with @slicer-hub/client imagingStudyContext.js)."""
 
 from __future__ import annotations
 

@@ -21,9 +21,9 @@ Subscribers never auto-download inside the Hub client library; the application
 (or Slicer `service_provider_hub.py`) calls `fetch_all_payloads` / `fetchAllPayloads`
 before handling the event.
 
-Authoritative hub code: `hub/hub.py`. Matching clients:
-vtk-js `Sources/IO/Core/HubClient/`, VolView `src/io/hub-client.ts`, OHIF
-`extensions/cast`, Slicer `python_client`.
+Authoritative hub code: `HubInterface/hub/hub.py`. Matching clients:
+`HubInterface/python_client` (`hub_client`), `@slicer-hub/client`
+(SlicerHub-js-clients), and `@slicer-hub/ohif-extension`.
 
 Filename rules when storing bytes: `VolView/server/hub/filename-policy.md`.
 

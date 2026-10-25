@@ -21,10 +21,14 @@ Framework: `service_provider.py` (shared with other service providers).
 ## Dependencies
 
 ```bash
-pip install aiohttp nnunetv2 torch
+pip install aiohttp nnunetv2
+# CUDA torch (required for GPU). Plain `pip install torch` installs a +cpu build
+# on Windows and dental_segmentator will fall back to CPU even if a GPU is present:
+pip install torch --index-url https://download.pytorch.org/whl/cu128
 ```
 
-CUDA recommended; CPU works but is slow (set `DENTAL_SEG_DEVICE=cpu`).
+CUDA recommended; CPU works but is slow (set `DENTAL_SEG_DEVICE=cpu`). A `+cpu`
+torch build ignores the GPU — check `python -c "import torch; print(torch.__version__, torch.cuda.is_available())"`.
 
 ## Model weights
 

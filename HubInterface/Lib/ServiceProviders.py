@@ -18,7 +18,16 @@ import qt
 import slicer
 from slicer.i18n import tr as _
 
-from hub_client import HubClientOptions, HubConfig, SessionConfig, SlicerHubClient
+from hub_client import (
+    DICOM_SEND,
+    IDC_CLAUDE_SEND,
+    NIFTI_SEND,
+    HubClientOptions,
+    HubConfig,
+    SessionConfig,
+    SlicerHubClient,
+    request_event_for,
+)
 
 LOGGER = logging.getLogger("HubInterface.ServiceProviders")
 LOGGER.setLevel(logging.INFO)
@@ -76,11 +85,11 @@ def default_aibrain_script_path() -> str:
 
 DEFAULT_SCRIPT_PATH = default_aibrain_script_path()
 EVENTS = [
-    "dicom-send",
-    "nifti-send",
-    "status-request",
-    "idc-claude-request",
-    "idc-claude-send",
+    DICOM_SEND,
+    NIFTI_SEND,
+    request_event_for("STATUS"),
+    request_event_for("IDC-CLAUDE"),
+    IDC_CLAUDE_SEND,
 ]
 ACTORS = ["EC"]
 USER_NAME = "3dslicer-server"

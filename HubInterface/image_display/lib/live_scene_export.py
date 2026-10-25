@@ -9,6 +9,8 @@ import shutil
 import tempfile
 from typing import Any, Dict, List, Optional, Tuple
 
+from hub_client import IMAGINGSTUDY_OPEN
+
 LOGGER = logging.getLogger("HubInterface.ImageDisplay")
 
 LIVE_SCENE_SAMPLE_ID = "slicer-live-scene"
@@ -190,7 +192,7 @@ def build_livescene_imaging_study_open_message(
     return {
         "event": {
             "hub.topic": topic,
-            "hub.event": "ImagingStudy-open",
+            "hub.event": IMAGINGSTUDY_OPEN,
             "context": {
                 "study": study,
                 "scene": scene_doc,

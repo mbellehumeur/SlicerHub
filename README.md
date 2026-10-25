@@ -92,7 +92,7 @@ Since these resources do not log in as a user, they need a *service provider ent
 
 ### Image Display Client
 
-The image display client provides a PACS client type interface to the 3D Slicer viewer. Supported events include ImagingStudy-open, ImagingStudy-close, dicom-send, and status-request (embedded sceneview).
+The image display client provides a PACS client type interface to the 3D Slicer viewer. Supported events include imagingstudy-open, imagingstudy-close, dicom-send, and status-request (embedded sceneview).
 
 <p align="center">
   <img src="docs/images/ImageDisplayClient.png" alt="Image display client" width="80%">

@@ -4,6 +4,7 @@
 Run from repo root (plain Python, no 3D Slicer):
 
     pip install aiohttp nnunetv2
+    pip install torch --index-url https://download.pytorch.org/whl/cu128
     python service_providers/products/dental_segmentator.py
     python service_providers/products/dental_segmentator.py --local
 
@@ -316,6 +317,20 @@ def _cuda_available() -> bool:
         return False
 
 
+def _torch_cuda_diag() -> str:
+    """Short torch/CUDA status for CPU-fallback logs (e.g. ``2.14.0+cpu``)."""
+    try:
+        import torch
+
+        ver = getattr(torch, "__version__", "?")
+        built = getattr(torch.version, "cuda", None)
+        if built is None:
+            return f"torch={ver} (CPU-only build; install CUDA torch from pytorch.org)"
+        return f"torch={ver} cuda_built={built} cuda.is_available=False"
+    except ImportError:
+        return "torch not installed"
+
+
 def _mps_available() -> bool:
     try:
         import torch
@@ -337,8 +352,9 @@ def _prediction_device() -> str:
         if _cuda_available():
             return "cuda"
         LOGGER.warning(
-            "DENTAL_SEG: %s=cuda but no GPU - using cpu",
+            "DENTAL_SEG: %s=cuda but no GPU - using cpu (%s)",
             DEVICE_ENV,
+            _torch_cuda_diag(),
         )
         return "cpu"
     if requested == "mps":
@@ -355,7 +371,10 @@ def _prediction_device() -> str:
         return "cuda"
     if _mps_available():
         return "mps"
-    LOGGER.info("DENTAL_SEG: no GPU detected - using cpu (slow)")
+    LOGGER.info(
+        "DENTAL_SEG: no GPU detected - using cpu (slow) (%s)",
+        _torch_cuda_diag(),
+    )
     return "cpu"
 
 

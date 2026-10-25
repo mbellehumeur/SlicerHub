@@ -1,14 +1,11 @@
 """Slicer hub client library (async, aiohttp).
 
-Mirrors vtk-js ``HubClient`` for OAuth, subscribe, WebSocket bind, publish,
-and typed request/response. Hub URLs are supplied by the caller (e.g.
-``3dslicer-hub-ai-interface.py``).
+OAuth, subscribe, WebSocket bind, publish, and typed request/response.
+Hub URLs are supplied by the caller.
 
 Per-dataType hub.event names: ``<dataType.lower()>-request`` /
-``<dataType.lower()>-response``. Keep helpers in sync with:
-- ``vtk-js/Sources/IO/Core/HubClient/eventNames.js``
-- ``VolView/src/io/hub/event-names.ts``
-- the OHIF Hub extension's ``event-names.ts`` (Viewers/extensions/cast)
+``<dataType.lower()>-response``. Keep helpers and fixed-event constants in
+sync with ``@slicer-hub/client`` ``eventNames.js`` (SlicerHub-js-clients).
 """
 
 from __future__ import annotations
@@ -38,6 +35,22 @@ from urllib.parse import urljoin, urlparse, urlunparse
 
 REQUEST_SUFFIX = "-request"
 RESPONSE_SUFFIX = "-response"
+
+# Fixed hub.event names — always lowercase on the wire.
+IMAGINGSTUDY_OPEN = "imagingstudy-open"
+IMAGINGSTUDY_CLOSE = "imagingstudy-close"
+STATUS_UPDATE = "status-update"
+SCENE_UPDATE = "scene-update"
+ANNOTATION_UPDATE = "annotation-update"
+ANNOTATION_DELETE = "annotation-delete"
+DICOM_SEND = "dicom-send"
+NIFTI_SEND = "nifti-send"
+PNG_SEND = "png-send"
+IDC_CLAUDE_SEND = "idc-claude-send"
+CONFERENCE_CHAT = "conference-chat"
+DICOMSR_UPDATE = "dicomsr-update"
+SUBSCRIPTION_REMOVED = "subscription-removed"
+HEARTBEAT = "heartbeat"
 
 
 def normalize_data_type(data_type: Optional[str]) -> str:
@@ -523,9 +536,7 @@ def coerce_binary_publish_to_files(msg: Dict[str, Any]) -> Dict[str, Any]:
 
 # Hub binary-family events: any ``hub.event`` whose name matches one of these
 # prefixes (exact or followed by ``-`` / ``_``) is considered binary-bearing
-# for transport purposes. Keep this list byte-for-byte equivalent across the
-# four Hub implementations (vtk-js sendNormalize, Slicer hub_client, VolView
-# server hub_client, hub hub) per AGENTS.md section 2.
+# for transport purposes. Keep in sync with ``@slicer-hub/client`` sendNormalize.js.
 _HUB_BINARY_EVENT_PREFIXES = (
     "dicom",
     "nifti",
@@ -1883,7 +1894,7 @@ class SlicerHubClient(HubClient):
         event = hub_message.get("event")
         if not event:
             return
-        if event.get("hub.event") == "heartbeat":
+        if event.get("hub.event") == HEARTBEAT:
             return
 
         if hub_message.get("id") == self._last_published_message_id:

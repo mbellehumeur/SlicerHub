@@ -16,8 +16,12 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, Optional, Tuple
 
 from hub_client import (
+    DICOM_SEND,
     HUB_CLIENT_HTTP_PAYLOAD_MAX_CONCURRENT,
     HUB_CLIENT_HTTP_PAYLOAD_PROGRESS_INTERVAL,
+    IDC_CLAUDE_SEND,
+    NIFTI_SEND,
+    STATUS_UPDATE,
     HubPayloadTruncatedError,
     _PayloadHttpConnectionPool,
     _normalize_loopback_url,
@@ -885,7 +889,7 @@ def build_dicom_send_publish_message(
         "id": generate_message_id(),
         "event": {
             "hub.topic": topic,
-            "hub.event": "dicom-send",
+            "hub.event": DICOM_SEND,
             "context": {
                 "files": [
                     {
@@ -916,7 +920,7 @@ def build_nifti_send_publish_message(
         "id": generate_message_id(),
         "event": {
             "hub.topic": topic,
-            "hub.event": "nifti-send",
+            "hub.event": NIFTI_SEND,
             "context": {
                 "files": [
                     {
@@ -1024,7 +1028,7 @@ def build_status_update_publish_message(
         "target.subscriber.name": target,
         "event": {
             "hub.topic": topic_name,
-            "hub.event": "status-update",
+            "hub.event": STATUS_UPDATE,
             "context": {
                 "message": text,
                 "level": level_name,
@@ -1033,7 +1037,7 @@ def build_status_update_publish_message(
     }
 
 
-IDC_CLAUDE_SEND_EVENT = "idc-claude-send"
+IDC_CLAUDE_SEND_EVENT = IDC_CLAUDE_SEND
 
 
 def build_idc_claude_send_publish_message(

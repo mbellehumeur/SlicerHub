@@ -8,6 +8,11 @@ import threading
 from typing import Any, Callable, Dict, List, Optional, TypeVar
 
 from hub_client import (
+    ANNOTATION_DELETE,
+    ANNOTATION_UPDATE,
+    IMAGINGSTUDY_CLOSE,
+    IMAGINGSTUDY_OPEN,
+    SCENE_UPDATE,
     HubClientOptions,
     HubConfig,
     SessionConfig,
@@ -15,6 +20,7 @@ from hub_client import (
     has_pending_payload,
     hub_event_name,
     is_request_event,
+    request_event_for,
 )
 from Lib.conference import normalize_conference_participants
 from hub_presets import HUBS, USER_NAME
@@ -33,14 +39,14 @@ DISPLAY_PRODUCT_NAME = "3DSLICER-ID"
 DISPLAY_PRODUCT_VERSION = "1.0"
 DISPLAY_ACTORS = ["ID"]
 DISPLAY_EVENTS = [
-    "imagingstudy-open",
-    "imagingstudy-close",
-    "status-request",
-    "livescene-request",
-    "dicom-request",
-    "scene-update",
-    "annotation-update",
-    "annotation-delete",
+    IMAGINGSTUDY_OPEN,
+    IMAGINGSTUDY_CLOSE,
+    request_event_for("STATUS"),
+    request_event_for("LIVESCENE"),
+    request_event_for("DICOM"),
+    SCENE_UPDATE,
+    ANNOTATION_UPDATE,
+    ANNOTATION_DELETE,
 ]
 AUTO_RECONNECT = True
 
@@ -452,25 +458,25 @@ class ImageDisplayClientConnection:
                 "Image Display Client ignoring own event=%s", hub_event
             )
             return
-        if hub_event == "imagingstudy-open":
+        if hub_event == IMAGINGSTUDY_OPEN:
             self._apply_handler_state(handle_imaging_study_open(self, message))
             return
-        if hub_event == "imagingstudy-close":
+        if hub_event == IMAGINGSTUDY_CLOSE:
             self._apply_handler_state(handle_imaging_study_close(self, message))
             return
-        if hub_event == "scene-update":
+        if hub_event == SCENE_UPDATE:
             client = self._client
             if client is None:
                 LOGGER.warning("Ignoring scene-update: hub client unavailable")
                 return
             asyncio.create_task(self._handle_scene_update_task(client, message))
             return
-        if hub_event == "annotation-update":
+        if hub_event == ANNOTATION_UPDATE:
             from image_display_client_annotations import handle_annotation_update
 
             handle_annotation_update(self, message)
             return
-        if hub_event == "annotation-delete":
+        if hub_event == ANNOTATION_DELETE:
             from image_display_client_annotations import handle_annotation_delete
 
             handle_annotation_delete(self, message)
@@ -602,7 +608,7 @@ class ImageDisplayClientConnection:
         message = {
             "id": "status-context-sync",
             "event": {
-                "hub.event": "imagingstudy-open",
+                "hub.event": IMAGINGSTUDY_OPEN,
                 "hub.topic": self._topic,
                 "context": list(context),
             },

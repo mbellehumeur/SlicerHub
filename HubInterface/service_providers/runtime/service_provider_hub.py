@@ -9,6 +9,7 @@ import traceback
 from typing import Any, Callable, Dict, List, Optional
 
 from hub_client import (
+    IMAGINGSTUDY_OPEN,
     SlicerHubClient,
     _context_files_from_event,
     data_type_from_event_name,
@@ -605,7 +606,7 @@ class ServiceProviderHubConnection:
 
     def _track_imaging_study(self, message: dict) -> None:
         event = message.get("event") or {}
-        if event.get("hub.event") != "imagingstudy-open":
+        if event.get("hub.event") != IMAGINGSTUDY_OPEN:
             return
         context = event.get("context")
         if isinstance(context, list) and context:

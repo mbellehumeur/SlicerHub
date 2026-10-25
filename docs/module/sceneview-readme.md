@@ -137,8 +137,8 @@ Implement handling in HubInterface (e.g. provider `onMessage` script or
 3. Publishing `sceneview-response` with that payload in `data`
 
 Event-name helpers must stay in sync with
-`python_client`, `VolView/src/io/hub/event-names.ts`, and
-`vtk-js/Sources/IO/Core/HubClient/eventNames.js`.
+`HubInterface/python_client/src/hub_client/client.py` and
+`@slicer-hub/client` `eventNames.js` (SlicerHub-js-clients).
 
 ## Reference implementation (removed from hub)
 

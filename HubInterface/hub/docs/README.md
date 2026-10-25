@@ -1,6 +1,6 @@
 # Slicer Hub (`hub`)
 
-FastAPI implementation of a [FHIRcast](https://fhircast.org/)-style hub for the Slicer Hub stack (VolView, vtk-js HubClient, OHIF hub extension). Subscribers connect over WebSocket (`/bind/{endpoint}`) or WebSub callbacks; the hub fans out events and collates typed request/response traffic.
+FastAPI implementation of a [FHIRcast](https://fhircast.org/)-style hub for the Slicer Hub stack (`@slicer-hub/client`, OHIF hub extension, Slicer Image Display / service providers). Subscribers connect over WebSocket (`/bind/{endpoint}`) or WebSub callbacks; the hub fans out events and collates typed request/response traffic.
 
 Run standalone:
 
@@ -59,7 +59,7 @@ Bearer validation lives in [`Lib/oauth_tokens.py`](Lib/oauth_tokens.py) (HS256 m
 
 Conference UI: `/api/hub/conference-client`, APIs under `/api/hub/conference` and `/api/hub/conference-topics`.
 
-Event names (`<datatype>-request` / `<datatype>-response`) are defined in [`hub_client.py`](hub_client.py) (top of file) and mirrored in vtk-js / VolView / OHIF.
+Event names (`<datatype>-request` / `<datatype>-response` and fixed wire events) are defined in [`../python_client/src/hub_client/client.py`](../python_client/src/hub_client/client.py) and mirrored in `@slicer-hub/client` `eventNames.js`.
 
 ---
 
@@ -268,7 +268,7 @@ Each item in `responses` is one subscriber's `<datatype>-response` payload. The 
 |------|------|
 | [`hub.py`](hub.py) | Hub app, routes, `Hub` state |
 | [`admin.html`](admin.html) | Admin UI |
-| [`hub_client.py`](hub_client.py) | Per-`dataType` event-name helpers; `HubClient` ABC and `SlicerHubClient` |
+| [`../python_client/src/hub_client/client.py`](../python_client/src/hub_client/client.py) | Per-`dataType` event-name helpers + fixed events; `HubClient` ABC and `SlicerHubClient` |
 | [`3dslicer-hub-ai-interface.py`](3dslicer-hub-ai-interface.py) | Standalone Hub subscriber (hub URLs from OHIF `hub.js`) |
 | [`HUB-README.md`](HUB-README.md) | VolView server run/deploy guide |
 
@@ -278,11 +278,11 @@ For workspace-wide Hub protocol rules (event-name sync across Python/JS/TS, line
 
 ## Python Hub client
 
-**Library:** [`hub_client.py`](hub_client.py) defines `SlicerHubClient` — OAuth, subscribe, WebSocket bind, publish, and typed `request` / `send_hub_request_response`. It does not embed hub URLs; callers pass `HubConfig` and `SessionConfig`.
+**Library:** [`../python_client/src/hub_client/client.py`](../python_client/src/hub_client/client.py) defines `SlicerHubClient` — OAuth, subscribe, WebSocket bind, publish, and typed `request` / `send_hub_request_response`. It does not embed hub URLs; callers pass `HubConfig` and `SessionConfig`.
 
 **Subscriber identity:** Clients generate `subscriber.name` locally as
 `<productName>-<6 random A–Z0-9>` when the session is created (see
-`generate_subscriber_name` in Python and `generateSubscriberName` in vtk-js).
+`generate_subscriber_name` in Python and `generateSubscriberName` in `@slicer-hub/client`).
 Mock OAuth (`/oauth/authorize`, `/oauth/token`) returns tokens and **topic** only;
 the hub registers the subscriber name from the subscribe form body.
 
