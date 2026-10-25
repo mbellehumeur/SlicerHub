@@ -14,7 +14,7 @@ Built via `request_event_for('STATUS')` / `requestEventFor('STATUS')` in client 
 
 ## Request
 
-HTTP `POST /api/hub/request` (or `client.request()` from a subscriber):
+HTTP `POST /api/hub` with `hub.event` ending in `-request` (or `client.request()` from a subscriber):
 
 ```json
 {

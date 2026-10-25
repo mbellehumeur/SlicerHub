@@ -40,8 +40,7 @@ poetry run python server_with_hub.py --port 4014
 
 | Method | Path | Purpose |
 |--------|------|---------|
-| `POST` | `/api/hub/` | Subscribe, unsubscribe, or publish (body with `hub.mode` or `event`) |
-| `POST` | `/api/hub/request` | Typed hub request → fan-out → collated HTTP response |
+| `POST` | `/api/hub/` | Subscribe, unsubscribe, publish, or typed request (`event.hub.event` ending in `-request` → fan-out → collated HTTP response) |
 | `WS` | `/bind/{endpoint}` | Receive hub events; send `<datatype>-response` for requests |
 | `GET` | `/api/hub/admin` | Admin dashboard HTML |
 | `GET` | `/api/hub/admin/snapshot` | JSON dashboard (subscriptions, conferences, audit) |
@@ -161,7 +160,7 @@ VolView publishes study/series/slice data as a single **binary batch** `dicom-se
 
 A caller uses **HTTP** to ask the hub to dispatch a **typed** request to every matching subscriber. The request body includes top-level `id` and `timestamp` (like publish). Each target receives a WebSocket message with `hub.event = <datatype>-request` and `context.id` set to that correlation id. Targets reply on `/bind/{endpoint}` with `hub.event = <datatype>-response` and the same `context.id`. The hub waits (default 2s, `HUB_REQUEST_TIMEOUT_SECONDS`) and returns one collated JSON body.
 
-**Entry point:** `POST /api/hub/request`
+**Entry point:** `POST /api/hub` when `event.hub.event` ends with `-request`
 
 ```mermaid
 sequenceDiagram
@@ -171,7 +170,7 @@ sequenceDiagram
     participant Target2 as Target subscriber 2
     participant BindWS as WS /bind/{endpoint}
 
-    Requester->>Hub: POST /api/hub/request
+    Requester->>Hub: POST /api/hub (*-request event)
     Note over Requester,Hub: subscriber.name, event.hub.event, event.hub.topic?, subscriber.actor, target.product.name?
 
     Hub->>Hub: Match requester subscription (exists, connected)

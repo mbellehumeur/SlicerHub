@@ -7,14 +7,14 @@ request/response flow from a connected 3D Slicer subscriber.
 
 ## Why it existed
 
-During early integration, callers could `POST /api/hub/request` with
-`subscriber: "3DSLICER"` and get viewport/camera JSON **without** a live Slicer
-WebSocket subscription. The hub read `.mrml` files from a fixed folder and
-returned a synthetic collated HTTP response.
+During early integration, callers could `POST /api/hub` with a `*-request`
+event and `subscriber: "3DSLICER"` and get viewport/camera JSON **without** a
+live Slicer WebSocket subscription. The hub read `.mrml` files from a fixed
+folder and returned a synthetic collated HTTP response.
 
 ## Trigger (removed)
 
-- **Endpoint:** `POST /api/hub/request`
+- **Endpoint:** `POST /api/hub` (typed `*-request`)
 - **Body:** `subscriber` must be `"3DSLICER"` (case-insensitive)
 - **`dataType`:** optional; when omitted, audit logged `sceneview-request`
   (`SCENEVIEW`)
@@ -123,7 +123,7 @@ Use the standard Hub protocol:
 
 | Item | Value |
 |------|--------|
-| `dataType` | `SCENEVIEW` (required on `POST /api/hub/request`) |
+| `dataType` | `SCENEVIEW` (required on typed `*-request` via `POST /api/hub`) |
 | Request event | `sceneview-request` |
 | Response event | `sceneview-response` |
 | Hub behavior | Fan-out to all connected subscriptions matching `(topic, actor[, productName])` |

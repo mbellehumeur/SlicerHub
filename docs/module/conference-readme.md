@@ -261,8 +261,8 @@ sequenceDiagram
   receive a second copy from the conference pass.
 - Conference deliveries are audit-logged like normal fan-out (`direction: sent`).
 
-Hub requests (`POST /api/hub/request`) are not conference-bridged — only publish
-notifications use cross-topic fan-out.
+Hub requests (`POST /api/hub` with a `*-request` event) are not conference-bridged
+— only publish notifications use cross-topic fan-out.
 
 ---
 

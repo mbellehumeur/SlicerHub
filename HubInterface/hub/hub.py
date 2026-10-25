@@ -2941,13 +2941,12 @@ async def get_favicon(theme: Optional[str] = None):
     raise HTTPException(status_code=404, detail="Favicon not found")
 
 
-@app.post("/api/hub/request")
-@app.post("/api/hub/request/")
-async def post_hub_request(request: Request):
+async def _handle_hub_request(request_data: dict):
     """Dispatch a typed request to all matching subscribers and return collated responses.
 
-    Request body must include ``event.hub.event`` (a ``*-request`` name). Topic filtering uses
-    ``event.hub.topic``. Optional ``event.context.dataType`` is forwarded on the WebSocket fan-out.
+    Invoked from ``POST /api/hub`` when ``event.hub.event`` ends with ``-request``.
+    Topic filtering uses ``event.hub.topic``. Optional ``event.context.dataType`` is
+    forwarded on the WebSocket fan-out.
 
     Matches subscriptions by ``(topic, target.actor[, target.product.name])`` (``target.actor``
     ``*`` or omitted = all roles on topic). The requester's ``subscriber.name`` is never a
@@ -2956,12 +2955,6 @@ async def post_hub_request(request: Request):
     ``HUB_REQUEST_TIMEOUT_SECONDS`` (2s); use ``event.context.timeoutSeconds`` (max 300) or
     ``idc-claude-request`` (180s min).
     """
-    _enforce_bearer_auth(request)
-    try:
-        request_data = await request.json()
-    except Exception:
-        raise HTTPException(status_code=400, detail="Invalid JSON body")
-
     if not isinstance(request_data, dict):
         raise HTTPException(status_code=400, detail="JSON body must be an object")
 
@@ -3943,7 +3936,7 @@ def _audit_message_params_from_notification(notification: dict) -> Dict[str, Any
 def _audit_message_params_from_hub_request(
     request_data: dict, request_event_name: str
 ) -> Dict[str, Any]:
-    """HTTP ``/request`` body parameters for admin (no collated response bodies)."""
+    """Hub-request body parameters for admin (no collated response bodies)."""
     params: Dict[str, Any] = {}
     for key in _AUDIT_MESSAGE_PARAM_ROOT_KEYS:
         if key in request_data and request_data[key] is not None:
@@ -4217,7 +4210,7 @@ async def _handle_multipart_publish(request: Request):
 @app.post("/api/hub/")
 @app.post("/api/hub")
 async def post_hub(request: Request):
-    """Handle subscribe/unsubscribe and publish requests."""
+    """Handle subscribe/unsubscribe, publish, and typed ``*-request`` fan-out."""
     _enforce_bearer_auth(request)
     content_type = request.headers.get("content-type", "")
     if "multipart" in content_type.lower():
@@ -4280,15 +4273,18 @@ async def post_hub(request: Request):
                 status_code=202
             )
 
-        # Publish via /api/hub or /api/hub/
+        # Publish or typed request via /api/hub or /api/hub/
         event = request_data.get("event")
         if isinstance(event, dict):
+            hub_event_name = event.get("hub.event")
+            if isinstance(hub_event_name, str) and is_request_event(hub_event_name):
+                return await _handle_hub_request(request_data)
             _reject_json_binary_bytes_publish(request_data)
             return await _handle_publish_notification(request_data)
 
         raise HTTPException(
             status_code=400,
-            detail="Invalid /api/hub POST payload: expected hub.mode for subscribe/unsubscribe or event payload for publish"
+            detail="Invalid /api/hub POST payload: expected hub.mode for subscribe/unsubscribe or event payload for publish/request"
         )
     except HTTPException:
         raise
@@ -4834,7 +4830,7 @@ def main():
     else:
         print("  (disabled — use Keycloak OIDC; see cast-keycloak README)")
     if HUB_REQUIRE_AUTH:
-        print("  Bearer auth: required on /api/hub and /api/hub/request")
+        print("  Bearer auth: required on /api/hub")
     if HUB_OIDC_ISSUER:
         print(f"  OIDC issuer: {HUB_OIDC_ISSUER}")
     print("")

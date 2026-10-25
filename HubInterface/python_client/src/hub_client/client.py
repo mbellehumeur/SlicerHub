@@ -93,7 +93,7 @@ def build_hub_request_event(
     hub_event: Optional[str] = None,
     extra_context: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
-    """Build the ``event`` object for ``POST /api/hub/request``."""
+    """Build the ``event`` object for a hub ``*-request`` (``POST /api/hub``)."""
     dt = (data_type or "").strip()
     he = (hub_event or "").strip().lower() or request_event_for(dt)
     if not he or not is_request_event(he):
@@ -2082,7 +2082,7 @@ class SlicerHubClient(HubClient):
             )
 
         hub_endpoint = self._hub.hub_endpoint.rstrip("/")
-        url = f"{hub_endpoint}/request"
+        url = hub_endpoint
         body: Dict[str, Any] = {
             "subscriber.name": subscriber,
             "id": generate_message_id(self._options.message_id_prefix),
