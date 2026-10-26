@@ -78,7 +78,7 @@ It can be used without the Slicer extension by running the `hub.py` script.
 
 ### Service Providers
 
-Service Providers are scripts that typically run on inference servers to connect them the hub with a websocket connection. The provider will receive instructions over the websocket to process a dataset with specific options, download the data, process and return result to the viewer.  This allows users to view results without having to send them to the PACS archive first.  The service can run on a local machin (only the hub needs to be on the internet with a domain name) therefore avoiding cloud GPU costs. 
+Service Providers are scripts that typically run on inference servers to connect them the hub with a websocket connection. The provider will receive instructions over the websocket to process a dataset with specific options, download the data, process and return result to the viewer.  This allows users to view results without having to send them to the PACS archive first.  The service can run on a local machine (only the hub needs to be on the internet with a domain name) therefore avoiding cloud GPU costs. 
 
 The service provider tab provides a visual description of how processing resources can be connected to the hub and made available to hub workflows.
 
@@ -86,7 +86,13 @@ The service provider tab provides a visual description of how processing resourc
   <img src="docs/images/ServiceProviderFeature.png" alt="Service Provider feature" width="80%">
 </p>
 
-Service Providers subscribe to all user topics for status-request and dicom/nifti events. In the example, Total Segmentator sends binary results back to the user through the hub.
+Service Providers subscribe to all user topics for status-request and dicom/nifti events. In the example below, Dental Segmentator sends binary results back to the user through the hub.
+
+<p align="center">
+  <a href="https://youtu.be/vNtK8ldMcw0">
+    <img src="https://img.youtube.com/vi/vNtK8ldMcw0/hqdefault.jpg" alt="Dental Segmentator demo" width="80%">
+  </a>
+</p>
 
 Since these resources do not log in as a user, they need a *service provider entry* in the customer's authorization server. This provides a client id and client secret. For the hub extension hub, they must be configured in the environment variables of the hub for the resource to connect successfully.
 
@@ -98,10 +104,14 @@ The image display client provides a PACS client type interface to the 3D Slicer 
   <img src="docs/images/ImageDisplayClient.png" alt="Image display client" width="80%">
 </p>
 
-It also forwards LiveScene events to the hub and provides access to DICOMDB to the worklist client. 
-Here is an example of its use:  
-https://youtu.be/rvaVWOaYgqU
+It also forwards LiveScene events to the hub and provides access to DICOMDB to the worklist client.
+Here is an example of its use:
 
+<p align="center">
+  <a href="https://youtu.be/rvaVWOaYgqU">
+    <img src="https://img.youtube.com/vi/rvaVWOaYgqU/hqdefault.jpg" alt="Image Display Client demo" width="80%">
+  </a>
+</p>
 
 ### Simplified, secure deployment of medical imaging services
 
