@@ -14,13 +14,13 @@ The extension aims to  promote, train, develop, and demonstrate interoperability
  
 This python extension supplies the **HUB**, service provider example scripts, and the Slicer Qt **Image Display** client connection. Together with its sister repository of [javascript clients](https://github.com/mbellehumeur/SlicerHub-js-clients), the system includes:
 
-- a WebSub hub (**HUB** actor) for communication between applications and users
-- a Worklist application (**WORKLIST_CLIENT** actor) 
-- Open-source medical imaging viewers (**IMAGE_DISPLAY** actors)
-- Open-source medical imaging inference models (**EVIDENCE_CREATOR** actors)
-- a DICOM SR reporting example (**REPORT_CREATOR** actor - WIP)
-- the [Imaging Data Commons](https://imaging.datacommons.cancer.gov/) and the [3D Slicer](https://www.slicer.org/) DICOM DB as read-only image archives (**IMAGE_ARCHIVE** actor)
-- an Authentication / identity provider with integration to the hub OIDC endpoints or built-in hub anonymous/mock authentication
+- **HUB** actor: a WebSub hub for communication between applications and users
+- **WORKLIST_CLIENT** actor: a Worklist application
+- **IMAGE_DISPLAY** actor: open-source medical imaging viewers
+- **EVIDENCE_CREATOR** actor: open-source medical imaging inference models
+- **REPORT_CREATOR** actor: a DICOM SR reporting example (WIP)
+- **IMAGE_ARCHIVE** actor: the [Imaging Data Commons](https://imaging.datacommons.cancer.gov/) and the [3D Slicer](https://www.slicer.org/) DICOM DB as read-only image archives
+- **IDENTITY_PROVIDER** actor: authentication / identity provider with integration to the hub OIDC endpoints or built-in hub anonymous/mock authentication
 
 The extension also includes features for education that are independent of the IHE Integrated Reporting workflow:
 

@@ -4815,10 +4815,6 @@ def main():
     print("=" * 60)
     print(f"Server running on http://{args.host}:{args.port}")
     print(f"Hub API endpoint: http://{args.host}:{args.port}/api/hub/")
-    if _hub_root_site_dir:
-        print(f"Marketing site: http://{args.host}:{args.port}/")
-    if any(entry.startswith("/ohif") for entry in _registered_spa_clients):
-        print(f"OHIF viewer: http://{args.host}:{args.port}/ohif/")
     print("")
     print("Test endpoints:")
     print(f"  GET    http://{args.host}:{args.port}/api/hub/admin (admin status page)")
