@@ -51,11 +51,12 @@ poetry run python server_with_hub.py --port 4014
 
 | Mode | Hub settings | Client behavior |
 |------|--------------|-----------------|
-| **Local dev (default)** | `HUB_MOCK_OAUTH=true`, `HUB_REQUIRE_AUTH=false` | Clients `POST` hub `/oauth/*`; subscribe works without enforced Bearer checks |
-| **Enforced mock tokens** | `HUB_REQUIRE_AUTH=true` | Subscribe/publish/request require Bearer JWT from mock `/oauth/token` |
+| **Local dev (default)** | `HUB_MOCK_OAUTH=true`, `HUB_REQUIRE_AUTH=false` | Clients `POST` hub `/oauth/*`; subscribe works without enforced Bearer checks; admin APIs open unless `HUB_ADMIN_TOKEN` is set |
+| **Enforced mock tokens** | `HUB_REQUIRE_AUTH=true` | Subscribe/publish/request, conference mutators, payload GET, and admin JSON APIs require Bearer JWT from mock `/oauth/token`; `/bind/{endpoint}` must match an existing subscription |
+| **Admin token (hosted demos)** | `HUB_ADMIN_TOKEN=<secret>` | Admin snapshot/metrics/clear-audit/reset and `/ws/admin` require `X-Hub-Admin-Token` (or `?admin_token=` / Bearer equal to the secret). Can combine with `HUB_REQUIRE_AUTH` |
 | **Keycloak RS256** | `HUB_OIDC_ISSUER` + optional `HUB_REQUIRE_AUTH=true` | Hub validates Keycloak access tokens via JWKS; deploy IdP from [`cast-keycloak`](https://github.com/mbellehumeur/cast-keycloak) |
 
-Bearer validation lives in [`Lib/oauth_tokens.py`](Lib/oauth_tokens.py) (HS256 mock + RS256/JWKS).
+Bearer / admin-token validation lives in [`Lib/oauth_tokens.py`](Lib/oauth_tokens.py) (HS256 mock + RS256/JWKS + `HUB_ADMIN_TOKEN`). Admin snapshot omits subscription `secret` values. `DELETE /api/hub` only unsubscribes a specific endpoint/callback+topic (no mass clear; use `POST /api/admin/reset`).
 
 Conference UI: `/api/hub/conference-client`, APIs under `/api/hub/conference` and `/api/hub/conference-topics`.
 
@@ -256,9 +257,10 @@ Each item in `responses` is one subscriber's `<datatype>-response` payload. The 
 
 ## Admin dashboard
 
-- **HTTP:** `GET /api/hub/admin/snapshot` — full state for the UI.
-- **WebSocket:** `WS /ws/admin` — lightweight `admin.refresh` with `revision`; the page reloads snapshot when revision changes.
-- **Reset:** `POST /api/admin/reset` — clears subscriptions, audit, conferences, auth codes; optional `single_user_mode`.
+- **HTTP:** `GET /api/hub/admin/snapshot` — full state for the UI (subscription `secret` omitted). Gated when `HUB_ADMIN_TOKEN` or `HUB_REQUIRE_AUTH` is set.
+- **WebSocket:** `WS /ws/admin` — lightweight `admin.refresh` with `revision`; the page reloads snapshot when revision changes. Pass `?admin_token=` when gated.
+- **Reset:** `POST /api/admin/reset` — clears subscriptions, audit, conferences, auth codes; optional `single_user_mode`. Same admin gate as snapshot.
+- **Unsubscribe only:** `DELETE /api/hub` with `hub.channel.endpoint` and/or `hub.callback`+`hub.topic`. Empty DELETE no longer clears all subscriptions.
 
 ---
 

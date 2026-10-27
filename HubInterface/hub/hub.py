@@ -109,6 +109,7 @@ from filename_policy import (
 )
 from hub_metrics import collect_hub_metrics
 from oauth_tokens import (
+    HUB_ADMIN_TOKEN,
     HUB_MOCK_OAUTH,
     HUB_OIDC_ISSUER,
     HUB_REQUIRE_AUTH,
@@ -116,8 +117,10 @@ from oauth_tokens import (
     JWT_DEFAULT_SECRET,
     JWT_ISSUER,
     TokenValidationError,
+    admin_auth_required,
     build_hs256_jwt,
     oauth_error_body,
+    validate_admin_access,
     validate_request_bearer,
     verify_hs256_jwt,
 )
@@ -1962,6 +1965,71 @@ def _enforce_bearer_auth(request: Request) -> Dict[str, Any]:
         ) from exc
 
 
+def _enforce_privileged_admin(request: Request) -> Dict[str, Any]:
+    """Require admin token and/or Bearer JWT for privileged admin routes."""
+    try:
+        return validate_admin_access(
+            authorization_header=request.headers.get("authorization"),
+            admin_token_header=request.headers.get("x-hub-admin-token"),
+            query_admin_token=request.query_params.get("admin_token"),
+            query_access_token=request.query_params.get("access_token"),
+        )
+    except TokenValidationError as exc:
+        raise HTTPException(
+            status_code=401,
+            detail=oauth_error_body(str(exc)),
+        ) from exc
+
+
+async def _enforce_privileged_admin_ws(websocket: WebSocket) -> bool:
+    """Validate admin WS credentials; close without accept on failure.
+
+    Returns True when the caller may ``accept()`` the socket.
+    """
+    if not admin_auth_required():
+        return True
+    try:
+        validate_admin_access(
+            authorization_header=websocket.headers.get("authorization"),
+            admin_token_header=websocket.headers.get("x-hub-admin-token"),
+            query_admin_token=websocket.query_params.get("admin_token"),
+            query_access_token=websocket.query_params.get("access_token"),
+        )
+        return True
+    except TokenValidationError:
+        await websocket.close(code=1008)
+        return False
+
+
+def _subscription_for_admin(sub: Dict) -> Dict:
+    """Public subscription view for admin snapshot (omit hub.secret)."""
+    view = dict(sub)
+    view.pop("secret", None)
+    return view
+
+
+def _bind_endpoint_is_subscribed(endpoint: str) -> bool:
+    """True when ``endpoint`` matches an existing websocket subscription id."""
+    if not endpoint:
+        return False
+    for sub in hub.subscriptions:
+        if sub.get("websocket_endpoint") == endpoint:
+            return True
+    return False
+
+
+def _unsubscribe_endpoint_id(endpoint: Optional[str]) -> Optional[str]:
+    """Extract bind UUID from a full URL or return the raw endpoint id."""
+    if not endpoint:
+        return None
+    endpoint = str(endpoint).strip()
+    if not endpoint:
+        return None
+    if "/bind/" in endpoint:
+        return endpoint.split("/bind/")[-1].strip() or None
+    return endpoint
+
+
 def _serve_html_page(filename: str):
     """Serve an HTML page from hub/Resources/, fallback to static mount."""
     html_path = os.path.join(resources_dir, filename)
@@ -2511,6 +2579,7 @@ async def get_conference():
 @app.post("/api/hub/conference")
 async def post_conference(request: Request):
     """Create a conference"""
+    _enforce_bearer_auth(request)
     try:
         data = await _parse_request_body(request)
     except Exception as e:
@@ -2565,6 +2634,7 @@ async def post_conference(request: Request):
 @app.patch("/api/hub/conference/join/")
 async def patch_conference_join(request: Request):
     """Add a topic to an existing conference (voluntary join from the client dialog)."""
+    _enforce_bearer_auth(request)
     try:
         data = await _parse_request_body(request)
     except Exception as e:
@@ -2633,6 +2703,7 @@ async def patch_conference_join(request: Request):
 @app.patch("/api/hub/conference/lead/")
 async def patch_conference_lead(request: Request):
     """Transfer scene-update leadership; conference owner (hostTopic) is unchanged."""
+    _enforce_bearer_auth(request)
     try:
         data = await _parse_request_body(request)
     except Exception as e:
@@ -2698,6 +2769,7 @@ async def patch_conference_lead(request: Request):
 @app.delete("/api/hub/conference")
 async def delete_conference(request: Request):
     """End a conference (host) or remove one attendee topic (leave)."""
+    _enforce_bearer_auth(request)
     try:
         data = await _parse_request_body(request)
     except Exception as e:
@@ -2832,19 +2904,23 @@ async def get_admin_about():
 
 
 @app.get("/api/hub/admin/metrics")
-async def get_admin_metrics():
+async def get_admin_metrics(request: Request):
     """Lightweight process metrics for admin sparkline charts."""
+    _enforce_privileged_admin(request)
     return collect_hub_metrics(hub, _http_payload_store)
 
 
 @app.get("/api/hub/admin/snapshot")
 async def get_admin_snapshot(
+    request: Request,
     publisher: Optional[str] = None,
     topic: Optional[str] = None,
     event: Optional[str] = None,
 ):
     """Consolidated admin dashboard payload (subscriptions, conferences, audit log)."""
+    _enforce_privileged_admin(request)
     subscriptions = hub.get_subscriptions()
+    public_subs = [_subscription_for_admin(sub) for sub in subscriptions]
     log_entries = hub.get_audit_log(
         publisher_filter=publisher, topic_filter=topic, event_filter=event
     )
@@ -2864,7 +2940,7 @@ async def get_admin_snapshot(
             "total_conferences": len(conferences),
             "total_admin_clients": len(hub.admin_websockets),
         },
-        "subscriptions": subscriptions,
+        "subscriptions": public_subs,
         "conferences": conferences,
         "audit": {
             "entries": log_entries,
@@ -2878,8 +2954,9 @@ async def get_admin_snapshot(
 
 @app.post("/api/hub/admin/clear-audit-log")
 @app.post("/api/hub/admin/clear-audit-log/")
-async def clear_audit_log():
+async def clear_audit_log(request: Request):
     """Clear message log entries only (subscriptions and conferences unchanged)."""
+    _enforce_privileged_admin(request)
     hub.audit_log.clear()
     hub.audit_log_counter = 0
     await hub.send_admin_refresh_command()
@@ -2889,6 +2966,7 @@ async def clear_audit_log():
 @app.post("/api/admin/reset")
 async def reset_hub(request: Request):
     """Reset the hub - clear all subscriptions, conferences, and audit log (like restarting the service)"""
+    _enforce_privileged_admin(request)
     single_user_mode = False
     try:
         data = await _parse_request_body(request)
@@ -3646,8 +3724,9 @@ def _iter_http_payload_chunks(
 
 
 @app.get("/api/hub/payloads/{token}")
-async def get_hub_payload(token: str):
+async def get_hub_payload(request: Request, token: str):
     """Serve a stored http binaryTransfer payload by token."""
+    _enforce_bearer_auth(request)
     entry = _http_payload_store.get(token)
     if entry is None:
         raise HTTPException(status_code=404, detail="payload not found or expired")
@@ -4299,41 +4378,55 @@ async def post_hub(request: Request):
 @app.delete("/api/hub/")
 @app.delete("/api/hub")
 async def delete_hub(request: Request):
-    """Handle DELETE /api/hub/ - clear all subscriptions"""
+    """Handle DELETE /api/hub/ — unsubscribe a specific channel (no mass clear)."""
+    _enforce_bearer_auth(request)
     try:
         unsubscribe_data = await _parse_request_body(request)
     except Exception:
         unsubscribe_data = {}
-    
-    # If unsubscribe data provided, remove specific subscriptions
-    if unsubscribe_data:
-        endpoint = unsubscribe_data.get("hub.channel.endpoint") or unsubscribe_data.get("hub_channel_endpoint")
-        callback = unsubscribe_data.get("hub.callback") or unsubscribe_data.get("hub_callback")
-        topic = unsubscribe_data.get("hub.topic") or unsubscribe_data.get("hub_topic")
-        
-        if endpoint or (callback and topic):
-            removed_count, removed_subs = hub.remove_subscription(
-                endpoint=endpoint.split("/bind/")[-1] if endpoint and "/bind/" in endpoint else None,
-                callback=callback,
-                topic=topic
-            )
-            if removed_subs:
-                await hub.broadcast_subscription_removed(
-                    removed_subs, "unsubscribe"
-                )
-            await hub.send_admin_refresh_command()
-            return {"status": "unsubscribed", "removed": removed_count}
-    
-    # Otherwise, clear all subscriptions
-    hub.subscriptions.clear()
-    hub.log("All subscriptions cleared")
+
+    endpoint = (
+        unsubscribe_data.get("hub.channel.endpoint")
+        or unsubscribe_data.get("hub_channel_endpoint")
+    )
+    callback = unsubscribe_data.get("hub.callback") or unsubscribe_data.get(
+        "hub_callback"
+    )
+    topic = unsubscribe_data.get("hub.topic") or unsubscribe_data.get("hub_topic")
+    endpoint_id = _unsubscribe_endpoint_id(endpoint)
+
+    if not endpoint_id and not (callback and topic):
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "DELETE /api/hub requires hub.channel.endpoint and/or "
+                "hub.callback+hub.topic; mass clear is not supported "
+                "(use POST /api/admin/reset)"
+            ),
+        )
+
+    removed_count, removed_subs = hub.remove_subscription(
+        endpoint=endpoint_id,
+        callback=callback,
+        topic=topic,
+    )
+    if removed_subs:
+        await hub.broadcast_subscription_removed(removed_subs, "unsubscribe")
     await hub.send_admin_refresh_command()
-    return {"status": "cleared"}
+    return {"status": "unsubscribed", "removed": removed_count}
 
 
 @app.websocket("/bind/{endpoint}")
 async def websocket_endpoint(websocket: WebSocket, endpoint: str):
     """WebSocket endpoint for event delivery"""
+    if HUB_REQUIRE_AUTH and not _bind_endpoint_is_subscribed(endpoint):
+        await websocket.close(code=1008)
+        hub.log(
+            f"Rejected bind WebSocket for unknown endpoint under HUB_REQUIRE_AUTH: "
+            f"{endpoint}"
+        )
+        return
+
     await websocket.accept()
     hub.log(f"WebSocket connection accepted for endpoint: {endpoint}")
     
@@ -4482,6 +4575,10 @@ async def websocket_endpoint(websocket: WebSocket, endpoint: str):
 @app.websocket("/ws/admin")
 async def admin_websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for admin page - receives refresh commands"""
+    if not await _enforce_privileged_admin_ws(websocket):
+        hub.log("Rejected admin WebSocket: missing or invalid credentials")
+        return
+
     await websocket.accept()
     
     # Extract location information from request headers
@@ -4827,7 +4924,13 @@ def main():
     else:
         print("  (disabled — use Keycloak OIDC; see cast-keycloak README)")
     if HUB_REQUIRE_AUTH:
-        print("  Bearer auth: required on /api/hub")
+        print("  Bearer auth: required on /api/hub, conference mutators, payloads, bind")
+    if HUB_ADMIN_TOKEN:
+        print("  Admin APIs: gated by HUB_ADMIN_TOKEN (X-Hub-Admin-Token / ?admin_token=)")
+    elif HUB_REQUIRE_AUTH:
+        print("  Admin APIs: gated by Bearer JWT (HUB_REQUIRE_AUTH)")
+    else:
+        print("  Admin APIs: open (set HUB_ADMIN_TOKEN or HUB_REQUIRE_AUTH to gate)")
     if HUB_OIDC_ISSUER:
         print(f"  OIDC issuer: {HUB_OIDC_ISSUER}")
     print("")

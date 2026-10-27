@@ -30,12 +30,18 @@ def _env_flag(name: str, default: bool = False) -> bool:
 
 HUB_MOCK_OAUTH = _env_flag("HUB_MOCK_OAUTH", default=True)
 HUB_REQUIRE_AUTH = _env_flag("HUB_REQUIRE_AUTH", default=False)
+HUB_ADMIN_TOKEN = os.environ.get("HUB_ADMIN_TOKEN", "").strip()
 JWT_ALGORITHM = "HS256"
 JWT_DEFAULT_SECRET = os.environ.get("HUB_JWT_SECRET", "slicer-hub-dev-secret-change-me")
 JWT_ISSUER = os.environ.get("HUB_JWT_ISSUER", "slicer-hub")
 JWT_AUDIENCE = os.environ.get("HUB_JWT_AUDIENCE", "hub-clients")
 HUB_OIDC_ISSUER = os.environ.get("HUB_OIDC_ISSUER", "").strip().rstrip("/")
 HUB_OIDC_AUDIENCE = os.environ.get("HUB_OIDC_AUDIENCE", "").strip()
+
+
+def admin_auth_required() -> bool:
+    """True when admin/destructive routes must authenticate."""
+    return bool(HUB_ADMIN_TOKEN) or HUB_REQUIRE_AUTH
 
 
 def _default_jwks_url(issuer: str) -> str:
@@ -199,3 +205,55 @@ def validate_request_bearer(authorization_header: Optional[str]) -> Dict[str, An
         raise TokenValidationError("Missing Authorization Bearer token")
     claims = verify_bearer_token(token)
     return claims_to_identity(claims)
+
+
+def _token_matches_admin(candidate: str) -> bool:
+    if not HUB_ADMIN_TOKEN or not candidate:
+        return False
+    return hmac.compare_digest(candidate, HUB_ADMIN_TOKEN)
+
+
+def validate_admin_access(
+    *,
+    authorization_header: Optional[str] = None,
+    admin_token_header: Optional[str] = None,
+    query_admin_token: Optional[str] = None,
+    query_access_token: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Authorize privileged admin routes.
+
+    When neither ``HUB_ADMIN_TOKEN`` nor ``HUB_REQUIRE_AUTH`` is set, allow
+    (local demo). Otherwise accept a matching admin token (header/query/Bearer)
+    or, if ``HUB_REQUIRE_AUTH``, a valid client JWT.
+    """
+    if not admin_auth_required():
+        return {}
+
+    candidates: list[str] = []
+    for raw in (
+        admin_token_header,
+        query_admin_token,
+        extract_bearer_token(authorization_header),
+        query_access_token,
+    ):
+        token = (raw or "").strip()
+        if token and token not in candidates:
+            candidates.append(token)
+
+    if HUB_ADMIN_TOKEN:
+        for candidate in candidates:
+            if _token_matches_admin(candidate):
+                return {"admin": True, "via": "admin_token"}
+
+    if HUB_REQUIRE_AUTH:
+        bearer = extract_bearer_token(authorization_header)
+        access = (query_access_token or "").strip()
+        token = bearer or access
+        if not token:
+            raise TokenValidationError("Missing Authorization Bearer token")
+        if HUB_ADMIN_TOKEN and _token_matches_admin(token):
+            return {"admin": True, "via": "admin_token"}
+        claims = verify_bearer_token(token)
+        return claims_to_identity(claims)
+
+    raise TokenValidationError("Invalid or missing admin token")

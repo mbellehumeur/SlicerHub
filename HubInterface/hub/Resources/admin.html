@@ -1183,6 +1183,7 @@
         const METRICS_URL = '/api/hub/admin/metrics';
         const METRICS_POLL_MS = 2000;
         const METRICS_HISTORY_LEN = 60;
+        const ADMIN_TOKEN_STORAGE_KEY = 'hubAdminToken';
 
         const metricsHistory = {
             memory: [],
@@ -1190,6 +1191,71 @@
             network: [],
         };
         let metricsPollTimer = null;
+        let adminTokenPrompted = false;
+
+        function getStoredAdminToken() {
+            try {
+                return (sessionStorage.getItem(ADMIN_TOKEN_STORAGE_KEY) || '').trim();
+            } catch (e) {
+                return '';
+            }
+        }
+
+        function setStoredAdminToken(token) {
+            try {
+                if (token) {
+                    sessionStorage.setItem(ADMIN_TOKEN_STORAGE_KEY, token);
+                } else {
+                    sessionStorage.removeItem(ADMIN_TOKEN_STORAGE_KEY);
+                }
+            } catch (e) {
+                /* ignore quota / private mode */
+            }
+        }
+
+        function adminAuthHeaders(extra) {
+            const headers = Object.assign({}, extra || {});
+            const token = getStoredAdminToken();
+            if (token) {
+                headers['X-Hub-Admin-Token'] = token;
+            }
+            return headers;
+        }
+
+        function promptForAdminToken(reason) {
+            if (adminTokenPrompted) {
+                return getStoredAdminToken();
+            }
+            adminTokenPrompted = true;
+            const message =
+                (reason || 'Admin API requires authentication.') +
+                '\n\nEnter HUB_ADMIN_TOKEN (or leave blank if using a Bearer JWT via other means):';
+            const entered = window.prompt(message, getStoredAdminToken());
+            if (entered == null) {
+                return getStoredAdminToken();
+            }
+            const trimmed = String(entered).trim();
+            setStoredAdminToken(trimmed);
+            return trimmed;
+        }
+
+        async function adminFetch(url, options) {
+            const opts = Object.assign({}, options || {});
+            opts.headers = adminAuthHeaders(opts.headers);
+            let response = await fetch(url, opts);
+            if (response.status === 401) {
+                const token = promptForAdminToken(
+                    'Admin credentials required (401).'
+                );
+                if (token) {
+                    opts.headers = adminAuthHeaders(
+                        Object.assign({}, options && options.headers)
+                    );
+                    response = await fetch(url, opts);
+                }
+            }
+            return response;
+        }
 
         /** IHE actor keywords and full names (aligned with Hub client ACTOR_PRESETS). */
         const IHE_ACTOR_REFERENCE = [
@@ -1329,7 +1395,7 @@
 
         async function pollMetrics() {
             try {
-                const response = await fetch(METRICS_URL);
+                const response = await adminFetch(METRICS_URL);
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}`);
                 }
@@ -1512,7 +1578,7 @@
             errorDiv.innerHTML = '';
 
             try {
-                const response = await fetch(buildSnapshotQuery());
+                const response = await adminFetch(buildSnapshotQuery());
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
@@ -2118,7 +2184,9 @@
 
         async function clearAuditLog() {
             try {
-                const res = await fetch('/api/hub/admin/clear-audit-log', { method: 'POST' });
+                const res = await adminFetch('/api/hub/admin/clear-audit-log', {
+                    method: 'POST',
+                });
                 if (!res.ok) {
                     const text = await res.text();
                     throw new Error(text || `HTTP ${res.status}`);
@@ -2299,7 +2367,7 @@
                     statusDiv.innerHTML = '';
 
                     try {
-                        const response = await fetch('/api/admin/reset', {
+                        const response = await adminFetch('/api/admin/reset', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json'
@@ -2342,8 +2410,12 @@
 
         function connectAdminWebSocket() {
             const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-            const wsUrl = `${protocol}//${window.location.host}/ws/admin`;
-            
+            let wsUrl = `${protocol}//${window.location.host}/ws/admin`;
+            const token = getStoredAdminToken();
+            if (token) {
+                wsUrl += `?admin_token=${encodeURIComponent(token)}`;
+            }
+
             try {
                 adminWebSocket = new WebSocket(wsUrl);
                 
@@ -2390,8 +2462,18 @@
                 };
                 
                 adminWebSocket.onclose = function(event) {
-                    console.log('Admin WebSocket closed');
-                    
+                    console.log('Admin WebSocket closed', event.code);
+                    if (event.code === 1008 && !getStoredAdminToken()) {
+                        promptForAdminToken(
+                            'Admin WebSocket rejected (auth required).'
+                        );
+                        if (getStoredAdminToken()) {
+                            reconnectAttempts = 0;
+                            setTimeout(connectAdminWebSocket, 250);
+                            return;
+                        }
+                    }
+
                     // Attempt to reconnect
                     if (reconnectAttempts < MAX_RECONNECT_ATTEMPTS) {
                         reconnectAttempts++;
@@ -2406,10 +2488,10 @@
             }
         }
 
-        // Connect on page load
-        window.addEventListener('load', function() {
+        // Snapshot first so a 401 can store admin token before the WS connects.
+        window.addEventListener('load', async function() {
+            await loadSnapshot();
             connectAdminWebSocket();
-            loadSnapshot();
             startMetricsPolling();
         });
 
