@@ -32,8 +32,12 @@ _HUB_PIP_PACKAGES = (
 )
 
 
+class HubDepsDeclinedError(RuntimeError):
+    """User declined installing missing hub packages into Slicer Python."""
+
+
 def _ensure_hub_deps() -> None:
-    """Install hub deps via Slicer pip (one package per call)."""
+    """Install hub deps via Slicer pip (one package per call) after confirm."""
     missing = []
     for pip_spec, import_name in _HUB_PIP_PACKAGES:
         try:
@@ -42,6 +46,16 @@ def _ensure_hub_deps() -> None:
             missing.append(pip_spec)
     if not missing:
         return
+    package_list = "\n".join(f"  • {spec}" for spec in missing)
+    if not slicer.util.confirmYesNoDisplay(
+        _(
+            "The hub needs packages that are not installed in this Slicer "
+            "Python environment:\n\n{packages}\n\n"
+            "Install them now with pip? This changes the Slicer Python site-packages."
+        ).format(packages=package_list),
+        windowTitle=_("Install hub dependencies"),
+    ):
+        raise HubDepsDeclinedError("dependency install declined")
     for pip_spec in missing:
         slicer.util.pip_install(pip_spec)
     import importlib
@@ -225,6 +239,12 @@ class HubServerWidget:
         self._hub_port = port
         try:
             _ensure_hub_deps()
+        except HubDepsDeclinedError:
+            self._set_status(
+                _("Hub start cancelled (dependencies not installed)"),
+                _STATUS_TEXT_STYLE_IDLE,
+            )
+            return
         except Exception as exc:
             self._set_status(
                 _("Dependency install failed: {0}").format(exc),

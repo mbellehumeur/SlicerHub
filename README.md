@@ -189,6 +189,8 @@ Build from this repo (`CMakeLists.txt` at repo root, module in `HubInterface/`).
 
 Override module root at runtime with `HUB_REPO_ROOT` when needed.
 
+Demo hub presets ship a public OAuth `client_secret` placeholder (mock hub OAuth does not validate it). Do not commit real identity-provider secrets. Install torch / nnU-Net / TotalSegmentator in the **separate Python** that runs service providers—not into 3D Slicer’s Python via the Hub module.
+
 ## License
 
 Slicer Hub is distributed under the [MIT License](LICENSE.txt).

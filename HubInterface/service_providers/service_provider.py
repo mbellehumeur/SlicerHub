@@ -25,33 +25,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
+from hub_presets import HUBS
+
 LOGGER = logging.getLogger("HubServiceProvider")
-
-SLICER_HUB_CLOUD = {
-    "name": "SLICER-HUB-CLOUD",
-    "hub_endpoint": (
-        "https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/api/hub"
-    ),
-    "authorization_endpoint": (
-        "https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/oauth/authorize"
-    ),
-    "token_endpoint": (
-        "https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/oauth/token"
-    ),
-    "client_id": "130c3d9c-4157-4dd1-aa1d-slicer",
-    "client_secret": "0c931e4163c1bc984b5266735dc652a2f1e3e6e8d8cfe5b0855f433cc8ff018f",
-    "lease": 999,
-}
-
-SLICER_HUB_LOCAL = {
-    "name": "SLICER-HUB",
-    "hub_endpoint": "http://127.0.0.1:2018/api/hub",
-    "authorization_endpoint": "http://127.0.0.1:2018/oauth/authorize",
-    "token_endpoint": "http://127.0.0.1:2018/oauth/token",
-    "client_id": "130c3d9c-4157-4dd1-aa1d-slicer",
-    "client_secret": "0c931e4163c1bc984b5266735dc652a2f1e3e6e8d8cfe5b0855f433cc8ff018f",
-    "lease": 999,
-}
 
 _DICOM_SEND_EVENT = "dicom-send"
 _NIFTI_SEND_EVENT = "nifti-send"
@@ -150,7 +126,10 @@ class ServiceProviderConfig:
 
 def resolve_hub_preset(use_local_hub: bool = False) -> Dict[str, Any]:
     """Return hub OAuth/endpoints for cloud (default) or local Slicer hub."""
-    return SLICER_HUB_LOCAL if use_local_hub else SLICER_HUB_CLOUD
+    name = "SLICER-HUB" if use_local_hub else "SLICER-HUB-CLOUD"
+    hub = dict(HUBS[name])
+    hub["name"] = name
+    return hub
 
 
 def parse_service_provider_args(argv: Optional[List[str]] = None) -> argparse.Namespace:

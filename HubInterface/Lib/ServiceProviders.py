@@ -28,36 +28,16 @@ from hub_client import (
     SlicerHubClient,
     request_event_for,
 )
+from hub_presets import DEFAULT_HUB_NAME, HUBS, USER_NAME
 
 LOGGER = logging.getLogger("HubInterface.ServiceProviders")
 LOGGER.setLevel(logging.INFO)
 
-# --- Hub config (align with Viewers/platform/app/public/config/hub.js) ---
-
-DEFAULT_HUB_NAME = "SLICER-HUB"
+# --- Hub config (presets in hub_presets; aliases for older saved settings) ---
 
 _HUB_NAME_ALIASES = {
     "VOLVIEW-HUB": "SLICER-HUB",
     "VOLVIEW-HUB-CLOUD": "SLICER-HUB-CLOUD",
-}
-
-HUBS: Dict[str, Dict[str, Any]] = {
-    "SLICER-HUB-CLOUD": {
-        "hub_endpoint": "https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/api/hub",
-        "authorization_endpoint": "https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/oauth/authorize",
-        "token_endpoint": "https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/oauth/token",
-        "client_id": "130c3d9c-4157-4dd1-aa1d-slicer",
-        "client_secret": "0c931e4163c1bc984b5266735dc652a2f1e3e6e8d8cfe5b0855f433cc8ff018f",
-        "lease": 999,
-    },
-    "SLICER-HUB": {
-        "hub_endpoint": "http://127.0.0.1:2018/api/hub",
-        "authorization_endpoint": "http://127.0.0.1:2018/oauth/authorize",
-        "token_endpoint": "http://127.0.0.1:2018/oauth/token",
-        "client_id": "130c3d9c-4157-4dd1-aa1d-slicer",
-        "client_secret": "0c931e4163c1bc984b5266735dc652a2f1e3e6e8d8cfe5b0855f433cc8ff018f",
-        "lease": 999,
-    },
 }
 
 
@@ -92,7 +72,6 @@ EVENTS = [
     IDC_CLAUDE_SEND,
 ]
 ACTORS = ["EC"]
-USER_NAME = "3dslicer-server"
 AUTO_RECONNECT = True
 # Main-thread queue poll while this module is active (avoid singleShot(0) spin).
 MAIN_QUEUE_TIMER_MS = 50
