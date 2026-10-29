@@ -24,8 +24,8 @@ This python extension supplies the **HUB**, service provider example scripts, an
 
 The extension also includes features for education that are independent of the IHE Integrated Reporting workflow:
 
-- an example [classroom application](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/classroom-client/)
-- creating, saving, and uploading teaching files and cohorts for class preparation
+- an example [classroom application](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/classroom-client/) ([demo video](https://youtu.be/ENyYdJ_fHYI))
+- an example worklist application for creating, saving, and uploading teaching files and cohorts for class preparation
 - conferencing for collaborative viewing and teaching
 - a [vanishing brush tool](https://youtu.be/xKQEOs1_9Bg?si=-gtvlB3aeq3KF-dX) for temporary annotations during conferencing
 - export to STL for 3D printing
@@ -37,6 +37,7 @@ Research and 3D Slicer functionalities, also independent of IHE, are included:
 - SceneViews status on request with the long term goal of inference for multi-application hanging protocols.
 - Status-request messaging for using current information from other applications in the workflow
 - Slicer Qt Image Display client and DICOM DB study list (same python/websocket client)
+
 
 File transfer allows inference servers to send their results directly back to the viewers without having to archive them to PACS first.  Research file formats like NIfTI, NRRD, and Zarr can be used.   Transfer is realized with multi-part POST to the hub and then GET retrieves from the receiving applications and service providers.  The file naming policy is decribed [here](docs/module/filename-policy.md). 
 
@@ -78,7 +79,7 @@ It can be used without the Slicer extension by running the `hub.py` script.
 
 ### Service Providers
 
-Service Providers are scripts that typically run on inference servers to connect them the hub with a websocket connection. The provider will receive instructions over the websocket to process a dataset with specific options, download the data, process and return result to the viewer.  This allows users to view results without having to send them to the PACS archive first.  The service can run on a local machine (only the hub needs to be on the internet with a domain name) therefore avoiding cloud GPU costs. 
+Service Providers are scripts that typically run on inference servers to connect them the hub with a websocket connection. The provider will receive instructions over the websocket to process a dataset with specific options, download the data, process and return result to the viewer.  This allows users to view results without having to send them to the PACS archive first.  The service can run on a local machine (only the hub needs to be on the internet with a domain name) therefore avoiding cloud GPU leasing expenses. 
 
 The service provider tab provides a visual description of how processing resources can be connected to the hub and made available to hub workflows.
 
@@ -217,6 +218,6 @@ Slicer Hub is distributed under the [MIT License](LICENSE.txt).
 
 DICOM® is the registered trademark of the National Electrical Manufacturers Association (NEMA) for its standards publications relating to digital imaging and communications in medicine. FHIR® and related HL7 marks are registered trademarks of Health Level Seven International (HL7). IHE® is a registered trademark of HIMSS. VolView® is a trademark of Kitware, Inc. OHIF® is a trademark of the Open Health Imaging Foundation. Imaging Data Commons® is a trademark of the National Cancer Institute.
 
-The Slicer Hub (including its hub, clients, and documentation) references ideas, workflows, and vocabulary drawn from these standards—such as DICOM objects and metadata, FHIR and FHIRcast-style context and events, and IHE actor roles (for example, Image Display and Evidence Creator)—and product names such as VolView, OHIF, and Imaging Data Commons solely to describe interoperability behavior.
+The Slicer Hub (including its hub, clients, and documentation) references ideas, workflows, and vocabulary drawn from these standards—such as DICOM objects and metadata, FHIR and FHIRcast-style context and events, and IHE actor roles (for example, Image Display and Evidence Creator)—and product names such as OHIF, and Imaging Data Commons solely to describe interoperability behavior.
 
 **Slicer Hub is not part of these standards.** It is not published by NEMA, HL7, or HIMSS, and is not an IHE Integration Profile, a FHIR implementation guide, or a DICOM conformance statement. Use of standard names and terms does not imply endorsement, certification, or official status. All other product and company names are trademarks of their respective owners.

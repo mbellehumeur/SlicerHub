@@ -10,6 +10,7 @@ from imaging_study_context import (
     extract_open_mode,
     extract_study_display_id,
     normalize_imaging_study_context,
+    same_open_imaging_study_context,
 )
 
 if TYPE_CHECKING:
@@ -107,6 +108,38 @@ def handle_imaging_study_open(
         study_id or "(unknown)",
         open_mode or "(unspecified)",
     )
+    previous = connection.get_last_open_context()
+    if same_open_imaging_study_context(context, previous):
+        LOGGER.info(
+            "Image Display imagingstudy-open skipped: same study already open "
+            "study=%s",
+            study_id or "(unknown)",
+        )
+        return {
+            "last_open_context": list(context),
+            "last_event": IMAGINGSTUDY_OPEN,
+            "open_study_id": study_id,
+            "open_mode": open_mode,
+        }
+    # Context may be empty on the wire while this ID already loaded the study.
+    prev_id = str(connection.get_open_study_id() or "").strip()
+    if (
+        not previous
+        and study_id
+        and prev_id
+        and study_id == prev_id
+    ):
+        LOGGER.info(
+            "Image Display imagingstudy-open skipped: same open_study_id "
+            "already open study=%s",
+            study_id,
+        )
+        return {
+            "last_open_context": list(context),
+            "last_event": IMAGINGSTUDY_OPEN,
+            "open_study_id": study_id,
+            "open_mode": open_mode,
+        }
     load_generation = connection.next_open_load_generation()
     _schedule_load(connection, list(context), load_generation)
     return {

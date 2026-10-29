@@ -144,6 +144,29 @@ def extract_dicom_series_uid(context: Any) -> str:
     return ""
 
 
+def same_open_imaging_study_context(a: Any, b: Any) -> bool:
+    """True when both contexts refer to the same already-open study.
+
+    Aligned with ``sameOpenImagingStudyContext`` in @slicer-hub/client:
+    matching sample ids; else matching study UIDs with empty-series compatible.
+    """
+    if not isinstance(a, list) or not isinstance(b, list) or not a or not b:
+        return False
+    sa = extract_worklist_sample_id(a)
+    sb = extract_worklist_sample_id(b)
+    if sa and sb and sa == sb:
+        return True
+    study_a = extract_dicom_study_uid(a)
+    study_b = extract_dicom_study_uid(b)
+    if not study_a or not study_b or study_a != study_b:
+        return False
+    series_a = extract_dicom_series_uid(a) or ""
+    series_b = extract_dicom_series_uid(b) or ""
+    if not series_a or not series_b:
+        return True
+    return series_a == series_b
+
+
 def extract_dicomweb_root(context: Any) -> str:
     value = extract_identifier_value(context, HUB_DICOMWEB_ROOT)
     if not value:
