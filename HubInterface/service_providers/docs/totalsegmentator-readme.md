@@ -8,7 +8,7 @@ From `HubInterface/` with a hub already listening (e.g. `--port 2018`):
 pip install -e python_client
 pip install aiohttp
 # Inference deps are operator-managed (TotalSegmentator / torch / highdicom), or use PythonSlicer on PATH
-python service_providers/products/total_segmentator.py --local
+python service_providers/products/total_segmentator/total_segmentator.py --local
 ```
 
 `--local` connects to `http://127.0.0.1:2018`. Omit it to use the default cloud hub.
@@ -25,7 +25,7 @@ In **Service Providers**, add or edit a row:
 | Version | `1.0` |
 | Description | e.g. Total Segmentator CT segmentation |
 | Hub | `SLICER-HUB` or `SLICER-HUB-CLOUD` |
-| onMessage script | `service_providers/products/total_segmentator.py` |
+| onMessage script | `service_providers/products/total_segmentator/total_segmentator.py` |
 
 Click **Connect**. The subscriber name (`TOTALSEG-XXXXXX`) appears only in the **hub admin portal**. Hub events subscribed for `TOTALSEG`: `dicom-send`, `nifti-send`, `status-request`.
 
@@ -66,8 +66,6 @@ topic/event subscribers (default publish behavior).
 VolView subscribes to `status-update`, appends each `context.message` to the **Job Status**
 textarea in the Total Segmentator dialog, and leaves the dialog open after upload so lines
 stream in live. Non-VolView sends (empty requester) still log locally only.
-
-**Disconnect the AIBRAIN service provider** while testing TotalSegmentator. If both are connected, AIBRAIN immediately publishes the demo `ai-results-mrbrain.dcm` on every `dicom-send` (the Hub module now skips that when multiple service providers are connected, but using one service provider avoids confusion).
 
 Requires the **TotalSegmentator** Slicer extension (Python package `totalsegmentator`) when using the Slicer path. For plain-Python CLI, install TotalSegmentator into that environment (not pinned in `service_providers/requirements.txt`). DICOM SEG output also needs **`highdicom`**.
 

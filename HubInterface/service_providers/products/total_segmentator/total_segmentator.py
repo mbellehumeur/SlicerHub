@@ -8,7 +8,7 @@ Standalone (plain Python, no Slicer UI) from ``HubInterface/``:
     pip install -e python_client
     pip install aiohttp
     # Optional: TotalSegmentator + torch in this Python, or PythonSlicer on PATH
-    python service_providers/products/total_segmentator.py --local
+    python service_providers/products/total_segmentator/total_segmentator.py --local
 
 Default hub is SLICER-HUB-CLOUD; ``--local`` uses ``http://127.0.0.1:2018``.
 
@@ -44,7 +44,7 @@ from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional, Tuple
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
-_SP_ROOT = _SCRIPT_DIR.parent
+_SP_ROOT = _SCRIPT_DIR.parent.parent
 for _extra in (
     _SCRIPT_DIR,
     _SP_ROOT,

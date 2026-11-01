@@ -12,10 +12,15 @@ set(MODULE_PYTHON_SCRIPTS
   Lib/__init__.py
   )
 
+set(MODULE_PYTHON_RESOURCES
+  Resources/Icons/HubInterface.svg
+  Resources/Icons/HubInterfaceLogo.png
+  )
+
 slicerMacroBuildScriptedModule(
   NAME ${MODULE_NAME}
   SCRIPTS ${MODULE_PYTHON_SCRIPTS}
-  RESOURCES Resources
+  RESOURCES ${MODULE_PYTHON_RESOURCES}
   WITH_GENERIC_TESTS
   )
 

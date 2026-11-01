@@ -57,13 +57,18 @@ DEFAULT_PRODUCT_VERSION = "519af9c"
 DEFAULT_DESCRIPTION = "Fully automatic whole-body CT segmentation of 104 structures, using TotalSegmentator AI model."
 
 
-def default_aibrain_script_path() -> str:
+def default_total_segmentator_script_path() -> str:
     from .repo_paths import service_provider_products_dir
 
-    return str(service_provider_products_dir() / "aibrain_on_message.py")
+    # Prefer packaged subdir layout; fall back to legacy flat path on older checkouts.
+    products = service_provider_products_dir()
+    nested = products / "total_segmentator" / "total_segmentator.py"
+    if nested.is_file():
+        return str(nested)
+    return str(products / "total_segmentator.py")
 
 
-DEFAULT_SCRIPT_PATH = default_aibrain_script_path()
+DEFAULT_SCRIPT_PATH = default_total_segmentator_script_path()
 EVENTS = [
     DICOM_SEND,
     NIFTI_SEND,
