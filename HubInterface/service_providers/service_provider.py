@@ -94,7 +94,9 @@ from hub_client import (  # noqa: E402
     SessionConfig,
     SlicerHubClient,
     data_type_from_event_name,
+    ensure_hub_subscribe_events,
     hub_event_name,
+    is_own_message,
     is_request_event,
     normalize_data_type,
     request_context,
@@ -334,7 +336,7 @@ def _build_client(config: ServiceProviderConfig) -> SlicerHubClient:
         product_name=config.product_name,
         product_version=config.product_version,
         actors=list(config.actors),
-        events=list(config.events),
+        events=ensure_hub_subscribe_events(list(config.events)),
         lease=int(hub_def["lease"]),
         user_name=config.user_name,
         default_target_actor="",
@@ -346,27 +348,20 @@ def _build_client(config: ServiceProviderConfig) -> SlicerHubClient:
 async def _connect(client: SlicerHubClient, config: ServiceProviderConfig) -> None:
     hub_def = resolve_hub_preset(config.use_local_hub)
     hub_name = hub_def["name"]
-    auth = await client.authenticate()
+    await client.connect()
     LOGGER.info(
         "%s: authenticated user_name=%s",
         config.product_name,
-        auth.get("user_name"),
+        client.user_name,
     )
-    code = auth.get("code")
-    if not code:
-        raise RuntimeError("authenticate did not return a code")
-    if not await client.get_token(code):
-        raise RuntimeError("get_token failed")
-    status = await client.subscribe()
-    if status != 202:
-        raise RuntimeError(f"subscribe failed with HTTP {status}")
     LOGGER.info(
-        "%s: subscribed hub=%s topic=%s events=%s endpoint=%s",
+        "%s: subscribed hub=%s topic=%s subscriber=%s events=%s endpoint=%s",
         config.product_name,
         hub_name,
-        config.topic,
-        ",".join(config.events),
-        hub_def["hub_endpoint"],
+        client.topic,
+        client.subscriber_name,
+        ",".join(ensure_hub_subscribe_events(list(config.events))),
+        client.hub_endpoint or hub_def["hub_endpoint"],
     )
 
 
@@ -453,7 +448,7 @@ async def _handle_status_request(
 
     req_ctx = request_context(message)
     data_type = req_ctx.get("dataType") or data_type_from_event_name(event_name)
-    if normalize_data_type(data_type) != normalize_data_type("STATUS"):
+    if normalize_data_type(data_type) != "status":
         return
 
     correlation_id = req_ctx.get("id")
@@ -468,7 +463,7 @@ async def _handle_status_request(
     event = message.get("event") or {}
     ctx.client.send_hub_request_response(
         correlation_id.strip(),
-        "STATUS",
+        "status",
         payload,
         event.get("hub.topic"),
     )
@@ -501,6 +496,8 @@ async def run(config: ServiceProviderConfig, handlers: ServiceProviderHandlers) 
         connected = True
         while True:
             message = await client.message_queue.get()
+            if is_own_message(message, client.subscriber_name):
+                continue
             hub_event = hub_event_name(message)
 
             if hub_event in (_DICOM_SEND_EVENT, _NIFTI_SEND_EVENT):

@@ -17,6 +17,7 @@ from hub_client import (
     dicom_send_file_name,
     has_pending_payload,
     hub_event_name,
+    is_own_message,
     is_request_event,
     normalize_data_type,
     request_context,
@@ -274,13 +275,18 @@ class ServiceProviderHubConnection:
         if self._service_provider_config is None:
             return
 
+        if self._client is not None and is_own_message(
+            message, self._client.subscriber_name
+        ):
+            return
+
         hub_event = hub_event_name(message)
         if is_request_event(hub_event):
             context = request_context(message)
             data_type = context.get("dataType")
             if not isinstance(data_type, str) or not data_type.strip():
                 data_type = data_type_from_event_name(hub_event)
-            if normalize_data_type(data_type) == normalize_data_type("STATUS"):
+            if normalize_data_type(data_type) == "status":
                 client = self._client
                 correlation_id = context.get("id")
                 if (
@@ -294,7 +300,7 @@ class ServiceProviderHubConnection:
                     )
                     client.send_hub_request_response(
                         correlation_id.strip(),
-                        "STATUS",
+                        "status",
                         payload,
                         event.get("hub.topic"),
                     )
@@ -305,7 +311,7 @@ class ServiceProviderHubConnection:
                         len(payload.get("items") or []),
                     )
                 return
-            if normalize_data_type(data_type) == normalize_data_type("IDC-CLAUDE"):
+            if normalize_data_type(data_type) == "idc-claude":
                 client = self._client
                 correlation_id = context.get("id")
                 if (
@@ -321,7 +327,7 @@ class ServiceProviderHubConnection:
                     )
                     client.send_hub_request_response(
                         correlation_id.strip(),
-                        "IDC-CLAUDE",
+                        "idc-claude",
                         payload,
                         event.get("hub.topic"),
                     )
@@ -405,37 +411,15 @@ class ServiceProviderHubConnection:
             if self._stop_event.is_set():
                 return
 
-            auth = await self._client.authenticate()
-            LOGGER.debug(
-                "authenticated product=%s user_name=%s",
-                self._product_name,
-                auth.get("user_name"),
-            )
-            if self._stop_event.is_set():
-                return
-
-            code = auth.get("code")
-            if not code:
-                raise RuntimeError("authenticate did not return a code")
-            if not await self._client.get_token(code):
-                raise RuntimeError("token exchange failed")
-            if self._stop_event.is_set():
-                return
-
-            status = await self._client.subscribe()
-            if status != 202:
-                if status == 0:
-                    raise RuntimeError(
-                        "subscribe failed (hub unreachable or network error)"
-                    )
-                raise RuntimeError(f"subscribe failed with HTTP {status}")
+            await self._client.connect()
             self._hub_subscribed = True
             LOGGER.debug(
-                "subscribed hub=%s topic=%s product=%s hub_endpoint=%s",
+                "subscribed hub=%s topic=%s product=%s subscriber=%s hub_endpoint=%s",
                 self._hub_name,
-                TOPIC,
+                self._client.topic or TOPIC,
                 self._product_name,
-                self._client._hub.hub_endpoint if self._client else "",
+                self._client.subscriber_name,
+                self._client.hub_endpoint,
             )
             from .provider_runtime import register_connection
 
@@ -464,9 +448,7 @@ class ServiceProviderHubConnection:
                     "dicom-send",
                     "nifti-send",
                 ):
-                    hub_endpoint = (
-                        self._client._hub.hub_endpoint if self._client else ""
-                    )
+                    hub_endpoint = self._client.hub_endpoint if self._client else ""
                     LOGGER.info(
                         "fetch_all_payloads start id=%s event=%s product=%s "
                         "hub=%s hub_endpoint=%s",

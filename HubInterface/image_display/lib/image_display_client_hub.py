@@ -41,9 +41,9 @@ DISPLAY_ACTORS = ["ID"]
 DISPLAY_EVENTS = [
     IMAGINGSTUDY_OPEN,
     IMAGINGSTUDY_CLOSE,
-    request_event_for("STATUS"),
-    request_event_for("LIVESCENE"),
-    request_event_for("DICOM"),
+    request_event_for("status"),
+    request_event_for("livescene"),
+    request_event_for("dicom"),
     SCENE_UPDATE,
     ANNOTATION_UPDATE,
     ANNOTATION_DELETE,
@@ -204,7 +204,7 @@ class ImageDisplayClientConnection:
     def get_subscriber_name(self) -> str:
         if self._client is None:
             return ""
-        return (self._client._session_cfg.subscriber_name or "").strip()
+        return self._client.subscriber_name
 
     def get_status_detail(self) -> Dict[str, Any]:
         detail = self._connected_status_detail()
@@ -350,7 +350,7 @@ class ImageDisplayClientConnection:
     def _connected_status_detail(self) -> Dict[str, Any]:
         subscriber = ""
         if self._client is not None:
-            subscriber = (self._client._session_cfg.subscriber_name or "").strip()
+            subscriber = self._client.subscriber_name
         detail: Dict[str, Any] = {
             "message_count": self._message_count,
             "subscriber_name": subscriber,
@@ -556,7 +556,7 @@ class ImageDisplayClientConnection:
             result = await client.request(
                 subscriber=subscriber,
                 topic=self._topic or None,
-                data_type="STATUS",
+                data_type="status",
                 actor="ID",
                 target_actor="*",
             )
@@ -670,7 +670,7 @@ class ImageDisplayClientConnection:
             self._product_version,
         )
         if self._status_callback:
-            initial_sub = (self._client._session_cfg.subscriber_name or "").strip()
+            initial_sub = self._client.subscriber_name
             if initial_sub:
                 self._emit_status("connecting", {"subscriber_name": initial_sub})
 
@@ -686,7 +686,7 @@ class ImageDisplayClientConnection:
             ):
                 return
             merged = dict(detail or {})
-            sub = (self._client._session_cfg.subscriber_name or "").strip()
+            sub = self._client.subscriber_name if self._client is not None else ""
             if sub:
                 merged.setdefault("subscriber_name", sub)
             self._emit_status(state, merged or None)
@@ -722,7 +722,7 @@ class ImageDisplayClientConnection:
                     )
                 raise RuntimeError(f"subscribe failed with HTTP {status}")
             self._hub_subscribed = True
-            subscriber = (self._client._session_cfg.subscriber_name or "").strip()
+            subscriber = self._client.subscriber_name
             LOGGER.info(
                 "Image Display Client subscribed hub=%s topic=%s subscriber=%s",
                 self._hub_name,

@@ -26,6 +26,7 @@ from hub_client import (
     HubConfig,
     SessionConfig,
     SlicerHubClient,
+    ensure_hub_subscribe_events,
     request_event_for,
 )
 from hub_presets import DEFAULT_HUB_NAME, HUBS, USER_NAME
@@ -72,8 +73,8 @@ DEFAULT_SCRIPT_PATH = default_total_segmentator_script_path()
 EVENTS = [
     DICOM_SEND,
     NIFTI_SEND,
-    request_event_for("STATUS"),
-    request_event_for("IDC-CLAUDE"),
+    request_event_for("status"),
+    request_event_for("idc-claude"),
     IDC_CLAUDE_SEND,
 ]
 ACTORS = ["EC"]
@@ -92,7 +93,8 @@ class ServiceProviderConfig:
 
 
 def subscribe_events_for_service_provider(cfg: ServiceProviderConfig) -> List[str]:
-    return list(EVENTS)
+    del cfg  # reserved for per-provider event overrides later
+    return ensure_hub_subscribe_events(list(EVENTS))
 
 
 DEFAULT_SERVICE_PROVIDERS = [
@@ -360,7 +362,9 @@ def build_hub_client(
         product_name=product_name,
         product_version=product_version,
         actors=list(ACTORS),
-        events=list(events if events is not None else EVENTS),
+        events=ensure_hub_subscribe_events(
+            list(events if events is not None else EVENTS)
+        ),
         lease=int(hub_def["lease"]),
         user_name=USER_NAME,
         default_target_actor="ID",

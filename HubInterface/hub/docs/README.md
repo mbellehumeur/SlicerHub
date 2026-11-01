@@ -202,7 +202,7 @@ sequenceDiagram
 | `subscriber.name` | Requester identity (must have a subscription; should be WS-connected) |
 | `event.hub.event` | Required `*-request` event name (for example `status-request`); hub dispatches this name as-is |
 | `event.hub.topic` | Optional; all matches must use this hub topic |
-| `event.context.dataType` | Optional handler token (for example `STATUS`, `PNGFULLSIZE`); copied into WS fan-out `context` |
+| `event.context.dataType` | Optional handler token (lowercase; for example `status`, `pngfullsize`); copied into WS fan-out `context`. Uppercase aliases still work via client normalize. |
 | `subscriber.actor` | Source / requester role (included on forwarded WS events) |
 | `target.actor` | Destination filter: subscription `actors` must include this keyword; omitted or `*` = all roles on topic. On POST request body, if `target.actor` is absent, `subscriber.actor` may be used as the filter. WS fan-out uses the same keys. |
 | `productName` | Optional filter on `client_info.productName`; `*` means any |
@@ -217,7 +217,7 @@ sequenceDiagram
   "event": {
     "hub.topic": "my-topic",
     "hub.event": "status-request",
-    "context": { "dataType": "STATUS" }
+    "context": { "dataType": "status" }
   },
   "subscriber.actor": "WORKLIST_CLIENT",
   "target.actor": "WORKLIST_CLIENT"
@@ -231,7 +231,7 @@ sequenceDiagram
   "ok": true,
   "id": "<uuid>",
   "subscriber.name": "REQUESTER-NAME",
-  "dataType": "JPGFULLSIZE",
+  "dataType": "jpgfullsize",
   "subscriber.actor": "ID",
   "target.actor": "*",
   "responses": [
@@ -268,11 +268,49 @@ Each item in `responses` is one subscriber's `<datatype>-response` payload. The 
 
 | File | Role |
 |------|------|
-| [`hub.py`](hub.py) | Hub app, routes, `Hub` state |
+| [`hub.py`](hub.py) | Thin FastAPI entrypoint (bootstrap, middleware, SPA mounts, uvicorn `main`) |
 | [`admin.html`](admin.html) | Admin UI |
 | [`../python_client/src/hub_client/client.py`](../python_client/src/hub_client/client.py) | Per-`dataType` event-name helpers + fixed events; `HubClient` ABC and `SlicerHubClient` |
 | [`3dslicer-hub-ai-interface.py`](3dslicer-hub-ai-interface.py) | Standalone Hub subscriber (hub URLs from OHIF `hub.js`) |
 | [`HUB-README.md`](HUB-README.md) | VolView server run/deploy guide |
+
+### `Lib/` modules (on `sys.path` when running `hub.py`)
+
+| Module | Role |
+|--------|------|
+| [`Lib/env.py`](Lib/env.py) | Env flags / tunables (`HUB_WS_*`, payload store, request timeout) |
+| [`Lib/logging_setup.py`](Lib/logging_setup.py) | `hub` logger + uvicorn access-log filter |
+| [`Lib/state.py`](Lib/state.py) | `Hub` class + `hub` singleton |
+| [`Lib/subscriptions.py`](Lib/subscriptions.py) | Topic/event/actor/product match helpers |
+| [`Lib/payload_store.py`](Lib/payload_store.py) | In-memory `payloadId` store + reaper |
+| [`Lib/request_parse.py`](Lib/request_parse.py) | Hub-request body field parsers |
+| [`Lib/audit_helpers.py`](Lib/audit_helpers.py) | Publisher + audit message params |
+| [`Lib/publish.py`](Lib/publish.py) | Publish / multipart fan-out |
+| [`Lib/binary_publish.py`](Lib/binary_publish.py) | Multipart parse + payloadId rewrite |
+| [`Lib/hub_request.py`](Lib/hub_request.py) | Typed `*-request` collation |
+| [`Lib/conference_logic.py`](Lib/conference_logic.py) | Conference topic / event helpers |
+| [`Lib/samples.py`](Lib/samples.py) | Sample study catalog helpers |
+| [`Lib/public_url.py`](Lib/public_url.py) | Public base URL behind reverse proxies |
+| [`Lib/static_spa.py`](Lib/static_spa.py) | Bundled SPA + root site mounts |
+| [`Lib/http_util.py`](Lib/http_util.py) | Shared auth / body / HTML helpers |
+| [`Lib/middleware.py`](Lib/middleware.py) | Spiderbot + request logging middleware |
+| [`Lib/oauth_tokens.py`](Lib/oauth_tokens.py) | JWT / admin token validation |
+| [`Lib/filename_policy.py`](Lib/filename_policy.py) | Binary transfer filename allowlist |
+| [`Lib/hub_metrics.py`](Lib/hub_metrics.py) | Admin metrics collection |
+
+### `Lib/routes/`
+
+| Module | Routes |
+|--------|--------|
+| [`hub_api.py`](Lib/routes/hub_api.py) | `POST`/`DELETE`/`OPTIONS` `/api/hub` |
+| [`bind_ws.py`](Lib/routes/bind_ws.py) | `WS` `/bind/{endpoint}` |
+| [`admin.py`](Lib/routes/admin.py) | Admin pages, snapshot, metrics, reset, `WS` `/ws/admin` |
+| [`oauth.py`](Lib/routes/oauth.py) | `/oauth/authorize`, `/oauth/token` |
+| [`conference.py`](Lib/routes/conference.py) | Conference HTTP APIs + client page |
+| [`payloads.py`](Lib/routes/payloads.py) | `GET` `/api/hub/payloads/{token}` |
+| [`samples.py`](Lib/routes/samples.py) | Sample catalog + file download |
+| [`idc.py`](Lib/routes/idc.py) | IDC series/NL/translate/proxy-download/MCP |
+| [`misc.py`](Lib/routes/misc.py) | `robots.txt`, favicon, icons |
 
 For workspace-wide Hub protocol rules (event-name sync across Python/JS/TS, line endings), see [`../../AGENTS.md`](../../AGENTS.md).
 

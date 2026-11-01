@@ -14,7 +14,7 @@ from hub_client import IMAGINGSTUDY_OPEN
 LOGGER = logging.getLogger("HubInterface.ImageDisplay")
 
 LIVE_SCENE_SAMPLE_ID = "slicer-live-scene"
-LIVESCENE_DATA_TYPE = "LIVESCENE"
+LIVESCENE_DATA_TYPE = "livescene"
 LIVESCENE_MIME = "application/vnd.slicerlive.scene+json"
 HUB_OPEN_MODE = "urn:cast:open-mode"
 HUB_OPEN_MODE_FILES = "files"

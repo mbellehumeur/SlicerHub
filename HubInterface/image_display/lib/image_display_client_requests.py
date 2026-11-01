@@ -24,9 +24,9 @@ _DEFAULT_DISPLAY_PRODUCT_NAME = "3DSLICER-ID"
 
 EMPTY_FHIRCAST_CONTEXT: Dict[str, Any] = {"context.type": "", "context": []}
 ID_ACTOR_KEYWORD = "ID"
-STATUS_DATA_TYPE = "STATUS"
-LIVESCENE_DATA_TYPE = "LIVESCENE"
-DICOM_DATA_TYPE = "DICOM"
+STATUS_DATA_TYPE = "status"
+LIVESCENE_DATA_TYPE = "livescene"
+DICOM_DATA_TYPE = "dicom"
 SCENEVIEW_BUILD_TIMEOUT_SECONDS = 9.0
 LIVESCENE_EXPORT_TIMEOUT_SECONDS = 120.0
 DICOM_EXPORT_TIMEOUT_SECONDS = 300.0
@@ -81,7 +81,7 @@ def _resolve_product_name(connection: "ImageDisplayClientConnection") -> str:
         return name
     client = connection.get_client()
     if client is not None:
-        session_name = (client._session_cfg.product_name or "").strip()
+        session_name = client.product_name
         if session_name:
             return session_name
     return _DEFAULT_DISPLAY_PRODUCT_NAME
