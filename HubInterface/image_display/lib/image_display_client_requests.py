@@ -81,7 +81,7 @@ def _resolve_product_name(connection: "ImageDisplayClientConnection") -> str:
         return name
     client = connection.get_client()
     if client is not None:
-        session_name = (client._session_cfg.product_name or "").strip()
+        session_name = client.product_name
         if session_name:
             return session_name
     return _DEFAULT_DISPLAY_PRODUCT_NAME

@@ -25,10 +25,14 @@ async def run() -> None:
         HubClientOptions,
         SessionConfig,
         SlicerHubClient,
+        ensure_hub_subscribe_events,
         generate_subscriber_name,
     )
 
-    # Match ServiceProviderConfig defaults (actors EC, dicom/nifti/status-request).
+    # Match ServiceProviderConfig defaults; ensure STATUS events are listed.
+    events = ensure_hub_subscribe_events(
+        ["dicom-send", "nifti-send", "status-request"]
+    )
     hub = build_local_hub_config()
     session = SessionConfig(
         topic=SMOKE_TOPIC,
@@ -36,27 +40,23 @@ async def run() -> None:
         product_name=f"{SMOKE_PRODUCT}-SP",
         product_version="1.0",
         actors=["EC"],
-        events=["dicom-send", "nifti-send", "status-request"],
+        events=events,
         user_name="3dslicer-server",
         lease=999,
         default_target_actor="EC",
     )
     client = SlicerHubClient(hub, session, HubClientOptions(auto_reconnect=False))
     try:
-        auth = await client.authenticate()
-        code = str(auth.get("code") or "").strip()
-        if not code:
-            raise RuntimeError("authenticate returned no code")
-        print(f"OK SP authenticate user_name={auth.get('user_name')}")
-        if not await client.get_token(code):
-            raise RuntimeError("get_token failed")
-        status = await client.subscribe()
+        status = await client.connect()
         if status != 202:
-            raise RuntimeError(f"subscribe HTTP {status}")
-        print(f"OK SP subscribed as {session.subscriber_name} events={session.events}")
+            raise RuntimeError(f"connect HTTP {status}")
+        print(
+            f"OK SP subscribed as {client.subscriber_name} "
+            f"events={session.events} product={client.product_name}"
+        )
 
         result = await client.request(
-            subscriber=session.subscriber_name,
+            subscriber=client.subscriber_name,
             topic=SMOKE_TOPIC,
             data_type="STATUS",
             actor="EC",

@@ -48,6 +48,8 @@ NIFTI_SEND = "nifti-send"
 PNG_SEND = "png-send"
 IDC_CLAUDE_SEND = "idc-claude-send"
 CONFERENCE_CHAT = "conference-chat"
+CONFERENCE_START = "conference-start"
+CONFERENCE_END = "conference-end"
 DICOMSR_UPDATE = "dicomsr-update"
 SUBSCRIPTION_REMOVED = "subscription-removed"
 HEARTBEAT = "heartbeat"
@@ -99,6 +101,41 @@ def data_type_from_event_name(name: Optional[str]) -> str:
     return ""
 
 
+def ensure_hub_subscribe_events(events: Optional[List[str]]) -> List[str]:
+    """Ensure STATUS request/update are subscribed when listing events explicitly.
+
+    Mirrors ``@slicer-hub/client`` ``ensureHubSubscribeEvents``.
+    """
+    if not events:
+        return ["*"]
+    if any(str(entry).strip() == "*" for entry in events):
+        return ["*"]
+    status_request = request_event_for("STATUS")
+    normalized = {
+        str(entry).strip().lower()
+        for entry in events
+        if str(entry).strip()
+    }
+    extras: List[str] = []
+    if status_request and status_request.lower() not in normalized:
+        extras.append(status_request)
+        normalized.add(status_request.lower())
+    if STATUS_UPDATE not in normalized:
+        extras.append(STATUS_UPDATE)
+    return list(events) + extras if extras else list(events)
+
+
+def is_own_message(
+    message: Dict[str, Any], subscriber_name: Optional[str]
+) -> bool:
+    """True when ``message['subscriber.name']`` matches ``subscriber_name``."""
+    own = str(subscriber_name or "").strip()
+    if not own:
+        return False
+    from_sub = str(message.get("subscriber.name") or "").strip()
+    return bool(from_sub) and from_sub == own
+
+
 def build_hub_request_event(
     *,
     data_type: Optional[str] = None,
@@ -142,7 +179,7 @@ def _short_caller_stack(skip: int = 2, depth: int = 6) -> str:
     return "\n".join(lines) if lines else "  (no caller frames)"
 
 
-DEFAULT_MESSAGE_ID_PREFIX = "PYCAST-"
+DEFAULT_MESSAGE_ID_PREFIX = "HUB-"
 RECONNECT_INTERVAL_SEC = 10.0
 RECONNECT_ERROR_THRESHOLD = 3
 # aiohttp defaults to 4 MiB; hub dicom-send uses a follow-on binary frame.
@@ -318,11 +355,11 @@ def resolve_target_product_name_for_wire(value: Optional[str]) -> Optional[str]:
     return text
 
 
-def generate_subscriber_name(product_name: str = "PYCAST") -> str:
+def generate_subscriber_name(product_name: str = "HUB") -> str:
     base = "".join(
         c if c.isalnum() else "-"
-        for c in (product_name or "PYCAST").strip()
-    ).strip("-") or "PYCAST"
+        for c in (product_name or "HUB").strip()
+    ).strip("-") or "HUB"
     suffix = "".join(
         random.choice(_SUBSCRIBER_SUFFIX_ALPHABET) for _ in range(6)
     )
@@ -560,14 +597,34 @@ def is_hub_binary_event(event_name: Any) -> bool:
     return False
 
 
-def hub_payload_id(event: Dict[str, Any]) -> str:
-    """Return the first pending chunk ``payloadId`` on ``context.files[]``."""
+def _event_dict_for_payload(message_or_event: Dict[str, Any]) -> Dict[str, Any]:
+    """Accept a full hub message or an ``event`` object for payload helpers."""
+    if not isinstance(message_or_event, dict):
+        return {}
+    nested = message_or_event.get("event")
+    if isinstance(nested, dict) and (
+        "context" in nested or "hub.event" in nested or "hub.topic" in nested
+    ):
+        return nested
+    return message_or_event
+
+
+def hub_payload_id(message_or_event: Dict[str, Any]) -> str:
+    """Return the first pending chunk ``payloadId`` on ``context.files[]``.
+
+    Accepts a full hub message or an ``event`` object.
+    """
+    event = _event_dict_for_payload(message_or_event)
     slot = _first_pending_payload_slot(event)
     return slot[3] if slot else ""
 
 
-def has_pending_payload(event: Dict[str, Any]) -> bool:
-    """True when a binary-family event carries unfetched ``payloadId`` value(s)."""
+def has_pending_payload(message_or_event: Dict[str, Any]) -> bool:
+    """True when ``context.files[]`` carries unfetched ``payloadId`` value(s).
+
+    Accepts a full hub message or an ``event`` object.
+    """
+    event = _event_dict_for_payload(message_or_event)
     return _first_pending_payload_slot(event) is not None
 
 
@@ -1153,6 +1210,11 @@ class HubClient(ABC):
         ...
 
     @abstractmethod
+    async def connect(self) -> int:
+        """Authenticate, exchange token, and subscribe. Return subscribe HTTP status."""
+        ...
+
+    @abstractmethod
     async def unsubscribe(self) -> None:
         ...
 
@@ -1223,7 +1285,7 @@ class SlicerHubClient(HubClient):
 
         if not self._session_cfg.subscriber_name.strip():
             self._session_cfg.subscriber_name = generate_subscriber_name(
-                self._session_cfg.product_name or "PYCAST"
+                self._session_cfg.product_name or "HUB"
             )
 
         self._token = ""
@@ -1244,8 +1306,17 @@ class SlicerHubClient(HubClient):
         self._async_loop: Optional[asyncio.AbstractEventLoop] = None
         self._payload_http_pool = _PayloadHttpConnectionPool()
 
-        if self._options.auto_reconnect:
-            self._reconnect_task = asyncio.create_task(self._reconnect_loop())
+    def _ensure_reconnect_task(self) -> None:
+        """Start the reconnect loop once a running event loop is available."""
+        if not self._options.auto_reconnect or self._closed:
+            return
+        if self._reconnect_task is not None and not self._reconnect_task.done():
+            return
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            return
+        self._reconnect_task = asyncio.create_task(self._reconnect_loop())
 
     def _emit_connection_state(
         self, state: str, detail: Optional[Dict[str, Any]] = None
@@ -1274,7 +1345,7 @@ class SlicerHubClient(HubClient):
         return f"{parsed.scheme}://{parsed.netloc}/oauth/authorize"
 
     def _product_name_for_oauth(self) -> str:
-        return (self._session_cfg.product_name or "PYCAST").strip() or "PYCAST"
+        return (self._session_cfg.product_name or "HUB").strip() or "HUB"
 
     def _events_form_value(self) -> str:
         events = self._session_cfg.events
@@ -1322,6 +1393,38 @@ class SlicerHubClient(HubClient):
         self._session_cfg.user_name = user_name or ""
 
     @property
+    def subscriber_name(self) -> str:
+        return (self._session_cfg.subscriber_name or "").strip()
+
+    @property
+    def topic(self) -> str:
+        return (self._session_cfg.topic or "").strip()
+
+    @property
+    def product_name(self) -> str:
+        return (self._session_cfg.product_name or "").strip()
+
+    @property
+    def product_version(self) -> str:
+        return (self._session_cfg.product_version or "").strip()
+
+    @property
+    def user_name(self) -> str:
+        return (self._session_cfg.user_name or "").strip()
+
+    @property
+    def is_subscribed(self) -> bool:
+        return bool(self._subscribed)
+
+    @property
+    def has_token(self) -> bool:
+        return bool((self._token or "").strip())
+
+    @property
+    def hub_endpoint(self) -> str:
+        return (self._hub.hub_endpoint or "").strip()
+
+    @property
     def message_queue(self) -> asyncio.Queue[Dict[str, Any]]:
         return self._message_queue
 
@@ -1332,6 +1435,19 @@ class SlicerHubClient(HubClient):
         self, callback: ConnectionStateCallback
     ) -> None:
         self._on_connection_state = callback
+
+    async def connect(self) -> int:
+        """Authenticate, exchange token, and subscribe. Return subscribe HTTP status."""
+        auth = await self.authenticate()
+        code = str(auth.get("code") or "").strip()
+        if not code:
+            raise RuntimeError("authenticate did not return a code")
+        if not await self.get_token(code):
+            raise RuntimeError("token exchange failed")
+        status = await self.subscribe()
+        if status != 202:
+            raise RuntimeError(f"subscribe failed with HTTP {status}")
+        return status
 
     async def authenticate(self) -> Dict[str, Any]:
         authorize_endpoint = self._authorization_endpoint()
@@ -1939,6 +2055,7 @@ class SlicerHubClient(HubClient):
                     self._subscribed = True
                     self._resubscribe_requested = False
                     await self._start_websocket(str(endpoint))
+                    self._ensure_reconnect_task()
                     return status
 
                 if status == 401:

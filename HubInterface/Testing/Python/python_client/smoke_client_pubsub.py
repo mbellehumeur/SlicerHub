@@ -20,7 +20,7 @@ from common.local_hub import (  # noqa: E402
 )
 
 
-async def _connect_client(label: str, events: list[str]):
+async def _connect_client(label: str, events: list[str], *, use_connect: bool = False):
     from hub_client import (
         HubClientOptions,
         SessionConfig,
@@ -39,19 +39,29 @@ async def _connect_client(label: str, events: list[str]):
         user_name=SMOKE_USER,
         lease=999,
     )
-    # auto_reconnect=False: construct outside create_task issues when looping carefully
     client = SlicerHubClient(hub, session, HubClientOptions(auto_reconnect=False))
-    auth = await client.authenticate()
-    code = str(auth.get("code") or "").strip()
-    if not code:
-        raise RuntimeError(f"{label}: authenticate returned no code")
-    if not await client.get_token(code):
-        raise RuntimeError(f"{label}: get_token failed")
-    status = await client.subscribe()
-    if status != 202:
-        raise RuntimeError(f"{label}: subscribe HTTP {status}")
-    print(f"OK {label} subscribed as {session.subscriber_name}")
-    return client, session
+    if use_connect:
+        status = await client.connect()
+        if status != 202:
+            raise RuntimeError(f"{label}: connect HTTP {status}")
+    else:
+        auth = await client.authenticate()
+        code = str(auth.get("code") or "").strip()
+        if not code:
+            raise RuntimeError(f"{label}: authenticate returned no code")
+        if not await client.get_token(code):
+            raise RuntimeError(f"{label}: get_token failed")
+        status = await client.subscribe()
+        if status != 202:
+            raise RuntimeError(f"{label}: subscribe HTTP {status}")
+    if not client.is_subscribed or not client.has_token:
+        raise RuntimeError(f"{label}: expected is_subscribed and has_token")
+    if client.subscriber_name != session.subscriber_name:
+        raise RuntimeError(f"{label}: subscriber_name accessor mismatch")
+    if client.topic != SMOKE_TOPIC:
+        raise RuntimeError(f"{label}: topic accessor mismatch")
+    print(f"OK {label} subscribed as {client.subscriber_name}")
+    return client
 
 
 async def _await_event(client, want_event: str, timeout: float = 8.0):
@@ -75,8 +85,8 @@ async def run() -> None:
     bootstrap_hubinterface_paths()
     from hub_client import IMAGINGSTUDY_CLOSE
 
-    sub, _sub_session = await _connect_client("sub", ["*"])
-    pub, _pub_session = await _connect_client("pub", ["*"])
+    sub = await _connect_client("sub", ["*"], use_connect=True)
+    pub = await _connect_client("pub", ["*"], use_connect=False)
     try:
         close_msg = {
             "event": {
@@ -91,7 +101,7 @@ async def run() -> None:
         print(f"OK sub received imagingstudy-close id={received.get('id')}")
 
         result = await pub.request(
-            subscriber=_pub_session.subscriber_name,
+            subscriber=pub.subscriber_name,
             topic=SMOKE_TOPIC,
             data_type="STATUS",
             actor="ID",
