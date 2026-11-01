@@ -286,7 +286,7 @@ class ServiceProviderHubConnection:
             data_type = context.get("dataType")
             if not isinstance(data_type, str) or not data_type.strip():
                 data_type = data_type_from_event_name(hub_event)
-            if normalize_data_type(data_type) == normalize_data_type("STATUS"):
+            if normalize_data_type(data_type) == "status":
                 client = self._client
                 correlation_id = context.get("id")
                 if (
@@ -300,7 +300,7 @@ class ServiceProviderHubConnection:
                     )
                     client.send_hub_request_response(
                         correlation_id.strip(),
-                        "STATUS",
+                        "status",
                         payload,
                         event.get("hub.topic"),
                     )
@@ -311,7 +311,7 @@ class ServiceProviderHubConnection:
                         len(payload.get("items") or []),
                     )
                 return
-            if normalize_data_type(data_type) == normalize_data_type("IDC-CLAUDE"):
+            if normalize_data_type(data_type) == "idc-claude":
                 client = self._client
                 correlation_id = context.get("id")
                 if (
@@ -327,7 +327,7 @@ class ServiceProviderHubConnection:
                     )
                     client.send_hub_request_response(
                         correlation_id.strip(),
-                        "IDC-CLAUDE",
+                        "idc-claude",
                         payload,
                         event.get("hub.topic"),
                     )

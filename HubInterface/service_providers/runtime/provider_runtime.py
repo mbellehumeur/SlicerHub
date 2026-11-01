@@ -1067,7 +1067,7 @@ def build_idc_claude_send_publish_message(
             "hub.event": IDC_CLAUDE_SEND_EVENT,
             "context": {
                 "id": corr,
-                "dataType": "IDC-CLAUDE",
+                "dataType": "idc-claude",
                 "data": payload,
             },
         },

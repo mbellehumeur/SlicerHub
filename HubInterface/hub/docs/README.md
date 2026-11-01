@@ -202,7 +202,7 @@ sequenceDiagram
 | `subscriber.name` | Requester identity (must have a subscription; should be WS-connected) |
 | `event.hub.event` | Required `*-request` event name (for example `status-request`); hub dispatches this name as-is |
 | `event.hub.topic` | Optional; all matches must use this hub topic |
-| `event.context.dataType` | Optional handler token (for example `STATUS`, `PNGFULLSIZE`); copied into WS fan-out `context` |
+| `event.context.dataType` | Optional handler token (lowercase; for example `status`, `pngfullsize`); copied into WS fan-out `context`. Uppercase aliases still work via client normalize. |
 | `subscriber.actor` | Source / requester role (included on forwarded WS events) |
 | `target.actor` | Destination filter: subscription `actors` must include this keyword; omitted or `*` = all roles on topic. On POST request body, if `target.actor` is absent, `subscriber.actor` may be used as the filter. WS fan-out uses the same keys. |
 | `productName` | Optional filter on `client_info.productName`; `*` means any |
@@ -217,7 +217,7 @@ sequenceDiagram
   "event": {
     "hub.topic": "my-topic",
     "hub.event": "status-request",
-    "context": { "dataType": "STATUS" }
+    "context": { "dataType": "status" }
   },
   "subscriber.actor": "WORKLIST_CLIENT",
   "target.actor": "WORKLIST_CLIENT"
@@ -231,7 +231,7 @@ sequenceDiagram
   "ok": true,
   "id": "<uuid>",
   "subscriber.name": "REQUESTER-NAME",
-  "dataType": "JPGFULLSIZE",
+  "dataType": "jpgfullsize",
   "subscriber.actor": "ID",
   "target.actor": "*",
   "responses": [

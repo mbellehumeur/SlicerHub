@@ -23,6 +23,13 @@ cd HubInterface
 python Testing/Python/run_live_smokes.py
 ```
 
+## dataType tokens
+
+Wire `hub.event` names are always lowercase (`status-request`). Prefer lowercase
+`context.dataType` tokens too (`status`, `dicom`, `livescene`). Uppercase aliases
+(`STATUS`) still work: `request_event_for` / `build_hub_request_event` /
+`send_hub_request_response` normalize via `normalize_data_type`.
+
 ## Minimal example (local hub)
 
 ```python

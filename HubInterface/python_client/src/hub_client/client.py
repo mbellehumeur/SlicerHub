@@ -110,7 +110,7 @@ def ensure_hub_subscribe_events(events: Optional[List[str]]) -> List[str]:
         return ["*"]
     if any(str(entry).strip() == "*" for entry in events):
         return ["*"]
-    status_request = request_event_for("STATUS")
+    status_request = request_event_for("status")
     normalized = {
         str(entry).strip().lower()
         for entry in events
@@ -144,7 +144,7 @@ def build_hub_request_event(
     extra_context: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """Build the ``event`` object for a hub ``*-request`` (``POST /api/hub``)."""
-    dt = (data_type or "").strip()
+    dt = normalize_data_type(data_type)
     he = (hub_event or "").strip().lower() or request_event_for(dt)
     if not he or not is_request_event(he):
         raise ValueError(
@@ -157,6 +157,8 @@ def build_hub_request_event(
     ctx: Dict[str, Any] = dict(extra_context) if extra_context else {}
     if dt and "dataType" not in ctx:
         ctx["dataType"] = dt
+    elif "dataType" in ctx:
+        ctx["dataType"] = normalize_data_type(ctx.get("dataType")) or ctx["dataType"]
     if ctx:
         event["context"] = ctx
     return event
@@ -2267,7 +2269,7 @@ class SlicerHubClient(HubClient):
         if not self._ws or self._ws.closed:
             LOGGER.warning("send_hub_request_response: websocket not open")
             return
-        dt = (data_type or "").strip()
+        dt = normalize_data_type(data_type)
         if not dt:
             LOGGER.error(
                 "send_hub_request_response requires a non-empty dataType"

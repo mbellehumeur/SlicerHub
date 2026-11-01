@@ -58,7 +58,7 @@ async def run() -> None:
         result = await client.request(
             subscriber=client.subscriber_name,
             topic=SMOKE_TOPIC,
-            data_type="STATUS",
+            data_type="status",
             actor="EC",
             target_actor="*",
         )

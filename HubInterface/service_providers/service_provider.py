@@ -448,7 +448,7 @@ async def _handle_status_request(
 
     req_ctx = request_context(message)
     data_type = req_ctx.get("dataType") or data_type_from_event_name(event_name)
-    if normalize_data_type(data_type) != normalize_data_type("STATUS"):
+    if normalize_data_type(data_type) != "status":
         return
 
     correlation_id = req_ctx.get("id")
@@ -463,7 +463,7 @@ async def _handle_status_request(
     event = message.get("event") or {}
     ctx.client.send_hub_request_response(
         correlation_id.strip(),
-        "STATUS",
+        "status",
         payload,
         event.get("hub.topic"),
     )

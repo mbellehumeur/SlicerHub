@@ -41,9 +41,9 @@ DISPLAY_ACTORS = ["ID"]
 DISPLAY_EVENTS = [
     IMAGINGSTUDY_OPEN,
     IMAGINGSTUDY_CLOSE,
-    request_event_for("STATUS"),
-    request_event_for("LIVESCENE"),
-    request_event_for("DICOM"),
+    request_event_for("status"),
+    request_event_for("livescene"),
+    request_event_for("dicom"),
     SCENE_UPDATE,
     ANNOTATION_UPDATE,
     ANNOTATION_DELETE,
@@ -556,7 +556,7 @@ class ImageDisplayClientConnection:
             result = await client.request(
                 subscriber=subscriber,
                 topic=self._topic or None,
-                data_type="STATUS",
+                data_type="status",
                 actor="ID",
                 target_actor="*",
             )

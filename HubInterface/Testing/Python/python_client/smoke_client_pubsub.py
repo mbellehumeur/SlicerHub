@@ -103,7 +103,7 @@ async def run() -> None:
         result = await pub.request(
             subscriber=pub.subscriber_name,
             topic=SMOKE_TOPIC,
-            data_type="STATUS",
+            data_type="status",
             actor="ID",
             target_actor="*",
         )

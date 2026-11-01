@@ -32,13 +32,21 @@ def main() -> int:
     )
 
     assert normalize_data_type(" STATUS ") == "status"
+    # Uppercase aliases still derive the same wire events.
     assert request_event_for("STATUS") == "status-request"
     assert response_event_for("STATUS") == "status-response"
+    assert request_event_for("status") == "status-request"
     assert is_request_event("status-request")
     assert not is_request_event("status-update")
     assert hub_event_name({"event": {"hub.event": IMAGINGSTUDY_OPEN}}) == IMAGINGSTUDY_OPEN
     assert CONFERENCE_START == "conference-start"
     assert CONFERENCE_END == "conference-end"
+
+    from hub_client import build_hub_request_event
+
+    built = build_hub_request_event(data_type="STATUS", topic="USER-1")
+    assert built["hub.event"] == "status-request"
+    assert built["context"]["dataType"] == "status"
 
     assert ensure_hub_subscribe_events([]) == ["*"]
     assert ensure_hub_subscribe_events(["*"]) == ["*"]

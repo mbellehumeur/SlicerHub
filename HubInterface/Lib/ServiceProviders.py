@@ -73,8 +73,8 @@ DEFAULT_SCRIPT_PATH = default_total_segmentator_script_path()
 EVENTS = [
     DICOM_SEND,
     NIFTI_SEND,
-    request_event_for("STATUS"),
-    request_event_for("IDC-CLAUDE"),
+    request_event_for("status"),
+    request_event_for("idc-claude"),
     IDC_CLAUDE_SEND,
 ]
 ACTORS = ["EC"]
