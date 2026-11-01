@@ -1223,10 +1223,77 @@ class Hub:
         self.pending_requests: Dict[str, Dict[str, Any]] = {}
         # OAuth authorization codes: code -> { user_name, topic, count, expires_at, used }
         self.auth_codes: Dict[str, Dict[str, Any]] = {}
+        # One entry per authenticated user (keyed by topic):
+        # { user_name, topic, authenticated_at, timezone, language, platform }
+        self.authentications: Dict[str, Dict[str, Any]] = {}
 
     def log(self, message: str, level: int = logging.INFO) -> None:
         """Log hub diagnostics via the hub logger."""
         hub_logger.log(level, message)
+
+    def upsert_authentication(self, user_name: str, topic: str) -> Dict[str, Any]:
+        """Record or refresh one authentication row per user/topic."""
+        topic_key = str(topic or "").strip()
+        name = str(user_name or "").strip()
+        if not topic_key:
+            topic_key = name
+        if not topic_key:
+            return {}
+        existing = self.authentications.get(topic_key)
+        if isinstance(existing, dict):
+            existing["user_name"] = name or existing.get("user_name") or topic_key
+            existing["topic"] = topic_key
+            existing["authenticated_at"] = datetime.now().isoformat()
+            return existing
+        entry = {
+            "user_name": name or topic_key,
+            "topic": topic_key,
+            "authenticated_at": datetime.now().isoformat(),
+            "timezone": "",
+            "language": "",
+            "platform": "",
+        }
+        self.authentications[topic_key] = entry
+        return entry
+
+    def enrich_authentication_from_client_info(
+        self, topic: str, client_info: Optional[Dict[str, Any]]
+    ) -> None:
+        """Update timezone/language/platform on an auth row from subscribe client_info."""
+        topic_key = str(topic or "").strip()
+        if not topic_key:
+            return
+        entry = self.authentications.get(topic_key)
+        if not isinstance(entry, dict):
+            return
+        if not isinstance(client_info, dict):
+            return
+        for key in ("timezone", "language", "platform"):
+            value = client_info.get(key)
+            if value is None:
+                continue
+            value_str = str(value).strip()
+            if value_str:
+                entry[key] = value_str
+
+    def authentications_for_admin(self) -> List[Dict[str, Any]]:
+        """Sorted public authentication rows for the admin snapshot."""
+        rows = list(self.authentications.values())
+        rows.sort(
+            key=lambda row: str(row.get("user_name") or row.get("topic") or "").lower()
+        )
+        return [
+            {
+                "user_name": str(row.get("user_name") or ""),
+                "topic": str(row.get("topic") or ""),
+                "authenticated_at": str(row.get("authenticated_at") or ""),
+                "timezone": str(row.get("timezone") or ""),
+                "language": str(row.get("language") or ""),
+                "platform": str(row.get("platform") or ""),
+            }
+            for row in rows
+            if isinstance(row, dict)
+        ]
 
     def set_server_port(self, port: int):
         """Set the server port for generating WebSocket URLs"""
@@ -1388,6 +1455,7 @@ class Hub:
             }
             
             self.subscriptions.append(subscription)
+            self.enrich_authentication_from_client_info(hub_topic, client_info)
             self.log(
                 _subscription_log_message(
                     "added",
@@ -1863,11 +1931,13 @@ class Hub:
         self.user_count = 0
         self.pending_requests.clear()
         self.auth_codes.clear()
+        self.authentications.clear()
         self.admin_revision = 0
         self.last_admin_refresh_time = 0.0
 
         self.log(
-            f"Hub reset - all subscriptions, conferences, audit log, and auth codes cleared; "
+            f"Hub reset - all subscriptions, conferences, audit log, authentications, "
+            f"and auth codes cleared; "
             f"{len(disconnected_endpoints)} subscriber WebSocket(s) disconnected"
         )
 
@@ -2483,6 +2553,11 @@ def _host_user_name_for_topic(topic: str, explicit: str = "") -> str:
     topic = str(topic or "").strip()
     if not topic:
         return ""
+    auth_entry = hub.authentications.get(topic)
+    if isinstance(auth_entry, dict):
+        candidate = str(auth_entry.get("user_name") or "").strip()
+        if candidate:
+            return candidate
     # Prefer a still-valid auth code for this topic (may already be consumed).
     try:
         _purge_expired_auth_codes()
@@ -2927,12 +3002,13 @@ async def get_admin_snapshot(
     unique_values = hub.get_audit_log_unique_values()
     conferences = list(hub.conferences)
 
+    authentications = hub.authentications_for_admin()
     return {
         "revision": hub.admin_revision,
         "single_user_mode": hub.single_user_mode,
         "stats": {
             "total_subscriptions": len(subscriptions),
-            "total_authentications": hub.user_count,
+            "total_authentications": len(authentications),
             "total_topics": len(
                 set(sub.get("topic") for sub in subscriptions if sub.get("topic"))
             ),
@@ -2942,6 +3018,7 @@ async def get_admin_snapshot(
         },
         "subscriptions": public_subs,
         "conferences": conferences,
+        "authentications": authentications,
         "audit": {
             "entries": log_entries,
             "count": len(log_entries),
@@ -4875,6 +4952,8 @@ async def post_oauth_token(request: Request):
         topic=topic,
         user_name=user_name,
     )
+
+    hub.upsert_authentication(user_name=user_name, topic=topic)
 
     response = {
         "token_type": "Bearer",

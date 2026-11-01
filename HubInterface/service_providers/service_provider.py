@@ -6,7 +6,7 @@ Dispatches dicom-send / nifti-send / status-request, downloads inbound files
 (HTTP URL first, hub payloadIds fallback), and exposes publish helpers on
 ``ServiceProviderContext``.
 
-Product scripts (e.g. ``lung_screening.py``) supply handlers and call ``run_sync()``.
+Product scripts (e.g. ``lung_screening/lung_screening.py``) supply handlers and call ``run_sync()``.
 
 Dependencies (stdlib + aiohttp): ``pip install aiohttp`` or use
 ``hub/requirements.txt``. Install ``pip install -e python_client`` first.

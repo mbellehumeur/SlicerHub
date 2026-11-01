@@ -18,7 +18,7 @@ In **Service Providers**, add or edit a row:
 | Version | `1.0` |
 | Description | e.g. NLST lung screening inference |
 | Hub | `SLICER-HUB` or `SLICER-HUB-CLOUD` |
-| onMessage script | `service_providers/products/lung_screening.py` |
+| onMessage script | `service_providers/products/lung_screening/lung_screening.py` |
 
 Click **Connect**. The subscriber name (`LUNGSCREENING-XXXXXX`) appears in the hub admin
 portal. Subscribed events: `dicom-send`, `nifti-send`, `status-request`.
@@ -31,8 +31,8 @@ From the repo root:
 
 ```bash
 pip install aiohttp
-python service_providers/products/lung_screening.py
-python service_providers/products/lung_screening.py --local
+python service_providers/products/lung_screening/lung_screening.py
+python service_providers/products/lung_screening/lung_screening.py --local
 ```
 
 Default hub is **SLICER-HUB-CLOUD**; `--local` uses `http://127.0.0.1:2018`.

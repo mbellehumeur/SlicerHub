@@ -62,7 +62,7 @@ In **Service Providers**, add or edit a row:
 | Version | `1.0` |
 | Description | e.g. dental CT/CBCT segmentation |
 | Hub | `SLICER-HUB` or `SLICER-HUB-CLOUD` |
-| onMessage script | `service_providers/products/dental_segmentator.py` |
+| onMessage script | `service_providers/products/dental_segmentator/dental_segmentator.py` |
 
 Click **Connect**. Subscribed events: `dicom-send`, `nifti-send`, `status-request`.
 
@@ -72,7 +72,7 @@ From `HubInterface/`:
 
 ```bash
 # optional: DENTAL_SEG_MODEL_PATH / DENTAL_SEG_DEVICE
-python service_providers/products/dental_segmentator.py --local
+python service_providers/products/dental_segmentator/dental_segmentator.py --local
 ```
 
 Default hub is **SLICER-HUB-CLOUD**; `--local` uses `http://127.0.0.1:2018`.

@@ -37,13 +37,13 @@ Standalone service providers (no Slicer UI).
 ```bash
 cd HubInterface
 pip install -r service_providers/requirements.txt
-python service_providers/products/neuro_seg.py --local
-python service_providers/products/total_segmentator.py --local
+python service_providers/products/neuro_seg/neuro_seg.py --local
+python service_providers/products/total_segmentator/total_segmentator.py --local
 ```
 
 `--local` uses `http://127.0.0.1:2018`. Default is cloud `SLICER-HUB-CLOUD`. Preset `client_secret` values are public mock placeholders (see `service_providers/hub_presets.py`); do not put real IdP secrets there.
 
-Examples: `neuro_seg.py`, `lung_screening.py`, `total_segmentator.py` (`TOTALSEG`). TotalSeg also needs TotalSegmentator installed in the Python that runs inference—prefer a dedicated env, not Slicer’s module `pip_install`; see [totalsegmentator-readme.md](../HubInterface/service_providers/docs/totalsegmentator-readme.md). `torchxrayvision/torchxrayvision.py` (`TORCHXRAYVISION`) is currently a TotalSeg clone; see [torchxrayvision-readme.md](../HubInterface/service_providers/docs/torchxrayvision-readme.md).
+Examples: `neuro_seg/neuro_seg.py`, `lung_screening/lung_screening.py`, `total_segmentator/total_segmentator.py` (`TOTALSEG`). TotalSeg also needs TotalSegmentator installed in the Python that runs inference—prefer a dedicated env, not Slicer’s module `pip_install`; see [totalsegmentator-readme.md](../HubInterface/service_providers/docs/totalsegmentator-readme.md). `torchxrayvision/torchxrayvision.py` (`TORCHXRAYVISION`) is currently a TotalSeg clone; see [torchxrayvision-readme.md](../HubInterface/service_providers/docs/torchxrayvision-readme.md).
 
 Product docs: [service_providers/docs/](../HubInterface/service_providers/docs/).
 

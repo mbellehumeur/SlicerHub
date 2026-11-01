@@ -39,6 +39,7 @@ HubInterface/hub/website/
 # Secrets / local env
 .env
 HubInterface/hub/.env
+HubInterface/hub/.env.example
 
 # OS
 .DS_Store

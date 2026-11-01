@@ -4,8 +4,8 @@
 Run from repo root (plain Python, no 3D Slicer):
 
     pip install aiohttp
-    python service_providers/products/lung_screening.py
-    python service_providers/products/lung_screening.py --local
+    python service_providers/products/lung_screening/lung_screening.py
+    python service_providers/products/lung_screening/lung_screening.py --local
 
 Default hub is SLICER-HUB-CLOUD; ``--local`` uses ``http://127.0.0.1:2018``.
 
@@ -27,7 +27,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 _SCRIPT_DIR = Path(__file__).resolve().parent
-_SP_ROOT = _SCRIPT_DIR.parent
+_SP_ROOT = _SCRIPT_DIR.parent.parent
 for _extra in (_SCRIPT_DIR, _SP_ROOT):
     _extra_str = str(_extra)
     if _extra.is_dir() and _extra_str not in sys.path:

@@ -246,7 +246,7 @@ Replace `<app>` with your App Service name from [azure-webapp.md](../../HubInter
    |-------|--------|
    | Product | `TOTALSEG` |
    | Hub | `SLICER-HUB-CLOUD` |
-   | onMessage script | `service_providers/products/total_segmentator.py` |
+   | onMessage script | `service_providers/products/total_segmentator/total_segmentator.py` |
 
 2. Click **Connect**
 3. If the hub uses real OAuth (not mock), configure service-provider credentials

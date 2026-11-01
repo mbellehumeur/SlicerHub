@@ -17,7 +17,7 @@ In **Service Providers**, add or edit a row:
 | Version | `1.0` |
 | Description | e.g. neurosegmentation |
 | Hub | `SLICER-HUB` or `SLICER-HUB-CLOUD` |
-| onMessage script | `service_providers/products/neuro_seg.py` |
+| onMessage script | `service_providers/products/neuro_seg/neuro_seg.py` |
 
 Click **Connect**. The subscriber name (`NEURO_SEG-XXXXXX`) appears in the hub admin
 portal. Subscribed events: `nifti-send`, `status-request` (no `dicom-send`).
@@ -32,8 +32,8 @@ From the repo root:
 
 ```bash
 pip install aiohttp
-python service_providers/products/neuro_seg.py
-python service_providers/products/neuro_seg.py --local
+python service_providers/products/neuro_seg/neuro_seg.py
+python service_providers/products/neuro_seg/neuro_seg.py --local
 ```
 
 Default hub is **SLICER-HUB-CLOUD**; `--local` uses `http://127.0.0.1:2018`.

@@ -477,6 +477,16 @@
             flex: 1;
             min-width: 140px;
         }
+        .stat-card.clickable {
+            cursor: pointer;
+        }
+        .stat-card.clickable:hover {
+            filter: brightness(0.97);
+        }
+        .stat-card.clickable:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
         .stat-card h3 {
             margin: 0;
             color: var(--text-secondary);
@@ -488,6 +498,37 @@
             font-weight: bold;
             color: var(--text-primary);
             margin-left: 10px;
+        }
+        .modal-dialog.authentications-dialog {
+            min-width: 420px;
+            max-width: 720px;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+        .authentications-dialog .auth-table-wrap {
+            margin: 12px 0 4px;
+            overflow-x: auto;
+        }
+        .authentications-dialog table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .authentications-dialog th,
+        .authentications-dialog td {
+            text-align: left;
+            padding: 6px 8px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        .authentications-dialog th {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        .authentications-dialog .no-authentications {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin: 12px 0;
         }
         .metrics-row {
             display: flex;
@@ -1127,9 +1168,12 @@
         <div id="errorMessage"></div>
 
         <div class="stats">
-            <div class="stat-card">
+            <div class="stat-card clickable" id="authenticationsCard"
+                 role="button" tabindex="0"
+                 title="Show authenticated users"
+                 aria-label="Show authentications">
                 <h3>Authentications</h3>
-                <div class="value" id="totalAuthentications" title="OAuth/token user counter (USER-n assignments since last hub reset)">-</div>
+                <div class="value" id="totalAuthentications" title="Authenticated users since last hub reset">-</div>
             </div>
             <div class="stat-card">
                 <h3>Application Subscriptions</h3>
@@ -1192,6 +1236,8 @@
         };
         let metricsPollTimer = null;
         let adminTokenPrompted = false;
+        let lastAuthentications = [];
+        let authenticationsModalOpen = false;
 
         function getStoredAdminToken() {
             try {
@@ -1592,10 +1638,13 @@
                 }
 
                 const stats = data.stats || {};
+                lastAuthentications = Array.isArray(data.authentications)
+                    ? data.authentications
+                    : [];
                 document.getElementById('totalSubscriptions').textContent =
                     stats.total_subscriptions || 0;
                 document.getElementById('totalAuthentications').textContent =
-                    stats.total_authentications ?? 0;
+                    stats.total_authentications ?? lastAuthentications.length;
                 document.getElementById('totalMessages').textContent =
                     stats.total_messages || 0;
 
@@ -1606,6 +1655,9 @@
 
                 renderSubscriptions(data.subscriptions);
                 renderConferences(data.conferences);
+                if (authenticationsModalOpen) {
+                    fillAuthenticationsModalBody();
+                }
 
                 const audit = data.audit || {};
                 updateDropdowns(
@@ -2268,6 +2320,98 @@
             return '/static/images/banner.jpg';
         }
 
+        function buildAuthenticationsTableHtml(list) {
+            const rows = Array.isArray(list) ? list : [];
+            if (!rows.length) {
+                return '<p class="no-authentications">No authentications</p>';
+            }
+            let html =
+                '<div class="auth-table-wrap"><table><thead><tr>' +
+                '<th>User name</th><th>Time zone</th><th>Language</th><th>Platform</th>' +
+                '</tr></thead><tbody>';
+            rows.forEach((entry) => {
+                html += `
+                    <tr>
+                        <td>${escapeHtml(entry.user_name || entry.topic || 'unknown')}</td>
+                        <td>${escapeHtml(entry.timezone || '')}</td>
+                        <td>${escapeHtml(entry.language || '')}</td>
+                        <td>${escapeHtml(entry.platform || '')}</td>
+                    </tr>
+                `;
+            });
+            html += '</tbody></table></div>';
+            return html;
+        }
+
+        function fillAuthenticationsModalBody() {
+            const body = document.getElementById('authenticationsModalBody');
+            if (!body) {
+                return;
+            }
+            body.innerHTML = buildAuthenticationsTableHtml(lastAuthentications);
+        }
+
+        function showAuthenticationsModal() {
+            if (authenticationsModalOpen) {
+                fillAuthenticationsModalBody();
+                return;
+            }
+            const backdrop = document.createElement('div');
+            backdrop.className = 'modal-backdrop';
+            backdrop.id = 'authenticationsModalBackdrop';
+            const dialog = document.createElement('div');
+            dialog.className = 'modal-dialog authentications-dialog';
+            dialog.id = 'authenticationsModalDialog';
+            dialog.setAttribute('role', 'dialog');
+            dialog.setAttribute('aria-labelledby', 'authenticationsModalTitle');
+            dialog.innerHTML = `
+                <h3 id="authenticationsModalTitle">Authentications</h3>
+                <div id="authenticationsModalBody"></div>
+                <div class="modal-actions">
+                    <button type="button" id="closeAuthenticationsBtn" class="btn-cancel">Close</button>
+                </div>
+            `;
+            document.body.appendChild(backdrop);
+            document.body.appendChild(dialog);
+            authenticationsModalOpen = true;
+            fillAuthenticationsModalBody();
+
+            const closeAuthentications = () => {
+                authenticationsModalOpen = false;
+                if (backdrop.parentNode) {
+                    document.body.removeChild(backdrop);
+                }
+                if (dialog.parentNode) {
+                    document.body.removeChild(dialog);
+                }
+                document.removeEventListener('keydown', onAuthEscape);
+            };
+
+            const onAuthEscape = (event) => {
+                if (event.key === 'Escape') {
+                    closeAuthentications();
+                }
+            };
+
+            backdrop.onclick = closeAuthentications;
+            document.getElementById('closeAuthenticationsBtn').onclick = closeAuthentications;
+            document.addEventListener('keydown', onAuthEscape);
+        }
+
+        function bindAuthenticationsCard() {
+            const card = document.getElementById('authenticationsCard');
+            if (!card) {
+                return;
+            }
+            card.addEventListener('click', showAuthenticationsModal);
+            card.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    showAuthenticationsModal();
+                }
+            });
+        }
+
         async function showAboutHub() {
             closeHubSettings();
             let aboutName = 'Slicer Hub';
@@ -2490,6 +2634,7 @@
 
         // Snapshot first so a 401 can store admin token before the WS connects.
         window.addEventListener('load', async function() {
+            bindAuthenticationsCard();
             await loadSnapshot();
             connectAdminWebSocket();
             startMetricsPolling();
