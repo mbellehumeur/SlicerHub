@@ -16,7 +16,6 @@ HubInterface/hub/build_clients.sh
 # Slicer hub deploy artifacts
 HubInterface/hub/slicer-hub.zip
 deploy/
-HubInterface/hub/volview-client/
 HubInterface/hub/worklist-client/
 HubInterface/hub/reporting-client/
 HubInterface/hub/classroom-client/

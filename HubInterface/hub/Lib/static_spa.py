@@ -17,7 +17,6 @@ _RESOURCES_DIR = os.path.join(_HUB_DIR, "Resources")
 
 # Bundled SPAs at subpaths: mount_path (URL) -> folder under hub/
 SPA_CLIENTS = [
-    ("volview-client", "volview-client"),
     ("worklist-client", "worklist-client"),
     ("reporting-client", "reporting-client"),
     ("classroom-client", "classroom-client"),

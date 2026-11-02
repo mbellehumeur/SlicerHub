@@ -171,7 +171,7 @@ async def lifespan(app: FastAPI):
         )
     else:
         hub_logger.info(
-            "Slicer hub SPA clients: none (build and sync volview-client, "
+            "Slicer hub SPA clients: none (build and sync "
             "worklist-client, reporting-client, classroom-client, slicerlive, slim, ohif)"
         )
     sample_count = len(_scan_hub_sample_studies())
