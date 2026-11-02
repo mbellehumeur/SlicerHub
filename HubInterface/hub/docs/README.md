@@ -45,18 +45,21 @@ poetry run python server_with_hub.py --port 4014
 | `GET` | `/api/hub/admin` | Admin dashboard HTML |
 | `GET` | `/api/hub/admin/snapshot` | JSON dashboard (subscriptions, conferences, audit) |
 | `WS` | `/ws/admin` | `admin.refresh` notifications (revision bump) |
-| `POST` | `/oauth/authorize`, `/oauth/token` | Dev/mock OAuth for clients (disable with `HUB_MOCK_OAUTH=false`) |
+| `GET` | `/api/hub/auth/config` | Auth mode discovery (`mock` \| `oidc`) for HubClient |
+| `GET` | `/oauth/login`, `/oauth/callback` | Browser OIDC (Google-ready PKCE); oidc mode only |
+| `POST` | `/oauth/authorize`, `/oauth/token` | Dev/mock OAuth (503 when `HUB_AUTH_MODE=oidc`) |
 
 ### Authentication modes
 
+Primary switch: **`HUB_AUTH_MODE=mock|oidc`** (default `mock`). Full setup (Auth0 / Entra / Google): [`oidc.md`](oidc.md).
+
 | Mode | Hub settings | Client behavior |
 |------|--------------|-----------------|
-| **Local dev (default)** | `HUB_MOCK_OAUTH=true`, `HUB_REQUIRE_AUTH=false` | Clients `POST` hub `/oauth/*`; subscribe works without enforced Bearer checks; admin APIs open unless `HUB_ADMIN_TOKEN` is set |
-| **Enforced mock tokens** | `HUB_REQUIRE_AUTH=true` | Subscribe/publish/request, conference mutators, payload GET, and admin JSON APIs require Bearer JWT from mock `/oauth/token`; `/bind/{endpoint}` must match an existing subscription |
-| **Admin token (hosted demos)** | `HUB_ADMIN_TOKEN=<secret>` | Admin snapshot/metrics/clear-audit/reset and `/ws/admin` require `X-Hub-Admin-Token` (or `?admin_token=` / Bearer equal to the secret). Can combine with `HUB_REQUIRE_AUTH` |
-| **Keycloak RS256** | `HUB_OIDC_ISSUER` + optional `HUB_REQUIRE_AUTH=true` | Hub validates Keycloak access tokens via JWKS; deploy IdP from [`cast-keycloak`](https://github.com/mbellehumeur/cast-keycloak) |
+| **Mock (default)** | `HUB_AUTH_MODE=mock`, optional `HUB_REQUIRE_AUTH` | JS/Python clients `POST` `/oauth/*`; Bearer optional unless `HUB_REQUIRE_AUTH=true` |
+| **OIDC (Google)** | `HUB_AUTH_MODE=oidc` + issuer/client/JWT secret | Browser login via HubClient; hub mints session JWT; Bearer required; topic must match JWT |
+| **Admin token (hosted demos)** | `HUB_ADMIN_TOKEN=<secret>` | Admin snapshot/metrics/clear-audit/reset and `/ws/admin` require `X-Hub-Admin-Token` (or `?admin_token=` / Bearer equal to the secret) |
 
-Bearer / admin-token validation lives in [`Lib/oauth_tokens.py`](Lib/oauth_tokens.py) (HS256 mock + RS256/JWKS + `HUB_ADMIN_TOKEN`). Admin snapshot omits subscription `secret` values. `DELETE /api/hub` only unsubscribes a specific endpoint/callback+topic (no mass clear; use `POST /api/admin/reset`).
+Bearer / admin-token validation lives in [`Lib/oauth_tokens.py`](Lib/oauth_tokens.py) (HS256 hub session + discovery JWKS for IdP id_tokens + `HUB_ADMIN_TOKEN`). Admin snapshot omits subscription `secret` values. `DELETE /api/hub` only unsubscribes a specific endpoint/callback+topic (no mass clear; use `POST /api/admin/reset`). Python `hub_client` OIDC is deferred (mock authorize only).
 
 Conference UI: `/api/hub/conference-client`, APIs under `/api/hub/conference` and `/api/hub/conference-topics`.
 
@@ -305,7 +308,7 @@ Each item in `responses` is one subscriber's `<datatype>-response` payload. The 
 | [`hub_api.py`](Lib/routes/hub_api.py) | `POST`/`DELETE`/`OPTIONS` `/api/hub` |
 | [`bind_ws.py`](Lib/routes/bind_ws.py) | `WS` `/bind/{endpoint}` |
 | [`admin.py`](Lib/routes/admin.py) | Admin pages, snapshot, metrics, reset, `WS` `/ws/admin` |
-| [`oauth.py`](Lib/routes/oauth.py) | `/oauth/authorize`, `/oauth/token` |
+| [`oauth.py`](Lib/routes/oauth.py) | `/api/hub/auth/config`, `/oauth/login`, `/oauth/callback`, mock `/oauth/authorize` + `/oauth/token` |
 | [`conference.py`](Lib/routes/conference.py) | Conference HTTP APIs + client page |
 | [`payloads.py`](Lib/routes/payloads.py) | `GET` `/api/hub/payloads/{token}` |
 | [`samples.py`](Lib/routes/samples.py) | Sample catalog + file download |
