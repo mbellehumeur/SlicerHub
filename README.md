@@ -20,11 +20,9 @@ This python extension supplies the **HUB**, service provider example scripts, an
 - **EVIDENCE_CREATOR** actor: medical imaging inference models
 - **REPORT_CREATOR** actor: a DICOM SR reporting example (WIP)
 - **IMAGE_ARCHIVE** actor: the [Imaging Data Commons](https://imaging.datacommons.cancer.gov/) and the [3D Slicer](https://www.slicer.org/) DICOM DB as read-only image archives
-- **IDENTITY_PROVIDER** actor: authentication / identity provider with integration to the hub OIDC endpoints or built-in hub anonymous/mock authentication
+- **IDENTITY_PROVIDER** actor: authentication / identity provider with integration to the hub [OIDC endpoints](HubInterface/hub/docs/oidc.md) or built-in hub anonymous/mock authentication
 
-### Auth / OIDC
 
-Hub auth mode is `HUB_AUTH_MODE=mock|oidc` (default mock). Browser OIDC (Auth0 / Entra / Google), hub session JWTs, and `@slicer-hub/client` redirect flow are documented in [`HubInterface/hub/docs/oidc.md`](HubInterface/hub/docs/oidc.md).
 
 The extension also includes features for education that are independent of the IHE Integrated Reporting workflow:
 
