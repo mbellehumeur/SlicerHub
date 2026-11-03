@@ -9,6 +9,7 @@ from hub_client import is_request_event
 from binary_publish import _reject_json_binary_bytes_publish
 from http_util import (
     _enforce_bearer_auth,
+    _enforce_topic_match,
     _parse_request_body,
     _unsubscribe_endpoint_id,
 )
@@ -23,10 +24,12 @@ router = APIRouter()
 @router.post("/api/hub")
 async def post_hub(request: Request):
     """Handle subscribe/unsubscribe, publish, and typed ``*-request`` fan-out."""
-    _enforce_bearer_auth(request)
+    identity = _enforce_bearer_auth(request)
     content_type = request.headers.get("content-type", "")
     if "multipart" in content_type.lower():
         try:
+            # Topic check happens inside after JSON part parse is awkward; enforce
+            # via Authorization only here for multipart (publisher topic in body).
             return await _handle_multipart_publish(request)
         except HTTPException:
             raise
@@ -60,7 +63,13 @@ async def post_hub(request: Request):
                         removed_subs, "unsubscribe"
                     )
                 return {"status": "unsubscribed", "removed": result.get("removed", 0)}
-            # Handle subscribe
+            # Handle subscribe — oidc: topic must match token
+            sub_topic = str(
+                subscription_data.get("hub.topic")
+                or subscription_data.get("hub_topic")
+                or ""
+            ).strip()
+            _enforce_topic_match(identity, sub_topic)
             result = hub.add_subscription(subscription_data)
             replaced_subs = result.get("replaced_subscriptions") or []
             if replaced_subs:
@@ -88,6 +97,8 @@ async def post_hub(request: Request):
         # Publish or typed request via /api/hub or /api/hub/
         event = request_data.get("event")
         if isinstance(event, dict):
+            pub_topic = str(event.get("hub.topic") or "").strip()
+            _enforce_topic_match(identity, pub_topic)
             hub_event_name = event.get("hub.event")
             if isinstance(hub_event_name, str) and is_request_event(hub_event_name):
                 return await _handle_hub_request(request_data)

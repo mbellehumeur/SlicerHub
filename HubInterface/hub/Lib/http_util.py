@@ -9,6 +9,7 @@ from urllib.parse import parse_qs
 from fastapi import HTTPException, Request, WebSocket
 from fastapi.responses import RedirectResponse, Response
 from oauth_tokens import (
+    HUB_AUTH_MODE,
     TokenValidationError,
     admin_auth_required,
     oauth_error_body,
@@ -53,6 +54,36 @@ def _enforce_bearer_auth(request: Request) -> Dict[str, Any]:
             status_code=401,
             detail=oauth_error_body(str(exc)),
         ) from exc
+
+
+def _enforce_topic_match(identity: Dict[str, Any], topic: str) -> None:
+    """In oidc mode, require the request topic to match the JWT topic claim."""
+    if HUB_AUTH_MODE != "oidc":
+        return
+    if not identity:
+        raise HTTPException(
+            status_code=401,
+            detail=oauth_error_body("Missing authenticated identity"),
+        )
+    claimed = str(identity.get("topic") or "").strip()
+    requested = str(topic or "").strip()
+    if not claimed:
+        raise HTTPException(
+            status_code=403,
+            detail=oauth_error_body("Token missing topic claim"),
+        )
+    if requested == "*":
+        raise HTTPException(
+            status_code=403,
+            detail=oauth_error_body("Wildcard topic is not allowed in oidc mode"),
+        )
+    if not requested or requested != claimed:
+        raise HTTPException(
+            status_code=403,
+            detail=oauth_error_body(
+                f"Topic {requested!r} does not match token topic {claimed!r}"
+            ),
+        )
 
 
 def _enforce_privileged_admin(request: Request) -> Dict[str, Any]:

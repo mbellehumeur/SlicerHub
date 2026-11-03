@@ -1,4 +1,4 @@
-# Hub auth — OIDC (browser) + mock mode
+# OIDC ientity provider
 
 The hub supports two auth modes via `HUB_AUTH_MODE`:
 
@@ -11,28 +11,6 @@ In `oidc` mode, mock `/oauth/authorize` and `/oauth/token` return **503**.
 
 Personal Google accounts work (not Workspace-only). Topic defaults to the Google **email** claim.
 
-## Browser flow
-
-```mermaid
-sequenceDiagram
-  participant JS as HubClient_JS
-  participant Hub
-  participant Google
-
-  JS->>Hub: GET /api/hub/auth/config
-  Hub-->>JS: mode=oidc login_url
-  JS->>Hub: GET /oauth/login?return_to=...
-  Hub->>Google: 302 authorize PKCE
-  Google->>Hub: GET /oauth/callback?code
-  Hub->>Hub: exchange verify mint JWT topic=email
-  Hub->>JS: redirect return_to#access_token&topic&...
-  JS->>JS: store token topic userName
-  JS->>Hub: POST /api/hub Bearer subscribe
-```
-
-Callback fragment fields: `access_token`, `id_token`, `topic`, `user_name`, `expires_in`, `hub_auth=oidc`.
-
-In oidc mode, subscribe/publish `hub.topic` must match the JWT `topic` claim.
 
 ## Environment
 
@@ -67,11 +45,10 @@ Startup fails if `HUB_AUTH_MODE=oidc` and issuer/client id/secret/JWT secret are
 
 Discovery: `GET {issuer}/.well-known/openid-configuration` (works for Auth0, Google, Entra).
 
-## Auth0 (recommended starter)
+## Auth0 example
 
-Often the simplest path: free developer tenant, one Regular Web Application, explicit callback URLs.
 
-1. Sign up at [auth0.com](https://auth0.com/) (use any email, including `@bellehumeur-engineering.com`).
+1. Sign up at [auth0.com](https://auth0.com/) .
 2. **Applications → Create Application → Regular Web Application**.
 3. **Settings**: copy Domain, Client ID, Client Secret.
 4. **Allowed Callback URLs** (comma-separated), matching hub exactly, e.g.  
@@ -79,6 +56,8 @@ Often the simplest path: free developer tenant, one Regular Web Application, exp
 5. **Allowed Logout URLs** / **Allowed Web Origins**: your hub public base (and local origin if testing).
 6. Hub env: `HUB_OIDC_ISSUER=https://<Domain>` (no path; include region subdomain if Auth0 shows one, e.g. `xxx.us.auth0.com`).
 7. Topic = Auth0 user **email** with `HUB_OIDC_TOPIC_CLAIM=email`.
+
+![Auth0 client ID settings](Screenshot_Auth0-client-id.png)
 
 You can later enable Google / Microsoft social connections inside Auth0 without changing hub code.
 
@@ -105,9 +84,15 @@ You can later enable Google / Microsoft social connections inside Auth0 without 
 
 Prefer full-page redirect with `return_to` (popup optional later for embedded viewers).
 
-## Python `hub_client` — deferred
+## Admin portal (`/api/hub/admin`)
 
-[`SlicerHubClient.authenticate`](../../python_client/src/hub_client/client.py) still uses mock `POST /oauth/authorize`. Against an oidc hub that call gets **503** until a later device/browser flow is added. Use mock mode or the JS client for OIDC login today.
+In oidc mode the admin page redirects to `/oauth/login` (same hash-token return as HubClient) and sends the hub session JWT as `Authorization: Bearer`. Optional `HUB_ADMIN_TOKEN` still works via the prompt in mock / when that secret is set.
+
+## Conference APIs
+
+Create/join/leave/lead (`POST`/`PATCH`/`DELETE` `/api/hub/conference*`) require Bearer when oidc is on. `@slicer-hub/client` conference helpers and SPA dialogs pass the HubClient session token as `Authorization: Bearer`.
+
+## Python `hub_client`
 
 ## Verify checklist
 
@@ -115,4 +100,4 @@ Prefer full-page redirect with `return_to` (popup optional later for embedded vi
 2. OIDC without Google env: hub exits at startup.
 3. OIDC + Google: HubClient → callback → Bearer subscribe/publish OK; no Bearer → 401.
 4. Mock authorize under oidc → 503.
-5. Python client against oidc hub → expected fail until deferred work.
+

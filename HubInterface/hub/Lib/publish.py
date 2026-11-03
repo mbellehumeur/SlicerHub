@@ -278,6 +278,19 @@ async def _handle_multipart_publish(request: Request):
             ),
         )
     notification, blobs_by_file_index = await _parse_binary_batch_publish(request)
+    # OIDC topic binding (Bearer already checked in hub_api).
+    try:
+        from http_util import _enforce_topic_match
+        from oauth_tokens import validate_request_bearer
+
+        identity = validate_request_bearer(request.headers.get("authorization"))
+        event = notification.get("event") if isinstance(notification, dict) else {}
+        pub_topic = ""
+        if isinstance(event, dict):
+            pub_topic = str(event.get("hub.topic") or "").strip()
+        _enforce_topic_match(identity, pub_topic)
+    except HTTPException:
+        raise
     return await _handle_publish_notification(
         notification,
         predecoded_binary_by_index=blobs_by_file_index,

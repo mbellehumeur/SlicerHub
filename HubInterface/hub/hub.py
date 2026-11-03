@@ -83,9 +83,11 @@ if _lib_dir not in sys.path:
 
 from oauth_tokens import (
     HUB_ADMIN_TOKEN,
+    HUB_AUTH_MODE,
     HUB_MOCK_OAUTH,
     HUB_OIDC_ISSUER,
     HUB_REQUIRE_AUTH,
+    assert_oidc_runtime_config,
 )
 
 # Try to import FastAPI - install with: pip install fastapi uvicorn
@@ -137,7 +139,13 @@ _registered_spa_clients = []
 async def lifespan(app: FastAPI):
     """Startup logging / payload reaper; shutdown closes WebSockets."""
     _configure_hub_logging()
+    try:
+        assert_oidc_runtime_config()
+    except RuntimeError as exc:
+        hub_logger.error("%s", exc)
+        raise
     _install_uvicorn_access_log_filter()
+    hub_logger.info("Slicer hub auth mode: %s", HUB_AUTH_MODE)
     if HUB_WS_KEEPALIVE:
         hub_logger.info(
             "Slicer hub WebSocket keepalive: on (interval=%ss, JSON ping/pong)",
@@ -246,6 +254,12 @@ def main():
     parser.add_argument("--host", type=str, default="0.0.0.0", help="Server host (default: 0.0.0.0)")
     args = parser.parse_args()
 
+    try:
+        assert_oidc_runtime_config()
+    except RuntimeError as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        sys.exit(1)
+
     hub.set_server_port(args.port)
 
     print("=" * 60)
@@ -258,12 +272,18 @@ def main():
     print(f"  GET    http://{args.host}:{args.port}/api/hub/admin (admin status page)")
     print(f"  POST   http://{args.host}:{args.port}/api/hub/")
     print("")
-    print("OAuth (mock):")
-    if HUB_MOCK_OAUTH:
+    print(f"Auth mode: {HUB_AUTH_MODE}")
+    if HUB_AUTH_MODE == "oidc":
+        print(f"  GET    http://{args.host}:{args.port}/oauth/login")
+        print(f"  GET    http://{args.host}:{args.port}/oauth/callback")
+        print(f"  GET    http://{args.host}:{args.port}/api/hub/auth/config")
+        if HUB_OIDC_ISSUER:
+            print(f"  OIDC issuer: {HUB_OIDC_ISSUER}")
+    elif HUB_MOCK_OAUTH:
         print(f"  POST   http://{args.host}:{args.port}/oauth/authorize")
         print(f"  POST   http://{args.host}:{args.port}/oauth/token")
     else:
-        print("  (disabled — use Keycloak OIDC; see cast-keycloak README)")
+        print("  Mock OAuth disabled (HUB_MOCK_OAUTH=false)")
     if HUB_REQUIRE_AUTH:
         print("  Bearer auth: required on /api/hub, conference mutators, payloads, bind")
     if HUB_ADMIN_TOKEN:
@@ -272,8 +292,6 @@ def main():
         print("  Admin APIs: gated by Bearer JWT (HUB_REQUIRE_AUTH)")
     else:
         print("  Admin APIs: open (set HUB_ADMIN_TOKEN or HUB_REQUIRE_AUTH to gate)")
-    if HUB_OIDC_ISSUER:
-        print(f"  OIDC issuer: {HUB_OIDC_ISSUER}")
     print("")
     print(f"WebSocket connections: ws://{args.host}:{args.port}/bind/<endpoint>")
     print("")

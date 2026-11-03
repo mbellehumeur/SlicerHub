@@ -1228,6 +1228,7 @@
         const METRICS_POLL_MS = 2000;
         const METRICS_HISTORY_LEN = 60;
         const ADMIN_TOKEN_STORAGE_KEY = 'hubAdminToken';
+        const ADMIN_AUTH_MODE_KEY = 'hubAdminAuthMode';
 
         const metricsHistory = {
             memory: [],
@@ -1236,6 +1237,7 @@
         };
         let metricsPollTimer = null;
         let adminTokenPrompted = false;
+        let adminAuthMode = '';
         let lastAuthentications = [];
         let authenticationsModalOpen = false;
 
@@ -1259,16 +1261,100 @@
             }
         }
 
+        function getStoredAuthMode() {
+            try {
+                return (sessionStorage.getItem(ADMIN_AUTH_MODE_KEY) || adminAuthMode || '').trim();
+            } catch (e) {
+                return adminAuthMode || '';
+            }
+        }
+
+        function setStoredAuthMode(mode) {
+            adminAuthMode = (mode || '').trim();
+            try {
+                if (adminAuthMode) {
+                    sessionStorage.setItem(ADMIN_AUTH_MODE_KEY, adminAuthMode);
+                } else {
+                    sessionStorage.removeItem(ADMIN_AUTH_MODE_KEY);
+                }
+            } catch (e) {
+                /* ignore */
+            }
+        }
+
+        function clearOidcHashFromUrl() {
+            const url = `${window.location.pathname}${window.location.search}`;
+            window.history.replaceState(null, '', url);
+        }
+
+        /** Consume hub OIDC callback fragment (same shape as HubClient). */
+        function consumeOidcHashTokens() {
+            const hash = String(window.location.hash || '').replace(/^#/, '');
+            if (!hash) {
+                return false;
+            }
+            const params = new URLSearchParams(hash);
+            if (params.get('hub_auth') !== 'oidc') {
+                return false;
+            }
+            const accessToken = (params.get('access_token') || '').trim();
+            if (!accessToken) {
+                return false;
+            }
+            setStoredAdminToken(accessToken);
+            setStoredAuthMode('oidc');
+            clearOidcHashFromUrl();
+            return true;
+        }
+
+        function redirectToOidcLogin(loginUrl) {
+            const returnTo = `${window.location.origin}${window.location.pathname}${window.location.search}`;
+            const base = (loginUrl || '/oauth/login').trim();
+            const sep = base.includes('?') ? '&' : '?';
+            window.location.assign(
+                `${base}${sep}return_to=${encodeURIComponent(returnTo)}`
+            );
+        }
+
+        async function ensureAdminAuth() {
+            consumeOidcHashTokens();
+            let cfg = { mode: 'mock' };
+            try {
+                const response = await fetch('/api/hub/auth/config', {
+                    method: 'GET',
+                    headers: { Accept: 'application/json' },
+                });
+                if (response.ok) {
+                    cfg = await response.json();
+                }
+            } catch (e) {
+                /* assume mock */
+            }
+            const mode = (cfg && cfg.mode) || 'mock';
+            setStoredAuthMode(mode);
+            if (mode === 'oidc' && !getStoredAdminToken()) {
+                redirectToOidcLogin(cfg.login_url || '/oauth/login');
+                return false;
+            }
+            return true;
+        }
+
         function adminAuthHeaders(extra) {
             const headers = Object.assign({}, extra || {});
             const token = getStoredAdminToken();
             if (token) {
+                // OIDC hub session JWT (Bearer) and/or HUB_ADMIN_TOKEN header.
+                headers['Authorization'] = `Bearer ${token}`;
                 headers['X-Hub-Admin-Token'] = token;
             }
             return headers;
         }
 
         function promptForAdminToken(reason) {
+            if (getStoredAuthMode() === 'oidc') {
+                redirectToOidcLogin('/oauth/login');
+                return '';
+            }
             if (adminTokenPrompted) {
                 return getStoredAdminToken();
             }
@@ -1290,6 +1376,11 @@
             opts.headers = adminAuthHeaders(opts.headers);
             let response = await fetch(url, opts);
             if (response.status === 401) {
+                if (getStoredAuthMode() === 'oidc') {
+                    setStoredAdminToken('');
+                    redirectToOidcLogin('/oauth/login');
+                    return response;
+                }
                 const token = promptForAdminToken(
                     'Admin credentials required (401).'
                 );
@@ -2557,7 +2648,8 @@
             let wsUrl = `${protocol}//${window.location.host}/ws/admin`;
             const token = getStoredAdminToken();
             if (token) {
-                wsUrl += `?admin_token=${encodeURIComponent(token)}`;
+                // access_token = hub session JWT (oidc); admin_token = HUB_ADMIN_TOKEN.
+                wsUrl += `?access_token=${encodeURIComponent(token)}&admin_token=${encodeURIComponent(token)}`;
             }
 
             try {
@@ -2607,14 +2699,21 @@
                 
                 adminWebSocket.onclose = function(event) {
                     console.log('Admin WebSocket closed', event.code);
-                    if (event.code === 1008 && !getStoredAdminToken()) {
-                        promptForAdminToken(
-                            'Admin WebSocket rejected (auth required).'
-                        );
-                        if (getStoredAdminToken()) {
-                            reconnectAttempts = 0;
-                            setTimeout(connectAdminWebSocket, 250);
+                    if (event.code === 1008) {
+                        if (getStoredAuthMode() === 'oidc') {
+                            setStoredAdminToken('');
+                            redirectToOidcLogin('/oauth/login');
                             return;
+                        }
+                        if (!getStoredAdminToken()) {
+                            promptForAdminToken(
+                                'Admin WebSocket rejected (auth required).'
+                            );
+                            if (getStoredAdminToken()) {
+                                reconnectAttempts = 0;
+                                setTimeout(connectAdminWebSocket, 250);
+                                return;
+                            }
                         }
                     }
 
@@ -2632,9 +2731,13 @@
             }
         }
 
-        // Snapshot first so a 401 can store admin token before the WS connects.
+        // OIDC redirect (if needed), then snapshot before WS so auth is ready.
         window.addEventListener('load', async function() {
             bindAuthenticationsCard();
+            const ready = await ensureAdminAuth();
+            if (!ready) {
+                return;
+            }
             await loadSnapshot();
             connectAdminWebSocket();
             startMetricsPolling();

@@ -50,6 +50,8 @@ class Hub:
         self.pending_requests: Dict[str, Dict[str, Any]] = {}
         # OAuth authorization codes: code -> { user_name, topic, count, expires_at, used }
         self.auth_codes: Dict[str, Dict[str, Any]] = {}
+        # OIDC login PKCE state: state -> { code_verifier, return_to, expires_at }
+        self.oidc_login_states: Dict[str, Dict[str, Any]] = {}
         # One entry per authenticated user (keyed by topic):
         # { user_name, topic, authenticated_at, timezone, language, platform }
         self.authentications: Dict[str, Dict[str, Any]] = {}
@@ -760,6 +762,7 @@ class Hub:
         self.user_count = 0
         self.pending_requests.clear()
         self.auth_codes.clear()
+        self.oidc_login_states.clear()
         self.authentications.clear()
         self.admin_revision = 0
         self.last_admin_refresh_time = 0.0

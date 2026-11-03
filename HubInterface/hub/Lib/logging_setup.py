@@ -25,7 +25,7 @@ def path_suppress_uvicorn_access_log(path: str, method: str) -> bool:
         return True
     if path.startswith("/api/hub") and method in ("GET", "POST", "DELETE"):
         return True
-    if path in ("/oauth/token", "/oauth/authorize") and method == "POST":
+    if path in ("/oauth/token", "/oauth/authorize", "/oauth/login", "/oauth/callback", "/api/hub/auth/config") and method in ("POST", "GET"):
         return True
     return False
 

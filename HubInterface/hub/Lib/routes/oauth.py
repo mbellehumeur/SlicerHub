@@ -1,31 +1,49 @@
-"""Mock OAuth authorize/token endpoints."""
+"""Mock OAuth + OIDC browser login (Google-ready) endpoints."""
 
 from __future__ import annotations
 
+import hashlib
+import json
 import os
 import secrets
 import time
 import uuid
 from typing import Any, Dict, Optional
+from urllib.parse import urlencode, urlparse
+from urllib.request import Request as UrlRequest, urlopen
 
 from fastapi import APIRouter, HTTPException, Request
+from fastapi.responses import RedirectResponse
 from oauth_tokens import (
+    HUB_AUTH_MODE,
     HUB_MOCK_OAUTH,
+    HUB_OIDC_CLIENT_ID,
+    HUB_OIDC_CLIENT_SECRET,
+    HUB_OIDC_ISSUER,
+    HUB_OIDC_REDIRECT_URI,
+    HUB_OIDC_SCOPES,
+    HUB_REQUIRE_AUTH,
     JWT_AUDIENCE,
     JWT_DEFAULT_SECRET,
     JWT_ISSUER,
     TokenValidationError,
     build_hs256_jwt,
+    identity_from_oidc_claims,
     verify_hs256_jwt,
+    verify_oidc_id_token,
 )
+from oidc_discovery import OidcDiscoveryError, fetch_openid_configuration
 
 from http_util import _parse_request_body
+from public_url import _request_public_base_url
 from state import hub
 
 router = APIRouter()
 
 
 JWT_EXPIRY_SECONDS = int(os.environ.get("HUB_JWT_EXPIRY_SECONDS", "3600"))
+_AUTH_CODE_TTL_SECONDS = 60
+_OIDC_STATE_TTL_SECONDS = 600
 
 
 def _issue_jwt_pair(
@@ -53,17 +71,8 @@ def _issue_jwt_pair(
     return build_hs256_jwt(claims, JWT_DEFAULT_SECRET)
 
 
-_AUTH_CODE_TTL_SECONDS = 60
-
-
 def _resolve_authorize_identity(request_data: Dict[str, Any]) -> Dict[str, Any]:
-    """Resolve user_name / topic for /oauth/authorize.
-
-    Precedence: id_token (claims) > user_name (asserted) > server-generated.
-    Always honours single_user_mode and an explicit body 'topic' override.
-    Subscriber names are chosen by clients on subscribe, not OAuth.
-    Returns { user_name, topic, count }.
-    """
+    """Resolve user_name / topic for /oauth/authorize (mock only)."""
     user_name: Optional[str] = None
     topic: Optional[str] = None
 
@@ -74,7 +83,6 @@ def _resolve_authorize_identity(request_data: Dict[str, Any]) -> Dict[str, Any]:
                 id_token.strip(), JWT_DEFAULT_SECRET, allow_expired=True
             )
         except TokenValidationError as exc:
-            # Map signature/format failures to OAuth invalid_token (401).
             raise HTTPException(
                 status_code=401,
                 detail={"error": "invalid_token", "error_description": str(exc)},
@@ -87,7 +95,6 @@ def _resolve_authorize_identity(request_data: Dict[str, Any]) -> Dict[str, Any]:
         user_name = asserted_user.strip()
 
     if user_name is None:
-        # Server-generated identity (mirrors legacy /oauth/token fallback).
         hub.user_count += 1
         count = hub.user_count
         user_name = f"USER-{count}"
@@ -113,7 +120,6 @@ def _resolve_authorize_identity(request_data: Dict[str, Any]) -> Dict[str, Any]:
 
 
 def _purge_expired_auth_codes() -> None:
-    """Drop expired/used codes to keep the in-memory store bounded."""
     now = time.time()
     expired = [
         code for code, info in hub.auth_codes.items()
@@ -123,28 +129,313 @@ def _purge_expired_auth_codes() -> None:
         hub.auth_codes.pop(code, None)
 
 
-@router.post("/oauth/authorize")
-async def post_oauth_authorize(request: Request):
-    """Mock OAuth 2.0 authorization endpoint.
+def _purge_expired_oidc_states() -> None:
+    now = time.time()
+    expired = [
+        state
+        for state, info in hub.oidc_login_states.items()
+        if info.get("expires_at", 0) <= now
+    ]
+    for state in expired:
+        hub.oidc_login_states.pop(state, None)
 
-    Accepts a previously-issued id_token (expired or not), a caller-asserted
-    user_name, or nothing (server generates USER-N). Returns a one-time code
-    bound to the resolved identity. Not for production.
 
-    Note: real OAuth /authorize is GET + browser redirect. This is a
-    programmatic POST + JSON mock used by Hub clients.
-    """
-    if not HUB_MOCK_OAUTH:
+def _mock_oauth_disabled_detail() -> Dict[str, str]:
+    return {
+        "error": "mock_oauth_disabled",
+        "error_description": (
+            "Hub mock OAuth is disabled (HUB_AUTH_MODE=oidc). "
+            "Use GET /oauth/login for browser OIDC login."
+        ),
+    }
+
+
+def _pkce_challenge(verifier: str) -> str:
+    digest = hashlib.sha256(verifier.encode("ascii")).digest()
+    return (
+        __import__("base64")
+        .urlsafe_b64encode(digest)
+        .rstrip(b"=")
+        .decode("ascii")
+    )
+
+
+def _oidc_redirect_uri(request: Request) -> str:
+    if HUB_OIDC_REDIRECT_URI:
+        return HUB_OIDC_REDIRECT_URI
+    base = _request_public_base_url(request).rstrip("/")
+    return f"{base}/oauth/callback"
+
+
+def _allowed_return_origins(request: Request) -> set[str]:
+    """Hub origin + HUB_OIDC_RETURN_ORIGINS (comma-separated)."""
+    base = _request_public_base_url(request).rstrip("/")
+    origins: set[str] = set()
+    try:
+        parsed = urlparse(base)
+        if parsed.scheme and parsed.netloc:
+            origins.add(f"{parsed.scheme}://{parsed.netloc}".lower())
+    except Exception:
+        pass
+    raw = os.environ.get("HUB_OIDC_RETURN_ORIGINS", "").strip()
+    for part in raw.split(","):
+        item = part.strip().rstrip("/")
+        if not item:
+            continue
+        try:
+            p = urlparse(item if "://" in item else f"https://{item}")
+            if p.scheme and p.netloc:
+                origins.add(f"{p.scheme}://{p.netloc}".lower())
+        except Exception:
+            continue
+    return origins
+
+
+def _is_local_dev_origin(origin: str) -> bool:
+    try:
+        p = urlparse(origin)
+    except Exception:
+        return False
+    if p.scheme not in ("http", "https"):
+        return False
+    host = (p.hostname or "").lower()
+    return host in ("localhost", "127.0.0.1", "::1")
+
+
+def _safe_return_to(raw: str, request: Request) -> str:
+    """Resolve post-login redirect. Allows hub origin, configured SPA origins,
+    and localhost/127.0.0.1 (any port) for local HubClient SPAs."""
+    candidate = (raw or "").strip()
+    base = _request_public_base_url(request).rstrip("/")
+    if not candidate:
+        return f"{base}/worklist-client/"
+    if candidate.startswith("/"):
+        return f"{base}{candidate}"
+    try:
+        parsed = urlparse(candidate)
+    except Exception:
+        return f"{base}/worklist-client/"
+    if parsed.scheme not in ("http", "https") or not parsed.netloc:
+        return f"{base}/worklist-client/"
+    origin = f"{parsed.scheme}://{parsed.netloc}".lower()
+    allowed = _allowed_return_origins(request)
+    if origin in allowed or _is_local_dev_origin(origin):
+        # Drop any fragment; callback appends its own.
+        return candidate.split("#", 1)[0]
+    return f"{base}/worklist-client/"
+
+
+def _mint_hub_session(user_name: str, topic: str) -> Dict[str, Any]:
+    hub.user_count += 1
+    count = hub.user_count
+    if hub.single_user_mode:
+        user_name = "SINGLE-USER"
+        topic = "SINGLE-USER"
+    access_token = _issue_jwt_pair(
+        token_type="access",
+        count=count,
+        topic=topic,
+        user_name=user_name,
+    )
+    id_token = _issue_jwt_pair(
+        token_type="id",
+        count=count,
+        topic=topic,
+        user_name=user_name,
+    )
+    hub.upsert_authentication(user_name=user_name, topic=topic)
+    return {
+        "token_type": "Bearer",
+        "expires_in": JWT_EXPIRY_SECONDS,
+        "scope": "openid",
+        "topic": topic,
+        "user_name": user_name,
+        "id_token": id_token,
+        "access_token": access_token,
+    }
+
+
+@router.get("/api/hub/auth/config")
+@router.get("/api/hub/auth/config/")
+async def get_auth_config(request: Request):
+    """Public auth mode discovery for HubClient SPAs."""
+    base = _request_public_base_url(request).rstrip("/")
+    payload: Dict[str, Any] = {
+        "mode": HUB_AUTH_MODE,
+        "require_auth": bool(HUB_REQUIRE_AUTH),
+    }
+    if HUB_AUTH_MODE == "oidc":
+        payload["login_url"] = f"{base}/oauth/login"
+        payload["issuer"] = HUB_OIDC_ISSUER
+    else:
+        payload["authorize_url"] = f"{base}/oauth/authorize"
+        payload["token_url"] = f"{base}/oauth/token"
+    return payload
+
+
+@router.get("/oauth/login")
+async def oauth_login(request: Request, return_to: str = ""):
+    """Start OIDC authorization-code + PKCE flow (browser redirect to IdP)."""
+    if HUB_AUTH_MODE != "oidc":
         raise HTTPException(
             status_code=503,
             detail={
-                "error": "mock_oauth_disabled",
-                "error_description": (
-                    "Hub mock OAuth is disabled; use Keycloak OIDC endpoints "
-                    "(see cast-keycloak README)."
-                ),
+                "error": "oidc_disabled",
+                "error_description": "Set HUB_AUTH_MODE=oidc to enable browser login",
             },
         )
+    if not HUB_OIDC_ISSUER or not HUB_OIDC_CLIENT_ID:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "oidc_not_configured",
+                "error_description": "HUB_OIDC_ISSUER and HUB_OIDC_CLIENT_ID required",
+            },
+        )
+    try:
+        doc = fetch_openid_configuration(HUB_OIDC_ISSUER)
+    except OidcDiscoveryError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail={"error": "oidc_discovery_failed", "error_description": str(exc)},
+        ) from exc
+
+    authorize_endpoint = str(doc.get("authorization_endpoint") or "").strip()
+    if not authorize_endpoint:
+        raise HTTPException(status_code=502, detail="OIDC authorize endpoint missing")
+
+    _purge_expired_oidc_states()
+    state = secrets.token_urlsafe(24)
+    code_verifier = secrets.token_urlsafe(64)
+    hub.oidc_login_states[state] = {
+        "code_verifier": code_verifier,
+        "return_to": _safe_return_to(return_to, request),
+        "expires_at": time.time() + _OIDC_STATE_TTL_SECONDS,
+    }
+
+    params = {
+        "client_id": HUB_OIDC_CLIENT_ID,
+        "response_type": "code",
+        "scope": HUB_OIDC_SCOPES,
+        "redirect_uri": _oidc_redirect_uri(request),
+        "state": state,
+        "code_challenge": _pkce_challenge(code_verifier),
+        "code_challenge_method": "S256",
+    }
+    # Google-friendly: force account chooser when useful
+    if "accounts.google.com" in HUB_OIDC_ISSUER:
+        params["access_type"] = "online"
+        params["include_granted_scopes"] = "true"
+
+    url = f"{authorize_endpoint}?{urlencode(params)}"
+    return RedirectResponse(url=url, status_code=302)
+
+
+@router.get("/oauth/callback")
+async def oauth_callback(
+    request: Request,
+    code: str = "",
+    state: str = "",
+    error: str = "",
+    error_description: str = "",
+):
+    """Complete OIDC login; redirect to return_to with hub session tokens in the hash."""
+    if HUB_AUTH_MODE != "oidc":
+        raise HTTPException(status_code=503, detail="OIDC mode is not enabled")
+    if error:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": error,
+                "error_description": error_description or "IdP returned an error",
+            },
+        )
+    if not code or not state:
+        raise HTTPException(status_code=400, detail="Missing code or state")
+
+    _purge_expired_oidc_states()
+    pending = hub.oidc_login_states.pop(state, None)
+    if not pending:
+        raise HTTPException(status_code=400, detail="Invalid or expired OIDC state")
+
+    try:
+        doc = fetch_openid_configuration(HUB_OIDC_ISSUER)
+    except OidcDiscoveryError as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    token_endpoint = str(doc.get("token_endpoint") or "").strip()
+    if not token_endpoint:
+        raise HTTPException(status_code=502, detail="OIDC token endpoint missing")
+
+    form = urlencode(
+        {
+            "grant_type": "authorization_code",
+            "code": code,
+            "redirect_uri": _oidc_redirect_uri(request),
+            "client_id": HUB_OIDC_CLIENT_ID,
+            "client_secret": HUB_OIDC_CLIENT_SECRET,
+            "code_verifier": pending["code_verifier"],
+        }
+    ).encode("utf-8")
+    try:
+        req = UrlRequest(
+            token_endpoint,
+            data=form,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            method="POST",
+        )
+        with urlopen(req, timeout=20) as resp:
+            token_payload = json.loads(resp.read().decode("utf-8"))
+    except Exception as exc:
+        raise HTTPException(
+            status_code=502,
+            detail=f"OIDC token exchange failed: {exc}",
+        ) from exc
+
+    id_token = str(token_payload.get("id_token") or "").strip()
+    if not id_token:
+        raise HTTPException(status_code=502, detail="OIDC token response missing id_token")
+
+    try:
+        idp_claims = verify_oidc_id_token(id_token)
+    except TokenValidationError as exc:
+        raise HTTPException(
+            status_code=401,
+            detail={"error": "invalid_id_token", "error_description": str(exc)},
+        ) from exc
+
+    identity = identity_from_oidc_claims(idp_claims)
+    if not identity.get("topic"):
+        raise HTTPException(
+            status_code=400,
+            detail="OIDC identity missing topic claim (set HUB_OIDC_TOPIC_CLAIM)",
+        )
+
+    session = _mint_hub_session(identity["user_name"], identity["topic"])
+    await hub.send_admin_refresh_command()
+
+    fragment = urlencode(
+        {
+            "access_token": session["access_token"],
+            "id_token": session["id_token"],
+            "token_type": "Bearer",
+            "expires_in": str(session["expires_in"]),
+            "topic": session["topic"],
+            "user_name": session["user_name"],
+            "hub_auth": "oidc",
+        }
+    )
+    return_to = str(pending.get("return_to") or "").strip() or _safe_return_to("", request)
+    # Strip any existing fragment before appending ours.
+    return_to = return_to.split("#", 1)[0]
+    return RedirectResponse(url=f"{return_to}#{fragment}", status_code=302)
+
+
+@router.post("/oauth/authorize")
+async def post_oauth_authorize(request: Request):
+    """Mock OAuth 2.0 authorization endpoint (disabled when HUB_AUTH_MODE=oidc)."""
+    if not HUB_MOCK_OAUTH:
+        raise HTTPException(status_code=503, detail=_mock_oauth_disabled_detail())
     try:
         request_data = await _parse_request_body(request)
     except Exception:
@@ -174,21 +465,9 @@ async def post_oauth_authorize(request: Request):
 
 @router.post("/oauth/token")
 async def post_oauth_token(request: Request):
-    """OAuth token endpoint. Supports grant_type=authorization_code.
-
-    Redeems a one-time code issued by POST /oauth/authorize and returns
-    access_token + id_token bound to the same identity.
-    """
+    """Mock OAuth token endpoint (disabled when HUB_AUTH_MODE=oidc)."""
     if not HUB_MOCK_OAUTH:
-        raise HTTPException(
-            status_code=503,
-            detail={
-                "error": "mock_oauth_disabled",
-                "error_description": (
-                    "Hub mock OAuth is disabled; use Keycloak OIDC token endpoint."
-                ),
-            },
-        )
+        raise HTTPException(status_code=503, detail=_mock_oauth_disabled_detail())
     try:
         request_data = await _parse_request_body(request)
     except Exception:
@@ -203,7 +482,9 @@ async def post_oauth_token(request: Request):
             status_code=400,
             detail={
                 "error": "unsupported_grant_type",
-                "error_description": f"grant_type '{grant_type}' is not supported; use authorization_code",
+                "error_description": (
+                    f"grant_type '{grant_type}' is not supported; use authorization_code"
+                ),
             },
         )
     if not code:
@@ -229,6 +510,9 @@ async def post_oauth_token(request: Request):
     user_name = info["user_name"]
     topic = info["topic"]
     count = info["count"]
+    if hub.single_user_mode:
+        user_name = "SINGLE-USER"
+        topic = "SINGLE-USER"
 
     access_token = _issue_jwt_pair(
         token_type="access",
@@ -242,10 +526,9 @@ async def post_oauth_token(request: Request):
         topic=topic,
         user_name=user_name,
     )
-
     hub.upsert_authentication(user_name=user_name, topic=topic)
-
-    response = {
+    await hub.send_admin_refresh_command()
+    return {
         "token_type": "Bearer",
         "expires_in": JWT_EXPIRY_SECONDS,
         "scope": "openid",
@@ -253,5 +536,3 @@ async def post_oauth_token(request: Request):
         "id_token": id_token,
         "access_token": access_token,
     }
-    await hub.send_admin_refresh_command()
-    return response
