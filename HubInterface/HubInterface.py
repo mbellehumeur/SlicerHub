@@ -28,7 +28,8 @@ class HubInterface(ScriptedLoadableModule):
         self.parent.contributors = ["Martin Bellehumeur"]
         self.parent.helpText = _(
             """
-            This extension is a 
+            <a href="https://github.com/mbellehumeur/SlicerHub">SlicerHub on GitHub</a><br><br>
+            This extension is a
             <a href="https://en.wikipedia.org/wiki/Publish%E2%80%93subscribe_pattern">WebSub-based</a>
             desktop integration messaging infrastructure that connects users of image displays,
             worklists, reporting tools, conferencing tools, remote inference models and AI Orchestrators.<br><br>

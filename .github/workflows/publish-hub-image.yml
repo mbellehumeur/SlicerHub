@@ -1,0 +1,131 @@
+# Publish Slicer Hub Docker images to GHCR.
+#
+#   ghcr.io/<owner>/slicer-hub:slim|latest  — API + WebSocket
+#   ghcr.io/<owner>/slicer-hub:full         — with SPA mounts (workflow_dispatch only)
+#
+# Triggers: hub-v* tags (slim), manual workflow_dispatch (slim and/or full).
+
+name: Publish Hub Docker image
+
+on:
+  push:
+    tags:
+      - "hub-v*"
+  workflow_dispatch:
+    inputs:
+      variant:
+        description: "Image variant to build"
+        required: true
+        default: "slim"
+        type: choice
+        options:
+          - slim
+          - full
+          - all
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  IMAGE_NAME: slicer-hub
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Image name
+        id: meta
+        run: |
+          OWNER="${GITHUB_REPOSITORY_OWNER,,}"
+          echo "image=ghcr.io/${OWNER}/${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
+          SHA="${GITHUB_SHA::7}"
+          echo "sha=${SHA}" >> "$GITHUB_OUTPUT"
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Resolve variant
+        id: variant
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "value=${{ inputs.variant }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=slim" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Stage slim dockerignore
+        if: steps.variant.outputs.value == 'slim' || steps.variant.outputs.value == 'all'
+        run: cp HubInterface/hub/.dockerignore.slim HubInterface/.dockerignore
+
+      - name: Slim tags
+        id: slim_tags
+        if: steps.variant.outputs.value == 'slim' || steps.variant.outputs.value == 'all'
+        run: |
+          {
+            echo "tags<<EOF"
+            echo "${{ steps.meta.outputs.image }}:slim"
+            echo "${{ steps.meta.outputs.image }}:latest"
+            echo "${{ steps.meta.outputs.image }}:slim-${{ steps.meta.outputs.sha }}"
+            if [[ -n "${{ steps.meta.outputs.tag }}" ]]; then
+              echo "${{ steps.meta.outputs.image }}:${{ steps.meta.outputs.tag }}"
+            fi
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Build and push slim
+        if: steps.variant.outputs.value == 'slim' || steps.variant.outputs.value == 'all'
+        uses: docker/build-push-action@v6
+        with:
+          context: HubInterface
+          file: HubInterface/hub/Dockerfile.slim
+          platforms: linux/amd64
+          push: true
+          tags: ${{ steps.slim_tags.outputs.tags }}
+          cache-from: type=gha,scope=hub-slim
+          cache-to: type=gha,mode=max,scope=hub-slim
+
+      - name: Check SPA mounts for full
+        if: steps.variant.outputs.value == 'full' || steps.variant.outputs.value == 'all'
+        run: |
+          missing=0
+          for d in website worklist-client OHIF-client; do
+            if [[ ! -f "HubInterface/hub/${d}/index.html" ]]; then
+              echo "::error::hub/${d}/index.html missing — sync SPA mounts before building :full"
+              missing=1
+            fi
+          done
+          exit "$missing"
+
+      - name: Stage full dockerignore
+        if: steps.variant.outputs.value == 'full' || steps.variant.outputs.value == 'all'
+        run: cp HubInterface/hub/.dockerignore.fly HubInterface/.dockerignore
+
+      - name: Build and push full
+        if: steps.variant.outputs.value == 'full' || steps.variant.outputs.value == 'all'
+        uses: docker/build-push-action@v6
+        with:
+          context: HubInterface
+          file: HubInterface/hub/Dockerfile.fly
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ steps.meta.outputs.image }}:full
+            ${{ steps.meta.outputs.image }}:full-${{ steps.meta.outputs.sha }}
+          cache-from: type=gha,scope=hub-full
+          cache-to: type=gha,mode=max,scope=hub-full

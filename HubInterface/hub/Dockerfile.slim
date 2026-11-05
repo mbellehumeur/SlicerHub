@@ -1,0 +1,28 @@
+# Slim Slicer Hub image — API + WebSocket only (no SPA client trees).
+# Build context: HubInterface/ (see publish-docker.sh / GitHub Actions).
+#
+#   docker build -f hub/Dockerfile.slim -t ghcr.io/mbellehumeur/slicer-hub:slim \
+#     --ignorefile hub/.dockerignore.slim .
+
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PORT=8000
+
+WORKDIR /app
+
+COPY hub/requirements-azure.txt /app/requirements.txt
+RUN pip install --upgrade pip && pip install -r /app/requirements.txt
+
+COPY hub/ /app/
+COPY python_client/ /app/python_client/
+
+RUN chmod +x /app/start-azure.sh \
+    && rm -f /app/.env /app/.env.* \
+    && rm -f /app/slicer-hub.zip
+
+EXPOSE 8000
+
+CMD ["/app/start-azure.sh"]

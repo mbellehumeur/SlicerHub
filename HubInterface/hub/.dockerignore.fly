@@ -24,9 +24,12 @@ hub/*.md
 hub/make_zip.py
 hub/build_clients.sh
 hub/deploy-fly.sh
+hub/publish-docker.sh
 hub/Dockerfile
 hub/Dockerfile.fly
+hub/Dockerfile.slim
 hub/.dockerignore.fly
+hub/.dockerignore.slim
 
 python_client/**/__pycache__
 python_client/**/*.egg-info

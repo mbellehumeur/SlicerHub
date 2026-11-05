@@ -1,0 +1,47 @@
+# Used with Dockerfile.slim (paths relative to HubInterface/ build context).
+# Same as .dockerignore.fly plus SPA / demo client trees.
+
+**/.git
+**/.gitignore
+**/__pycache__
+**/*.py[cod]
+**/*.egg-info
+**/.pytest_cache
+**/.mypy_cache
+**/.ruff_cache
+**/.venv
+**/venv
+**/.env
+**/.env.*
+!**/.env.example
+
+hub/slicer-hub.zip
+hub/.env
+hub/.env.*
+hub/__pycache__
+hub/Lib/__pycache__
+hub/docs
+hub/*.md
+hub/make_zip.py
+hub/build_clients.sh
+hub/deploy-fly.sh
+hub/publish-docker.sh
+hub/Dockerfile
+hub/Dockerfile.fly
+hub/Dockerfile.slim
+hub/.dockerignore.fly
+hub/.dockerignore.slim
+
+# SPA / static client mounts (full image keeps these via Dockerfile.fly)
+hub/OHIF-client
+hub/worklist-client
+hub/reporting-client
+hub/classroom-client
+hub/website
+hub/slicerlive
+hub/hub-mirror
+hub/slim
+
+python_client/**/__pycache__
+python_client/**/*.egg-info
+python_client/.venv
