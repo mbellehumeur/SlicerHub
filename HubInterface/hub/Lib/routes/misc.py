@@ -49,7 +49,7 @@ async def get_favicon(theme: Optional[str] = None):
         )
         if os.path.exists(slicer_path):
             return FileResponse(slicer_path, media_type="image/png")
-    logo_path = os.path.join(_RESOURCES_DIR, "images", "volview-logo.svg")
+    logo_path = os.path.join(_RESOURCES_DIR, "images", "hub-radio-favicon.svg")
     if os.path.exists(logo_path):
         return FileResponse(logo_path, media_type="image/svg+xml")
     raise HTTPException(status_code=404, detail="Favicon not found")

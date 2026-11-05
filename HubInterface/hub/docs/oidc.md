@@ -7,9 +7,6 @@ The hub supports two auth modes via `HUB_AUTH_MODE`:
 | `mock` (default) | `POST /oauth/authorize` → `POST /oauth/token` | Optional (`HUB_REQUIRE_AUTH`) |
 | `oidc` | Browser: `GET /oauth/login` → IdP → `GET /oauth/callback` | **Required**; Bearer = hub-minted session JWT |
 
-In `oidc` mode, mock `/oauth/authorize` returns **503**. `/oauth/token` accepts SP `client_credentials` only; mock `authorization_code` returns **503**.
-
-Personal Google accounts work (not Workspace-only). Topic defaults to the Google **email** claim.
 
 ## Deployed hubs
 
@@ -18,7 +15,7 @@ Personal Google accounts work (not Workspace-only). Topic defaults to the Google
 | **OIDC** (Auth0 login) | [https://oidc.bellehumeur-engineering.com/](https://oidc.bellehumeur-engineering.com/) — worklist: [/worklist-client/](https://oidc.bellehumeur-engineering.com/worklist-client/) |
 | **Mock** (no IdP; public demos) | [https://bellehumeur-engineering.com/](https://bellehumeur-engineering.com/) — worklist: [/worklist-client/](https://bellehumeur-engineering.com/worklist-client/) |
 
-Fly apps: `bellehumeur-hub-oidc` and `bellehumeur-hub` (see `HubInterface/fly.oidc.toml`, `fly.toml`, `hub/deploy-fly.sh`). Slicer preset `SLICER-HUB-CLOUD-OIDC` targets the OIDC host; `SLICER-HUB-CLOUD` targets the mock apex.
+ Slicer preset `SLICER-HUB-CLOUD-OIDC` targets the OIDC host; `SLICER-HUB-CLOUD` targets the anonymous mock auth.
 
 ## Environment
 
@@ -69,7 +66,7 @@ Discovery: `GET {issuer}/.well-known/openid-configuration` (works for Auth0, Goo
 
 ![Auth0 client ID settings](Screenshot_Auth0-client-id.png)
 
-You can later enable Google / Microsoft social connections inside Auth0 without changing hub code.
+
 
 ### Auth0 Machine-to-Machine (service providers)
 
@@ -84,13 +81,6 @@ SPs do **not** use the Regular Web Application. Create a separate M2M app:
 
 Flow: SP → hub `POST /oauth/token` (`grant_type=client_credentials`) → hub exchanges with Auth0 → hub mints HS256 session JWT with `role=service_provider`, `topic=*`. Humans still cannot subscribe `topic=*`.
 
-## Google Cloud Console (personal account)
-
-1. [Google Cloud Console](https://console.cloud.google.com/) → APIs & Services → Credentials → Create OAuth client ID → **Web application**.
-2. Authorized redirect URI must match hub exactly, e.g. `http://127.0.0.1:2018/oauth/callback` (local) and/or `https://<hub-host>/oauth/callback` (Azure).
-3. OAuth consent screen: External; while **Testing**, add your Gmail under **Test users**.
-4. Scopes `openid email profile` are non-sensitive for personal testing.
-5. Hub topic becomes your Google email (`HUB_OIDC_TOPIC_CLAIM=email`).
 
 ## Public discovery
 
