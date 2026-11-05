@@ -33,7 +33,7 @@ class HubInterface(ScriptedLoadableModule):
             desktop integration messaging infrastructure that connects users of image displays,
             worklists, reporting tools, conferencing tools, remote inference models and AI Orchestrators.<br><br>
             Try the
-            <a href="https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/">online example worklist client</a>
+            <a href="https://bellehumeur-engineering.com/worklist-client/">online example worklist client</a>
             or watch the
             <a href="https://youtu.be/xKQEOs1_9Bg">classroom vanishing brush tool</a>
             along with this documentation to find out more.<br><br>
@@ -60,7 +60,7 @@ class HubInterface(ScriptedLoadableModule):
             </ul>
             The extension also includes features for education that are independent of the IHE Integrated Reporting workflow:
             <ul>
-            <li>an example <a href="https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/classroom-client/">classroom application</a></li>
+            <li>an example <a href="https://bellehumeur-engineering.com/classroom-client/">classroom application</a></li>
             <li>creating, saving, and uploading teaching files and cohorts for class preparation</li>
             <li>conferencing for collaborative viewing and teaching</li>
             <li>a <a href="https://youtu.be/xKQEOs1_9Bg?si=-gtvlB3aeq3KF-dX">vanishing brush tool</a> for temporary annotations during conferencing</li>

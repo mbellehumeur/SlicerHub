@@ -37,6 +37,7 @@ DEFAULT_DISPLAY_TOPIC = "USER-1"
 _SETTINGS_GROUP = "HubInterface"
 _SETTINGS_KEY_HUB = "imageDisplayHub"
 _SETTINGS_KEY_TOPIC = "imageDisplayTopic"
+_SETTINGS_KEY_OIDC = "imageDisplayOidc"
 
 _STATUS_TEXT_STYLE_IDLE = "color: palette(text);"
 _STATUS_TEXT_STYLE_CONNECTED = "color: #2e7d32; font-weight: bold;"
@@ -208,16 +209,26 @@ class ImageDisplayClientWidget:
         topic_row = qt.QWidget()
         topic_row_layout = qt.QHBoxLayout(topic_row)
         topic_row_layout.setContentsMargins(0, 0, 0, 0)
+        self.oidcCheckBox = qt.QCheckBox(_("OIDC"))
+        self.oidcCheckBox.setToolTip(
+            _("Use hub OIDC browser login; user is the email from the IdP")
+        )
+        slicer_email = self._slicer_user_email()
+        self.oidcCheckBox.setChecked(self._initial_oidc_checked(slicer_email))
+        self.oidcCheckBox.toggled.connect(self._on_oidc_toggled)
         self.topicEdit = qt.QLineEdit(
-            self._load_setting(_SETTINGS_KEY_TOPIC, DEFAULT_DISPLAY_TOPIC)
+            self._initial_topic_text(
+                oidc=self.oidcCheckBox.isChecked(),
+                slicer_email=slicer_email,
+            )
         )
         self.topicEdit.setPlaceholderText(_("Hub topic"))
-        self.oidcCheckBox = qt.QCheckBox()
-        oidc_label = qt.QLabel(_("OIDC:"))
-        topic_row_layout.addWidget(self.topicEdit, 1)
-        topic_row_layout.addWidget(oidc_label, 0)
+        # OIDC checkbox sits immediately after the "User:" form label.
         topic_row_layout.addWidget(self.oidcCheckBox, 0)
+        topic_row_layout.addWidget(self.topicEdit, 1)
         layout.addRow(_("User:"), topic_row)
+        # Keep last known / Slicer email if OIDC is on; clear only when user toggles OIDC on.
+        self._apply_oidc_topic_ui(clear_when_enabling=False)
 
         self.statusLabel = qt.QLabel(_("Disconnected"))
         self._apply_status_style("idle")
@@ -237,6 +248,45 @@ class ImageDisplayClientWidget:
         settings.endGroup()
         return str(value).strip() if value else default
 
+    @staticmethod
+    def _has_setting(key: str) -> bool:
+        settings = qt.QSettings()
+        settings.beginGroup(_SETTINGS_GROUP)
+        exists = settings.contains(key)
+        settings.endGroup()
+        return bool(exists)
+
+    @staticmethod
+    def _slicer_user_email() -> str:
+        """Application Settings → User → Email (vtkPersonInformation)."""
+        try:
+            info = slicer.app.applicationLogic().GetUserInformation()
+            email = info.GetEmail() if info is not None else ""
+            return str(email or "").strip()
+        except Exception:
+            return ""
+
+    @classmethod
+    def _initial_oidc_checked(cls, slicer_email: str = "") -> bool:
+        """Hub OIDC setting wins when present; else default on if Slicer email is set."""
+        if cls._has_setting(_SETTINGS_KEY_OIDC):
+            return cls._load_setting(_SETTINGS_KEY_OIDC, "").lower() in (
+                "1",
+                "true",
+                "yes",
+                "on",
+            )
+        return bool((slicer_email or cls._slicer_user_email()).strip())
+
+    @classmethod
+    def _initial_topic_text(cls, *, oidc: bool, slicer_email: str = "") -> str:
+        saved = cls._load_setting(_SETTINGS_KEY_TOPIC, "")
+        if oidc:
+            if saved:
+                return saved
+            return (slicer_email or cls._slicer_user_email()).strip()
+        return saved or DEFAULT_DISPLAY_TOPIC
+
     def _save_settings(self) -> None:
         settings = qt.QSettings()
         settings.beginGroup(_SETTINGS_GROUP)
@@ -244,7 +294,50 @@ class ImageDisplayClientWidget:
             settings.setValue(_SETTINGS_KEY_HUB, self.hubComboBox.currentText)
         if self.topicEdit:
             settings.setValue(_SETTINGS_KEY_TOPIC, self.topicEdit.text.strip())
+        if self.oidcCheckBox is not None:
+            settings.setValue(
+                _SETTINGS_KEY_OIDC,
+                "true" if self.oidcCheckBox.isChecked() else "false",
+            )
         settings.endGroup()
+
+    def _oidc_selected(self) -> bool:
+        return bool(self.oidcCheckBox is not None and self.oidcCheckBox.isChecked())
+
+    def _apply_oidc_topic_ui(self, *, clear_when_enabling: bool = False) -> None:
+        """When OIDC is on, disable the topic field; clear until email is known."""
+        if not self.topicEdit:
+            return
+        if self._oidc_selected():
+            self.topicEdit.setPlaceholderText(_("Email after hub login…"))
+            if clear_when_enabling:
+                self.topicEdit.clear()
+            elif not self.topicEdit.text.strip():
+                # Prefill Slicer Application Settings email when known.
+                email = self._slicer_user_email()
+                if email:
+                    self.topicEdit.text = email
+            # Keep disabled while OIDC is selected (also while disconnected).
+            self.topicEdit.setEnabled(False)
+        else:
+            self.topicEdit.setPlaceholderText(_("Hub topic"))
+            if not self._hub.isHubThreadRunning():
+                self.topicEdit.setEnabled(True)
+            if not self.topicEdit.text.strip():
+                restored = self._load_setting(
+                    _SETTINGS_KEY_TOPIC, DEFAULT_DISPLAY_TOPIC
+                )
+                if restored:
+                    self.topicEdit.text = restored
+
+    def _on_oidc_toggled(self, checked: bool) -> None:
+        # Clearing only when turning OIDC on; turning off restores mock topic.
+        self._apply_oidc_topic_ui(clear_when_enabling=bool(checked))
+        if checked and self.topicEdit and not self.topicEdit.text.strip():
+            email = self._slicer_user_email()
+            if email:
+                self.topicEdit.text = email
+        self._save_settings()
 
     @staticmethod
     def _product_name() -> str:
@@ -316,8 +409,11 @@ class ImageDisplayClientWidget:
             self.hubComboBox.setEnabled(enabled)
         if self.openHubButton:
             self.openHubButton.setEnabled(True)
+        if self.oidcCheckBox:
+            self.oidcCheckBox.setEnabled(enabled)
         if self.topicEdit:
-            self.topicEdit.setEnabled(enabled)
+            # OIDC mode: topic is always read-only (filled with IdP email when known).
+            self.topicEdit.setEnabled(enabled and not self._oidc_selected())
 
     def _on_open_hub(self) -> None:
         if not self.hubComboBox:
@@ -337,8 +433,13 @@ class ImageDisplayClientWidget:
     def _on_connect(self) -> None:
         if not self.topicEdit or not self.hubComboBox:
             return
+        oidc = self._oidc_selected()
         topic = self.topicEdit.text.strip()
-        if not topic:
+        if oidc:
+            # Topic comes from OIDC email after browser login.
+            topic = ""
+            self.topicEdit.clear()
+        elif not topic:
             slicer.util.errorDisplay(_("Enter a topic before connecting."))
             return
 
@@ -354,7 +455,9 @@ class ImageDisplayClientWidget:
         self._set_fields_enabled(False)
         self._apply_status_style("active")
         if self.statusLabel:
-            self.statusLabel.text = _("Connecting…")
+            self.statusLabel.text = (
+                _("Opening browser for hub login…") if oidc else _("Connecting…")
+            )
         if self.connectButton:
             self.connectButton.enabled = False
         self._set_hub_session_buttons_enabled(True)
@@ -424,6 +527,17 @@ class ImageDisplayClientWidget:
             self._apply_status_style(
                 "error" if load_status == "error" else "connected"
             )
+            # OIDC (and mock token) may replace the session topic with email.
+            session_topic = (self._hub.get_topic() or "").strip()
+            if not session_topic:
+                session_topic = str(detail.get("topic") or "").strip()
+            if self.topicEdit and session_topic:
+                if self.topicEdit.text.strip() != session_topic:
+                    self.topicEdit.text = session_topic
+                self._save_settings()
+                # Keep OIDC textbox disabled/read-only after email is filled.
+                if self._oidc_selected():
+                    self.topicEdit.setEnabled(False)
             status_detail = self._hub.get_status_detail()
             status_detail.update(
                 {

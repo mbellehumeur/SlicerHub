@@ -1,0 +1,52 @@
+# Fly.io — Slicer Hub MOCK auth (primary / marketing site)
+# App: bellehumeur-hub → https://bellehumeur-engineering.com
+# Build context: this directory (HubInterface/).
+#
+# Deploy:
+#   cd HubInterface/hub && python make_zip.py --skip-build   # sync SPA mounts
+#   ./deploy-fly.sh mock
+#   # or: fly deploy -c fly.toml
+#
+# Secrets (once):
+#   fly secrets set -a bellehumeur-hub \
+#     HUB_AUTH_MODE=mock \
+#     HUB_PUBLIC_BASE_URL=https://bellehumeur-engineering.com \
+#     HUB_WS_KEEPALIVE=true
+#
+# Certs / DNS after first deploy:
+#   fly certs add -a bellehumeur-hub bellehumeur-engineering.com
+#   fly certs add -a bellehumeur-hub www.bellehumeur-engineering.com
+#   # point GoDaddy A/AAAA (or CNAME) at Fly; keep Fastmail MX
+#
+# OIDC twin: fly.oidc.toml → bellehumeur-hub-oidc / oidc.bellehumeur-engineering.com
+
+app = "bellehumeur-hub"
+primary_region = "iad"
+
+[build]
+  dockerfile = "hub/Dockerfile.fly"
+  ignorefile = "hub/.dockerignore.fly"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 250
+    soft_limit = 200
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "30s"
+    method = "GET"
+    path = "/api/hub/auth/config"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "1024mb"

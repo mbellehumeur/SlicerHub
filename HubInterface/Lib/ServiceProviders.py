@@ -29,7 +29,15 @@ from hub_client import (
     ensure_hub_subscribe_events,
     request_event_for,
 )
-from hub_presets import DEFAULT_HUB_NAME, HUBS, USER_NAME
+from hub_presets import (
+    DEFAULT_HUB_NAME,
+    HUBS,
+    USER_NAME,
+    load_sp_credentials_from_qsettings,
+    resolve_sp_oauth_credentials,
+    save_sp_client_id_to_qsettings,
+    save_sp_client_secret_to_qsettings,
+)
 
 LOGGER = logging.getLogger("HubInterface.ServiceProviders")
 LOGGER.setLevel(logging.INFO)
@@ -170,7 +178,7 @@ def hub_admin_url_for_name(hub_name: str) -> Optional[str]:
     hub_base = hub_endpoint if hub_endpoint.endswith("/") else f"{hub_endpoint}/"
     admin_path = (
         "admin?theme=3dslicer"
-        if hub_name in ("SLICER-HUB", "SLICER-HUB-CLOUD")
+        if hub_name in ("SLICER-HUB", "SLICER-HUB-CLOUD", "SLICER-HUB-CLOUD-OIDC")
         else "admin"
     )
     return urljoin(hub_base, admin_path)
@@ -350,12 +358,18 @@ def build_hub_client(
         raise KeyError(f"Unknown hub {hub_name!r}; choose from {list(HUBS)}")
 
     hub_def = HUBS[hub_name]
+    qs_id, qs_secret = load_sp_credentials_from_qsettings(qt.QSettings())
+    client_id, client_secret = resolve_sp_oauth_credentials(
+        hub_def,
+        qsettings_client_id=qs_id,
+        qsettings_client_secret=qs_secret,
+    )
     hub = HubConfig(
         hub_endpoint=hub_def["hub_endpoint"],
         authorization_endpoint=hub_def["authorization_endpoint"],
         token_endpoint=hub_def["token_endpoint"],
-        client_id=hub_def["client_id"],
-        client_secret=hub_def["client_secret"],
+        client_id=client_id,
+        client_secret=client_secret,
     )
     session = SessionConfig(
         topic=TOPIC,
@@ -371,6 +385,7 @@ def build_hub_client(
     )
     options = HubClientOptions(
         auto_reconnect=AUTO_RECONNECT,
+        use_client_credentials=True,
     )
     return SlicerHubClient(hub, session, options)
 
@@ -554,15 +569,22 @@ class ServiceProviderRow:
         hub_row_layout.addStretch(1)
 
         self.clientIdButton = qt.QPushButton(_("Client ID"))
-        self.clientIdButton.setEnabled(False)
         self.clientIdButton.setToolTip(
-            _("OAuth client ID for this hub (not configured yet)")
+            _(
+                "Auth0 Machine-to-Machine client ID for service providers "
+                "(stored in Slicer settings; env HUB_SP_CLIENT_ID overrides)"
+            )
         )
+        self.clientIdButton.clicked.connect(self._on_edit_client_id)
         self.clientSecretButton = qt.QPushButton(_("Client Secret"))
-        self.clientSecretButton.setEnabled(False)
         self.clientSecretButton.setToolTip(
-            _("OAuth client secret for this hub (not configured yet)")
+            _(
+                "Auth0 Machine-to-Machine client secret for service providers "
+                "(stored in Slicer settings; env HUB_SP_CLIENT_SECRET overrides)"
+            )
         )
+        self.clientSecretButton.clicked.connect(self._on_edit_client_secret)
+        self._refresh_sp_credential_button_labels()
 
         self.statusLabel = qt.QLabel(_("Disconnected"))
         self.saveButton = qt.QPushButton(_("Save"))
@@ -654,6 +676,82 @@ class ServiceProviderRow:
             slicer.util.warningDisplay(
                 _("Could not open hub admin URL:\n{url}").format(url=admin_url)
             )
+
+    def _refresh_sp_credential_button_labels(self) -> None:
+        qs_id, qs_secret = load_sp_credentials_from_qsettings(qt.QSettings())
+        env_id = bool(os.environ.get("HUB_SP_CLIENT_ID", "").strip())
+        env_secret = bool(os.environ.get("HUB_SP_CLIENT_SECRET", "").strip())
+        if env_id:
+            self.clientIdButton.setText(_("Client ID (env)"))
+        elif qs_id:
+            self.clientIdButton.setText(_("Client ID (set)"))
+        else:
+            self.clientIdButton.setText(_("Client ID"))
+        if env_secret:
+            self.clientSecretButton.setText(_("Client Secret (env)"))
+        elif qs_secret:
+            self.clientSecretButton.setText(_("Client Secret (set)"))
+        else:
+            self.clientSecretButton.setText(_("Client Secret"))
+
+    def _on_edit_client_id(self) -> None:
+        settings = qt.QSettings()
+        current, _ = load_sp_credentials_from_qsettings(settings)
+        text = qt.QInputDialog.getText(
+            self.frame,
+            _("Service provider Client ID"),
+            _(
+                "Auth0 Machine-to-Machine Client ID "
+                "(leave empty to clear; env HUB_SP_CLIENT_ID overrides):"
+            ),
+            qt.QLineEdit.Normal,
+            current,
+        )
+        # PythonQt may return (text, ok) or just text
+        ok = True
+        value = ""
+        if isinstance(text, (tuple, list)):
+            if len(text) >= 2:
+                value, ok = str(text[0] or ""), bool(text[1])
+            elif text:
+                value = str(text[0] or "")
+        elif text is None:
+            ok = False
+        else:
+            value = str(text)
+        if not ok:
+            return
+        save_sp_client_id_to_qsettings(settings, value)
+        self._refresh_sp_credential_button_labels()
+
+    def _on_edit_client_secret(self) -> None:
+        settings = qt.QSettings()
+        _, current = load_sp_credentials_from_qsettings(settings)
+        text = qt.QInputDialog.getText(
+            self.frame,
+            _("Service provider Client Secret"),
+            _(
+                "Auth0 Machine-to-Machine Client Secret "
+                "(leave empty to clear; env HUB_SP_CLIENT_SECRET overrides):"
+            ),
+            qt.QLineEdit.Password,
+            current,
+        )
+        ok = True
+        value = ""
+        if isinstance(text, (tuple, list)):
+            if len(text) >= 2:
+                value, ok = str(text[0] or ""), bool(text[1])
+            elif text:
+                value = str(text[0] or "")
+        elif text is None:
+            ok = False
+        else:
+            value = str(text)
+        if not ok:
+            return
+        save_sp_client_secret_to_qsettings(settings, value)
+        self._refresh_sp_credential_button_labels()
 
     def _set_script_path(self, path: str) -> None:
         self._script_path = os.path.normpath((path or "").strip())

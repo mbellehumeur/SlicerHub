@@ -312,6 +312,12 @@ class HubClientOptions:
     auto_start: bool = False
     preserve_session_topic_from_token: bool = False
     message_id_prefix: str = DEFAULT_MESSAGE_ID_PREFIX
+    # When hub auth mode is oidc, open the system browser for login.
+    oidc_open_browser: bool = True
+    # Seconds to wait for the OIDC loopback callback.
+    oidc_timeout_s: float = 300.0
+    # Service providers: oidc client_credentials (no browser) against hub /oauth/token.
+    use_client_credentials: bool = False
 
 
 def _utc_timestamp() -> str:
@@ -1295,6 +1301,8 @@ class SlicerHubClient(HubClient):
         self._last_published_message_id = ""
         self._subscribed = False
         self._resubscribe_requested = False
+        self._oidc_session = False
+        self._auth_mode = ""
         self._ws: Optional[aiohttp.ClientWebSocketResponse] = None
         self._ws_task: Optional[asyncio.Task[None]] = None
         self._reconnect_task: Optional[asyncio.Task[None]] = None
@@ -1346,8 +1354,188 @@ class SlicerHubClient(HubClient):
         parsed = urlparse(self._hub.token_endpoint)
         return f"{parsed.scheme}://{parsed.netloc}/oauth/authorize"
 
+    def _hub_origin(self) -> str:
+        for raw in (
+            self._hub.hub_endpoint,
+            self._hub.token_endpoint,
+            self._hub.authorization_endpoint,
+        ):
+            text = (raw or "").strip()
+            if not text:
+                continue
+            try:
+                parsed = urlparse(text)
+                if parsed.scheme and parsed.netloc:
+                    return f"{parsed.scheme}://{parsed.netloc}"
+            except Exception:
+                continue
+        return ""
+
     def _product_name_for_oauth(self) -> str:
         return (self._session_cfg.product_name or "HUB").strip() or "HUB"
+
+    def _apply_session_tokens(
+        self,
+        *,
+        access_token: str,
+        id_token: str = "",
+        topic: str = "",
+        user_name: str = "",
+        oidc_session: bool = False,
+    ) -> None:
+        self._token = (access_token or "").strip()
+        if id_token:
+            self._last_id_token = id_token.strip()
+        self._oidc_session = bool(oidc_session)
+        if user_name:
+            self._session_cfg.user_name = user_name.strip()
+        if topic and not self._options.preserve_session_topic_from_token:
+            self.set_topic(topic.strip())
+
+    async def _fetch_auth_config(self) -> Dict[str, Any]:
+        origin = self._hub_origin()
+        if not origin:
+            return {"mode": "mock"}
+        http = await self._get_http()
+        try:
+            async with http.get(
+                f"{origin}/api/hub/auth/config",
+                headers={"Accept": "application/json"},
+            ) as response:
+                if response.status != 200:
+                    LOGGER.debug(
+                        "auth/config HTTP %s; assuming mock", response.status
+                    )
+                    return {"mode": "mock"}
+                data = await response.json()
+                if not isinstance(data, dict):
+                    return {"mode": "mock"}
+                return data
+        except Exception as exc:
+            LOGGER.debug("auth/config unavailable (%s); assuming mock", exc)
+            return {"mode": "mock"}
+
+    async def _authenticate_client_credentials(self) -> Dict[str, Any]:
+        """OIDC M2M: POST hub /oauth/token with client_credentials (no browser)."""
+        token_endpoint = (self._hub.token_endpoint or "").strip()
+        if not token_endpoint:
+            raise RuntimeError(
+                "SlicerHubClient: use_client_credentials requires token_endpoint"
+            )
+        client_id = (self._hub.client_id or "").strip()
+        client_secret = (self._hub.client_secret or "").strip()
+        if not client_id or not client_secret:
+            raise RuntimeError(
+                "SlicerHubClient: use_client_credentials requires client_id and "
+                "client_secret (env HUB_SP_CLIENT_* / QSettings / hub presets)"
+            )
+        self._emit_connection_state(
+            "connecting",
+            {
+                "phase": "client_credentials",
+                "detail": "Requesting hub M2M session token",
+            },
+        )
+        LOGGER.info("Hub OIDC client_credentials for client_id=%s…", client_id)
+        form = {
+            "grant_type": "client_credentials",
+            "client_id": client_id,
+            "client_secret": client_secret,
+        }
+        http = await self._get_http()
+        async with http.post(
+            token_endpoint,
+            data=form,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        ) as response:
+            text = await response.text()
+            if response.status != 200:
+                raise RuntimeError(
+                    f"client_credentials failed HTTP {response.status}: {text}"
+                )
+            try:
+                data = json.loads(text) if text else {}
+            except json.JSONDecodeError as exc:
+                raise RuntimeError(
+                    f"client_credentials: invalid JSON response: {text[:200]}"
+                ) from exc
+        if not isinstance(data, dict):
+            raise RuntimeError("client_credentials: response was not an object")
+        access = data.get("access_token")
+        if not isinstance(access, str) or not access.strip():
+            raise RuntimeError("client_credentials: missing access_token")
+        topic = data.get("topic") if isinstance(data.get("topic"), str) else "*"
+        user_name = (
+            data.get("user_name")
+            if isinstance(data.get("user_name"), str)
+            else client_id
+        )
+        id_token = data.get("id_token") if isinstance(data.get("id_token"), str) else ""
+        self._apply_session_tokens(
+            access_token=access.strip(),
+            id_token=id_token or "",
+            topic=(topic or "*").strip() or "*",
+            user_name=(user_name or client_id).strip(),
+            oidc_session=True,
+        )
+        LOGGER.info(
+            "Hub OIDC M2M login complete user_name=%s topic=%s",
+            self._session_cfg.user_name,
+            self._session_cfg.topic,
+        )
+        return {
+            "user_name": self._session_cfg.user_name or "",
+            "code": "",
+            "mode": "oidc",
+            "tokens_ready": True,
+        }
+
+    async def _authenticate_oidc(self, auth_config: Dict[str, Any]) -> Dict[str, Any]:
+        if self._options.use_client_credentials:
+            return await self._authenticate_client_credentials()
+
+        from hub_client.oidc_browser import (
+            apply_oidc_session_tokens,
+            capture_hub_oidc_tokens,
+        )
+
+        origin = self._hub_origin()
+        login_url = str(auth_config.get("login_url") or "").strip() or (
+            f"{origin}/oauth/login" if origin else ""
+        )
+        if not login_url:
+            raise RuntimeError(
+                "SlicerHubClient: OIDC mode but login_url / hub origin missing"
+            )
+        self._emit_connection_state(
+            "connecting",
+            {"phase": "oidc_browser", "detail": "Opening browser for hub login"},
+        )
+        LOGGER.info("Opening browser for hub OIDC login…")
+        raw = await capture_hub_oidc_tokens(
+            login_url=login_url,
+            timeout_s=float(self._options.oidc_timeout_s or 300.0),
+            open_browser=bool(self._options.oidc_open_browser),
+        )
+        tokens = apply_oidc_session_tokens(raw)
+        self._apply_session_tokens(
+            access_token=tokens["access_token"],
+            id_token=tokens.get("id_token") or "",
+            topic=tokens.get("topic") or "",
+            user_name=tokens.get("user_name") or "",
+            oidc_session=True,
+        )
+        LOGGER.info(
+            "Hub OIDC login complete user_name=%s topic=%s",
+            self._session_cfg.user_name,
+            self._session_cfg.topic,
+        )
+        return {
+            "user_name": self._session_cfg.user_name or "",
+            "code": "",
+            "mode": "oidc",
+            "tokens_ready": True,
+        }
 
     def _events_form_value(self) -> str:
         events = self._session_cfg.events
@@ -1441,17 +1629,34 @@ class SlicerHubClient(HubClient):
     async def connect(self) -> int:
         """Authenticate, exchange token, and subscribe. Return subscribe HTTP status."""
         auth = await self.authenticate()
-        code = str(auth.get("code") or "").strip()
-        if not code:
-            raise RuntimeError("authenticate did not return a code")
-        if not await self.get_token(code):
-            raise RuntimeError("token exchange failed")
+        if auth.get("tokens_ready") and self._token:
+            pass
+        else:
+            code = str(auth.get("code") or "").strip()
+            if not code:
+                raise RuntimeError("authenticate did not return a code")
+            if not await self.get_token(code):
+                raise RuntimeError("token exchange failed")
         status = await self.subscribe()
         if status != 202:
             raise RuntimeError(f"subscribe failed with HTTP {status}")
         return status
 
     async def authenticate(self) -> Dict[str, Any]:
+        if self._oidc_session and self._token:
+            return {
+                "user_name": self._session_cfg.user_name or "",
+                "code": "",
+                "mode": "oidc",
+                "tokens_ready": True,
+            }
+
+        auth_config = await self._fetch_auth_config()
+        mode = str(auth_config.get("mode") or "mock").strip().lower()
+        self._auth_mode = mode
+        if mode == "oidc":
+            return await self._authenticate_oidc(auth_config)
+
         authorize_endpoint = self._authorization_endpoint()
         if not authorize_endpoint:
             raise ValueError(
@@ -1486,9 +1691,15 @@ class SlicerHubClient(HubClient):
             "user_name": data.get("user_name") or "",
             "code": data.get("code") or "",
             "expires_in": data.get("expires_in"),
+            "mode": "mock",
         }
 
     async def get_token(self, code: str) -> bool:
+        if self._oidc_session and self._token:
+            if self._options.auto_start:
+                await self.subscribe()
+            return True
+
         if not code:
             LOGGER.error("get_token: code is required")
             return False
@@ -1511,16 +1722,17 @@ class SlicerHubClient(HubClient):
                 return False
             config = await response.json()
 
-        if isinstance(config.get("access_token"), str) and config["access_token"]:
-            self._token = config["access_token"]
-        if isinstance(config.get("id_token"), str) and config["id_token"]:
-            self._last_id_token = config["id_token"]
-        topic = config.get("topic")
-        if isinstance(topic, str) and topic:
-            if not self._options.preserve_session_topic_from_token:
-                self.set_topic(topic)
-            if self._options.auto_start:
-                await self.subscribe()
+        access = config.get("access_token")
+        id_token = config.get("id_token")
+        topic = config.get("topic") if isinstance(config.get("topic"), str) else ""
+        self._apply_session_tokens(
+            access_token=access if isinstance(access, str) else "",
+            id_token=id_token if isinstance(id_token, str) else "",
+            topic=topic or "",
+            oidc_session=False,
+        )
+        if topic and self._options.auto_start:
+            await self.subscribe()
         return bool(self._token)
 
     async def _start_websocket(self, websocket_url: str) -> None:
@@ -2063,9 +2275,14 @@ class SlicerHubClient(HubClient):
                 if status == 401:
                     LOGGER.warning("subscribe 401: refreshing token")
                     try:
+                        # Force a new login (OIDC may open the browser again).
+                        self._oidc_session = False
+                        self._token = ""
                         auth = await self.authenticate()
-                        if auth.get("code"):
-                            await self.get_token(auth["code"])
+                        if auth.get("tokens_ready") and self._token:
+                            pass
+                        elif auth.get("code"):
+                            await self.get_token(str(auth["code"]))
                     except Exception as exc:
                         LOGGER.error("token refresh after 401 failed: %s", exc)
                 else:

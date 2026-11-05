@@ -323,13 +323,16 @@ def _default_status_response(config: ServiceProviderConfig) -> Dict[str, Any]:
 
 
 def _build_client(config: ServiceProviderConfig) -> SlicerHubClient:
+    from hub_presets import resolve_sp_oauth_credentials
+
     hub_def = resolve_hub_preset(config.use_local_hub)
+    client_id, client_secret = resolve_sp_oauth_credentials(hub_def)
     hub = HubConfig(
         hub_endpoint=hub_def["hub_endpoint"],
         authorization_endpoint=hub_def["authorization_endpoint"],
         token_endpoint=hub_def["token_endpoint"],
-        client_id=hub_def["client_id"],
-        client_secret=hub_def["client_secret"],
+        client_id=client_id,
+        client_secret=client_secret,
     )
     session = SessionConfig(
         topic=config.topic,
@@ -341,7 +344,10 @@ def _build_client(config: ServiceProviderConfig) -> SlicerHubClient:
         user_name=config.user_name,
         default_target_actor="",
     )
-    options = HubClientOptions(auto_reconnect=config.auto_reconnect)
+    options = HubClientOptions(
+        auto_reconnect=config.auto_reconnect,
+        use_client_credentials=True,
+    )
     return SlicerHubClient(hub, session, options)
 
 

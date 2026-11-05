@@ -6,7 +6,7 @@
 
 The Slicer Hub extension is a [WebSub](https://www.w3.org/TR/websub/)  messaging infrastructure that connects users of medical image displays, worklists, reporting tools, conferencing tools, remote inference models and AI Orchestrators.
 
-Try the [online example worklist client](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/) or watch the [classroom vanishing brush tool](https://youtu.be/xKQEOs1_9Bg) along with this documentation to find out more.
+Try the [online example worklist client](https://bellehumeur-engineering.com/worklist-client/) or watch the [classroom vanishing brush tool](https://youtu.be/xKQEOs1_9Bg) along with this documentation to find out more.
 
 ## Overview
 
@@ -26,7 +26,7 @@ This python extension supplies the **HUB**, service provider example scripts, an
 
 The extension also includes features for education that are independent of the IHE Integrated Reporting workflow:
 
-- an example [classroom application](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/classroom-client/) ([demo video](https://youtu.be/ENyYdJ_fHYI))
+- an example [classroom application](https://bellehumeur-engineering.com/classroom-client/) ([demo video](https://youtu.be/ENyYdJ_fHYI))
 - an example worklist application for creating, saving, and uploading teaching files and cohorts for class preparation
 - conferencing for collaborative viewing and teaching
 - a [vanishing brush tool](https://youtu.be/xKQEOs1_9Bg?si=-gtvlB3aeq3KF-dX) for temporary annotations during conferencing
@@ -55,10 +55,10 @@ Slicer Hub is an extension of [FHIRcast](https://fhircast.hl7.org/). FHIRcast is
 </p>
 
 
-You can try WebSub integration with the [Slicer Hub worklist example](https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/). 
+You can try WebSub integration with the [Slicer Hub worklist example](https://bellehumeur-engineering.com/worklist-client/). 
 
 <p align="center">
-  <a href="https://slicerhub-azejffgnb7dve8es.canadaeast-01.azurewebsites.net/worklist-client/">
+  <a href="https://bellehumeur-engineering.com/worklist-client/">
     <img src="docs/images/worklist-client.png" alt="Hub worklist client" width="100%">
   </a>
 </p>
@@ -97,7 +97,7 @@ Service Providers subscribe to all user topics for status-request and dicom/nift
   </a>
 </p>
 
-Since these resources do not log in as a user, they need a *service provider entry* in the customer's authorization server. This provides a client id and client secret. For the hub extension hub, they must be configured in the environment variables of the hub for the resource to connect successfully.
+Since these resources do not log in as a user, they need a *service provider entry* (Auth0 Machine-to-Machine application) in the customer's authorization server. That provides a client id and client secret used by the SP against hub `POST /oauth/token` (`client_credentials`). Configure the hub with `HUB_OIDC_M2M_AUDIENCE` (and optional `HUB_SP_CLIENT_IDS`); put the M2M credentials on the SP via Slicer settings or `HUB_SP_CLIENT_ID` / `HUB_SP_CLIENT_SECRET`. See [`HubInterface/hub/docs/oidc.md`](HubInterface/hub/docs/oidc.md).
 
 ### Image Display Client
 

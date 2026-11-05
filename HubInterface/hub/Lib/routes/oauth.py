@@ -9,6 +9,7 @@ import secrets
 import time
 import uuid
 from typing import Any, Dict, Optional
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request as UrlRequest, urlopen
 
@@ -20,12 +21,15 @@ from oauth_tokens import (
     HUB_OIDC_CLIENT_ID,
     HUB_OIDC_CLIENT_SECRET,
     HUB_OIDC_ISSUER,
+    HUB_OIDC_M2M_AUDIENCE,
     HUB_OIDC_REDIRECT_URI,
     HUB_OIDC_SCOPES,
     HUB_REQUIRE_AUTH,
+    HUB_SP_CLIENT_IDS,
     JWT_AUDIENCE,
     JWT_DEFAULT_SECRET,
     JWT_ISSUER,
+    ROLE_SERVICE_PROVIDER,
     TokenValidationError,
     build_hs256_jwt,
     identity_from_oidc_claims,
@@ -52,10 +56,11 @@ def _issue_jwt_pair(
     count: int,
     topic: str,
     user_name: str,
+    role: Optional[str] = None,
 ) -> str:
     """Issue signed JWT token."""
     now = int(time.time())
-    claims = {
+    claims: Dict[str, Any] = {
         "iss": JWT_ISSUER,
         "aud": JWT_AUDIENCE,
         "iat": now,
@@ -68,6 +73,8 @@ def _issue_jwt_pair(
         "user_name": user_name,
         "scope": "openid",
     }
+    if role:
+        claims["role"] = role
     return build_hs256_jwt(claims, JWT_DEFAULT_SECRET)
 
 
@@ -225,10 +232,15 @@ def _safe_return_to(raw: str, request: Request) -> str:
     return f"{base}/worklist-client/"
 
 
-def _mint_hub_session(user_name: str, topic: str) -> Dict[str, Any]:
+def _mint_hub_session(
+    user_name: str,
+    topic: str,
+    *,
+    role: Optional[str] = None,
+) -> Dict[str, Any]:
     hub.user_count += 1
     count = hub.user_count
-    if hub.single_user_mode:
+    if hub.single_user_mode and role != ROLE_SERVICE_PROVIDER:
         user_name = "SINGLE-USER"
         topic = "SINGLE-USER"
     access_token = _issue_jwt_pair(
@@ -236,12 +248,14 @@ def _mint_hub_session(user_name: str, topic: str) -> Dict[str, Any]:
         count=count,
         topic=topic,
         user_name=user_name,
+        role=role,
     )
     id_token = _issue_jwt_pair(
         token_type="id",
         count=count,
         topic=topic,
         user_name=user_name,
+        role=role,
     )
     hub.upsert_authentication(user_name=user_name, topic=topic)
     return {
@@ -252,6 +266,140 @@ def _mint_hub_session(user_name: str, topic: str) -> Dict[str, Any]:
         "user_name": user_name,
         "id_token": id_token,
         "access_token": access_token,
+    }
+
+
+def _mint_sp_hub_session(client_id: str) -> Dict[str, Any]:
+    """Mint hub session JWT for a service provider (topic=*, role=service_provider)."""
+    return _mint_hub_session(
+        client_id,
+        "*",
+        role=ROLE_SERVICE_PROVIDER,
+    )
+
+
+async def _token_client_credentials(request_data: Dict[str, Any]) -> Dict[str, Any]:
+    """Exchange Auth0 M2M client_credentials for a hub SP session JWT."""
+    client_id = str(request_data.get("client_id") or "").strip()
+    client_secret = str(request_data.get("client_secret") or "").strip()
+    if not client_id or not client_secret:
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "invalid_request",
+                "error_description": "client_id and client_secret are required",
+            },
+        )
+    if HUB_SP_CLIENT_IDS is not None and client_id not in HUB_SP_CLIENT_IDS:
+        raise HTTPException(
+            status_code=401,
+            detail={
+                "error": "invalid_client",
+                "error_description": "client_id is not allowlisted for hub M2M",
+            },
+        )
+    if not HUB_OIDC_M2M_AUDIENCE:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "m2m_not_configured",
+                "error_description": (
+                    "HUB_OIDC_M2M_AUDIENCE is required for service provider "
+                    "client_credentials"
+                ),
+            },
+        )
+    if not HUB_OIDC_ISSUER:
+        raise HTTPException(
+            status_code=503,
+            detail={
+                "error": "oidc_not_configured",
+                "error_description": "HUB_OIDC_ISSUER required",
+            },
+        )
+    try:
+        doc = fetch_openid_configuration(HUB_OIDC_ISSUER)
+    except OidcDiscoveryError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail={"error": "oidc_discovery_failed", "error_description": str(exc)},
+        ) from exc
+    token_endpoint = str(doc.get("token_endpoint") or "").strip()
+    if not token_endpoint:
+        raise HTTPException(status_code=502, detail="OIDC token endpoint missing")
+
+    form = urlencode(
+        {
+            "grant_type": "client_credentials",
+            "client_id": client_id,
+            "client_secret": client_secret,
+            "audience": HUB_OIDC_M2M_AUDIENCE,
+        }
+    ).encode("utf-8")
+    try:
+        req = UrlRequest(
+            token_endpoint,
+            data=form,
+            headers={"Content-Type": "application/x-www-form-urlencoded"},
+            method="POST",
+        )
+        with urlopen(req, timeout=20) as resp:
+            raw_body = resp.read().decode("utf-8")
+    except HTTPError as exc:
+        body = ""
+        try:
+            body = exc.read().decode("utf-8")
+        except Exception:
+            body = ""
+        if exc.code in (400, 401, 403):
+            raise HTTPException(
+                status_code=401,
+                detail={
+                    "error": "invalid_client",
+                    "error_description": body or str(exc.reason),
+                },
+            ) from exc
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "error": "idp_token_failed",
+                "error_description": f"IdP client_credentials failed: {exc}",
+            },
+        ) from exc
+    except URLError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "error": "idp_token_failed",
+                "error_description": f"IdP client_credentials failed: {exc}",
+            },
+        ) from exc
+
+    try:
+        token_payload = json.loads(raw_body)
+    except json.JSONDecodeError as exc:
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "error": "idp_token_failed",
+                "error_description": "IdP token response was not JSON",
+            },
+        ) from exc
+    if not str(token_payload.get("access_token") or "").strip():
+        raise HTTPException(
+            status_code=502,
+            detail={
+                "error": "idp_token_failed",
+                "error_description": "IdP token response missing access_token",
+            },
+        )
+
+    session = _mint_sp_hub_session(client_id)
+    await hub.send_admin_refresh_command()
+    return {
+        **session,
+        "hub_auth": "oidc",
+        "role": ROLE_SERVICE_PROVIDER,
     }
 
 
@@ -266,7 +414,10 @@ async def get_auth_config(request: Request):
     }
     if HUB_AUTH_MODE == "oidc":
         payload["login_url"] = f"{base}/oauth/login"
+        payload["token_url"] = f"{base}/oauth/token"
         payload["issuer"] = HUB_OIDC_ISSUER
+        if HUB_OIDC_M2M_AUDIENCE:
+            payload["m2m_audience"] = HUB_OIDC_M2M_AUDIENCE
     else:
         payload["authorize_url"] = f"{base}/oauth/authorize"
         payload["token_url"] = f"{base}/oauth/token"
@@ -274,8 +425,16 @@ async def get_auth_config(request: Request):
 
 
 @router.get("/oauth/login")
-async def oauth_login(request: Request, return_to: str = ""):
-    """Start OIDC authorization-code + PKCE flow (browser redirect to IdP)."""
+async def oauth_login(
+    request: Request,
+    return_to: str = "",
+    response_mode: str = "",
+):
+    """Start OIDC authorization-code + PKCE flow (browser redirect to IdP).
+
+    ``response_mode=query`` puts hub session tokens on ``return_to`` as a query
+    string (for native loopback clients). Default is fragment (SPAs).
+    """
     if HUB_AUTH_MODE != "oidc":
         raise HTTPException(
             status_code=503,
@@ -304,12 +463,24 @@ async def oauth_login(request: Request, return_to: str = ""):
     if not authorize_endpoint:
         raise HTTPException(status_code=502, detail="OIDC authorize endpoint missing")
 
+    mode = (response_mode or "").strip().lower()
+    if mode not in ("", "fragment", "query"):
+        raise HTTPException(
+            status_code=400,
+            detail={
+                "error": "invalid_response_mode",
+                "error_description": "response_mode must be fragment (default) or query",
+            },
+        )
+    delivery = "query" if mode == "query" else "fragment"
+
     _purge_expired_oidc_states()
     state = secrets.token_urlsafe(24)
     code_verifier = secrets.token_urlsafe(64)
     hub.oidc_login_states[state] = {
         "code_verifier": code_verifier,
         "return_to": _safe_return_to(return_to, request),
+        "response_mode": delivery,
         "expires_at": time.time() + _OIDC_STATE_TTL_SECONDS,
     }
 
@@ -414,7 +585,7 @@ async def oauth_callback(
     session = _mint_hub_session(identity["user_name"], identity["topic"])
     await hub.send_admin_refresh_command()
 
-    fragment = urlencode(
+    token_params = urlencode(
         {
             "access_token": session["access_token"],
             "id_token": session["id_token"],
@@ -426,9 +597,13 @@ async def oauth_callback(
         }
     )
     return_to = str(pending.get("return_to") or "").strip() or _safe_return_to("", request)
-    # Strip any existing fragment before appending ours.
-    return_to = return_to.split("#", 1)[0]
-    return RedirectResponse(url=f"{return_to}#{fragment}", status_code=302)
+    # Strip any existing fragment / query before appending ours.
+    return_to = return_to.split("#", 1)[0].split("?", 1)[0]
+    delivery = str(pending.get("response_mode") or "fragment").strip().lower()
+    if delivery == "query":
+        sep = "&" if "?" in return_to else "?"
+        return RedirectResponse(url=f"{return_to}{sep}{token_params}", status_code=302)
+    return RedirectResponse(url=f"{return_to}#{token_params}", status_code=302)
 
 
 @router.post("/oauth/authorize")
@@ -465,9 +640,7 @@ async def post_oauth_authorize(request: Request):
 
 @router.post("/oauth/token")
 async def post_oauth_token(request: Request):
-    """Mock OAuth token endpoint (disabled when HUB_AUTH_MODE=oidc)."""
-    if not HUB_MOCK_OAUTH:
-        raise HTTPException(status_code=503, detail=_mock_oauth_disabled_detail())
+    """OAuth token: mock authorization_code, or oidc client_credentials (SP M2M)."""
     try:
         request_data = await _parse_request_body(request)
     except Exception:
@@ -475,6 +648,12 @@ async def post_oauth_token(request: Request):
     request_data.update(dict(request.query_params))
 
     grant_type = (request_data.get("grant_type") or "").strip()
+    if HUB_AUTH_MODE == "oidc" and grant_type == "client_credentials":
+        return await _token_client_credentials(request_data)
+
+    if not HUB_MOCK_OAUTH:
+        raise HTTPException(status_code=503, detail=_mock_oauth_disabled_detail())
+
     code = (request_data.get("code") or "").strip()
 
     if grant_type and grant_type != "authorization_code":
@@ -483,7 +662,8 @@ async def post_oauth_token(request: Request):
             detail={
                 "error": "unsupported_grant_type",
                 "error_description": (
-                    f"grant_type '{grant_type}' is not supported; use authorization_code"
+                    f"grant_type '{grant_type}' is not supported; "
+                    "use authorization_code (mock) or client_credentials (oidc)"
                 ),
             },
         )

@@ -67,12 +67,16 @@ def _enforce_topic_match(identity: Dict[str, Any], topic: str) -> None:
         )
     claimed = str(identity.get("topic") or "").strip()
     requested = str(topic or "").strip()
+    role = str(identity.get("role") or "").strip()
     if not claimed:
         raise HTTPException(
             status_code=403,
             detail=oauth_error_body("Token missing topic claim"),
         )
     if requested == "*":
+        # Service providers may subscribe to all topics; humans may not.
+        if role == "service_provider":
+            return
         raise HTTPException(
             status_code=403,
             detail=oauth_error_body("Wildcard topic is not allowed in oidc mode"),

@@ -340,7 +340,8 @@ python 3dslicer-hub-ai-interface.py
 |------------|-----|
 | `VOLVIEW-HUB` | `http://localhost:4014/api/hub` (default in interface script) |
 | `VOLVIEW-HUB-CLOUD` | VolView Azure |
-| `SLICER-HUB-CLOUD` | 3D Slicer Azure |
+| `SLICER-HUB-CLOUD` | Mock auth cloud (`bellehumeur-engineering.com`) |
+| `SLICER-HUB-CLOUD-OIDC` | OIDC cloud (`oidc.bellehumeur-engineering.com`) |
 | `SLICER-HUB` | `http://localhost:2018/api/hub` |
 
 No local hub process is required when using a cloud `HUB_NAME`.

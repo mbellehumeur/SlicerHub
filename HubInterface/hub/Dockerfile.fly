@@ -1,0 +1,25 @@
+# Fly.io image — build from HubInterface/ (see ../fly.toml).
+# Vendors hub/ + python_client/ so hub_client imports work like the Azure zip.
+
+FROM python:3.11-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PORT=8000
+
+WORKDIR /app
+
+COPY hub/requirements-azure.txt /app/requirements.txt
+RUN pip install --upgrade pip && pip install -r /app/requirements.txt
+
+COPY hub/ /app/
+COPY python_client/ /app/python_client/
+
+RUN chmod +x /app/start-azure.sh \
+    && rm -f /app/.env /app/.env.* \
+    && rm -f /app/slicer-hub.zip
+
+EXPOSE 8000
+
+CMD ["/app/start-azure.sh"]

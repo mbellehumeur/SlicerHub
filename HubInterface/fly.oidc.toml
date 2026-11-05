@@ -1,0 +1,53 @@
+# Fly.io — Slicer Hub OIDC auth
+# App: bellehumeur-hub-oidc → https://oidc.bellehumeur-engineering.com
+# Same image as fly.toml (mock); auth differs only via secrets.
+#
+# Deploy: ./hub/deploy-fly.sh oidc
+#
+# Secrets (once; Auth0 Regular Web Application):
+#   fly secrets set -a bellehumeur-hub-oidc \
+#     HUB_AUTH_MODE=oidc \
+#     HUB_OIDC_ISSUER=https://YOUR_TENANT.us.auth0.com \
+#     HUB_OIDC_CLIENT_ID=... \
+#     HUB_OIDC_CLIENT_SECRET=... \
+#     HUB_JWT_SECRET=... \
+#     HUB_PUBLIC_BASE_URL=https://oidc.bellehumeur-engineering.com \
+#     HUB_OIDC_REDIRECT_URI=https://oidc.bellehumeur-engineering.com/oauth/callback \
+#     HUB_WS_KEEPALIVE=true
+#
+# Auth0 Allowed Callback / Logout / Web Origins: oidc.bellehumeur-engineering.com only.
+#
+# Certs / DNS:
+#   fly certs add -a bellehumeur-hub-oidc oidc.bellehumeur-engineering.com
+#   # GoDaddy: oidc CNAME → bellehumeur-hub-oidc.fly.dev
+
+app = "bellehumeur-hub-oidc"
+primary_region = "iad"
+
+[build]
+  dockerfile = "hub/Dockerfile.fly"
+  ignorefile = "hub/.dockerignore.fly"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [http_service.concurrency]
+    type = "connections"
+    hard_limit = 250
+    soft_limit = 200
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "30s"
+    method = "GET"
+    path = "/api/hub/auth/config"
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

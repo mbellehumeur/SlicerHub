@@ -91,7 +91,8 @@ def build_image_display_client(
     )
     options = HubClientOptions(
         auto_reconnect=AUTO_RECONNECT,
-        preserve_session_topic_from_token=True,
+        # OIDC: adopt JWT email topic before subscribe (hub enforces topic match).
+        preserve_session_topic_from_token=False,
     )
     return SlicerHubClient(hub, session, options)
 
@@ -349,12 +350,17 @@ class ImageDisplayClientConnection:
 
     def _connected_status_detail(self) -> Dict[str, Any]:
         subscriber = ""
+        user_name = ""
         if self._client is not None:
             subscriber = self._client.subscriber_name
+            user_name = self._client.user_name or ""
         detail: Dict[str, Any] = {
             "message_count": self._message_count,
             "subscriber_name": subscriber,
+            "topic": self._topic,
         }
+        if user_name:
+            detail["user_name"] = user_name
         if self._last_event:
             detail["last_event"] = self._last_event
         if self._open_study_id:
@@ -697,24 +703,13 @@ class ImageDisplayClientConnection:
             if self._stop_event.is_set():
                 return
 
-            auth = await self._client.authenticate()
             LOGGER.info(
-                "Image Display Client authenticated topic=%s user_name=%s",
-                self._topic,
-                auth.get("user_name"),
+                "Image Display Client connecting to hub (mock or OIDC browser)…"
             )
+            # connect() handles mock authorize/token and OIDC browser loopback.
+            status = await self._client.connect()
             if self._stop_event.is_set():
                 return
-
-            code = auth.get("code")
-            if not code:
-                raise RuntimeError("authenticate did not return a code")
-            if not await self._client.get_token(code):
-                raise RuntimeError("token exchange failed")
-            if self._stop_event.is_set():
-                return
-
-            status = await self._client.subscribe()
             if status != 202:
                 if status == 0:
                     raise RuntimeError(
@@ -722,11 +717,16 @@ class ImageDisplayClientConnection:
                     )
                 raise RuntimeError(f"subscribe failed with HTTP {status}")
             self._hub_subscribed = True
+            # Topic / user may have been set from OIDC claims (e.g. email).
+            if self._client.topic:
+                self._topic = self._client.topic
             subscriber = self._client.subscriber_name
             LOGGER.info(
-                "Image Display Client subscribed hub=%s topic=%s subscriber=%s",
+                "Image Display Client hub login complete hub=%s topic=%s "
+                "user_name=%s subscriber=%s",
                 self._hub_name,
                 self._topic,
+                self._client.user_name or "",
                 subscriber,
             )
             self._emit_status("connected", self._connected_status_detail())

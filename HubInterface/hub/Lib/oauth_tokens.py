@@ -72,7 +72,33 @@ HUB_OIDC_SCOPES = (
     os.environ.get("HUB_OIDC_SCOPES", "openid email profile").strip()
     or "openid email profile"
 )
+# Auth0 API identifier for Machine-to-Machine (service provider) client_credentials.
+HUB_OIDC_M2M_AUDIENCE = os.environ.get("HUB_OIDC_M2M_AUDIENCE", "").strip()
 _raw_jwks_url = os.environ.get("HUB_OIDC_JWKS_URL", "").strip()
+
+ROLE_SERVICE_PROVIDER = "service_provider"
+
+
+def _parse_sp_client_ids() -> Optional[set[str]]:
+    """Optional allowlist of Auth0 M2M client_ids. None = any IdP-accepted client."""
+    raw = os.environ.get("HUB_SP_CLIENT_IDS", "").strip()
+    if not raw:
+        return None
+    if raw.startswith("["):
+        try:
+            items = json.loads(raw)
+        except json.JSONDecodeError:
+            LOGGER.warning("HUB_SP_CLIENT_IDS JSON parse failed; ignoring allowlist")
+            return None
+        if not isinstance(items, list):
+            return None
+        ids = {str(x).strip() for x in items if str(x).strip()}
+        return ids or None
+    ids = {part.strip() for part in raw.split(",") if part.strip()}
+    return ids or None
+
+
+HUB_SP_CLIENT_IDS = _parse_sp_client_ids()
 
 
 def admin_auth_required() -> bool:
@@ -314,7 +340,15 @@ def claims_to_identity(claims: Dict[str, Any]) -> Dict[str, Any]:
     if not topic and HUB_AUTH_MODE == "oidc":
         # Hub session JWT should already carry topic; fall back for safety.
         topic = str(claims.get("email") or claims.get("sub") or "").strip()
-    return {"user_name": user_name, "topic": topic, "claims": claims}
+    identity: Dict[str, Any] = {
+        "user_name": user_name,
+        "topic": topic,
+        "claims": claims,
+    }
+    role = claims.get("role")
+    if role is not None and str(role).strip():
+        identity["role"] = str(role).strip()
+    return identity
 
 
 def oauth_error_body(detail: str) -> Dict[str, str]:
