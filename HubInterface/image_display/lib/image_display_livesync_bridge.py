@@ -5,7 +5,8 @@ When hub-mirror sends ``{ op: subscribe, ... }`` via scene-update, Image Display
 2. Publishes **Snapshot** scene-update with the LiveScene document (first paint)
 3. Optionally attaches a Hub sink peer for live MRML events (when ModuleServer is up)
 
-applyOps / reconcile are forwarded to the Hub sink peer when available.
+``{ op: unsubscribe }`` (and idle timeout) detaches the Hub sink so publishing stops
+when hub-mirror leaves. applyOps / reconcile are forwarded when the sink is up.
 Image Display LiveSync path publishes **only** scene-update (no ImagingStudy-open).
 """
 
@@ -13,6 +14,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import time
 from typing import TYPE_CHECKING, Any, Dict, List, Optional, Set, Tuple
 
 if TYPE_CHECKING:
@@ -22,8 +24,61 @@ LOGGER = logging.getLogger("HubInterface.ImageDisplay")
 
 LIVESYNC_CONTEXT_KEY = "livesync"
 LIVESYNC_EXPORT_TIMEOUT_SECONDS = 120.0
+# Detach Hub sink if no inbound LiveSync ops arrive (covers tab kill without unsubscribe).
+LIVESYNC_IDLE_DETACH_SECONDS = 180.0
 HUB_BLOBS_EVENT = "HubBlobs"
 SNAPSHOT_EVENT = "Snapshot"
+
+
+def _mark_livesync_inbound(connection: "ImageDisplayClientConnection") -> None:
+    connection._livesync_last_inbound = time.monotonic()
+    connection._livesync_armed = True
+
+
+def _clear_livesync_armed(connection: "ImageDisplayClientConnection") -> None:
+    connection._livesync_armed = False
+    connection._livesync_last_inbound = 0.0
+
+
+async def detach_livesync_hub_sink(
+    connection: "ImageDisplayClientConnection",
+    *,
+    reason: str,
+) -> None:
+    """Tear down ModuleServer Hub sink observers (stop scene-update flood)."""
+    bridge = getattr(connection, "_mrson_hub_bridge", None)
+    if bridge is None:
+        _clear_livesync_armed(connection)
+        return
+
+    def run() -> None:
+        bridge.detach()
+
+    try:
+        await connection.run_on_main_thread(run)
+        LOGGER.info("livesync Hub sink detached reason=%s", reason)
+    except Exception as exc:
+        LOGGER.warning("livesync Hub sink detach failed reason=%s: %s", reason, exc)
+    finally:
+        connection._mrson_hub_bridge = None
+        _clear_livesync_armed(connection)
+
+
+async def maybe_idle_detach_livesync(
+    connection: "ImageDisplayClientConnection",
+) -> None:
+    """Detach LiveSync sink after idle with no inbound ops (safety net)."""
+    if not getattr(connection, "_livesync_armed", False):
+        return
+    last = float(getattr(connection, "_livesync_last_inbound", 0.0) or 0.0)
+    if last <= 0.0:
+        return
+    idle = time.monotonic() - last
+    if idle < LIVESYNC_IDLE_DETACH_SECONDS:
+        return
+    await detach_livesync_hub_sink(
+        connection, reason=f"idle-{int(idle)}s"
+    )
 
 
 def _wire_from_scene_update_context(context: Any) -> Optional[Any]:
@@ -73,8 +128,19 @@ async def handle_scene_update(
         return
 
     op = str(wire.get("op") or "").strip()
+    if op:
+        _mark_livesync_inbound(connection)
+
     if op == "subscribe":
         await _respond_to_subscribe(connection, client, wire)
+        return
+
+    if op == "unsubscribe":
+        await detach_livesync_hub_sink(connection, reason="unsubscribe")
+        return
+
+    if op == "ping":
+        # Keepalive from an open hub-mirror; activity already marked above.
         return
 
     if op in ("applyOps", "reconcile", "getNode"):
@@ -227,6 +293,7 @@ async def _respond_to_subscribe(
 
     try:
         await connection.run_on_main_thread(subscribe_peer)
+        _mark_livesync_inbound(connection)
         LOGGER.info(
             "livesync subscribe: Hub sink peer subscribed types=%s localBulk=%s",
             types or "*",

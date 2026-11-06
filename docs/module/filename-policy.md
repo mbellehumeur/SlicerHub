@@ -6,11 +6,11 @@ The hub enforces an **allowlist** on `resource.fileName` and filters out double 
 
 Longest match wins (so `study.nii.gz` uses `.nii.gz`, not `.gz`).
 
-| Imaging | Archives / compression |
-|---------|-------------------------|
-| `.dcm`, `.dicom`, `.dic` | `.zip` |
-| `.nii`, `.nii.gz`, `.nrrd` | `.tar`, `.tar.gz`, `.gz` |
-| `.png`, `.jpg`, `.jpeg`, `.tif`, `.tiff`, `.bmp` | |
+| Imaging | Archives / compression | Other |
+|---------|-------------------------|-------|
+| `.dcm`, `.dicom`, `.dic` | `.zip` | `.glb` (MetaQuest / `glb-send`) |
+| `.nii`, `.nii.gz`, `.nrrd` | `.tar`, `.tar.gz`, `.gz` | `.bin` (LiveScene / mrson blobs) |
+| `.png`, `.jpg`, `.jpeg`, `.tif`, `.tiff`, `.bmp` | | |
 
 ## Double extensions
 

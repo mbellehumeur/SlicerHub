@@ -27,6 +27,7 @@ ID_ACTOR_KEYWORD = "ID"
 STATUS_DATA_TYPE = "status"
 LIVESCENE_DATA_TYPE = "livescene"
 DICOM_DATA_TYPE = "dicom"
+GLB_DATA_TYPE = "glb"
 SCENEVIEW_BUILD_TIMEOUT_SECONDS = 9.0
 LIVESCENE_EXPORT_TIMEOUT_SECONDS = 120.0
 DICOM_EXPORT_TIMEOUT_SECONDS = 300.0
@@ -197,6 +198,14 @@ async def handle_hub_request(
 
     if normalized == normalize_data_type(DICOM_DATA_TYPE):
         await handle_dicom_request(connection, client, message)
+        return
+
+    if normalized == normalize_data_type(GLB_DATA_TYPE):
+        bridge = await connection.ensure_mesh_bridge()
+        if bridge is None:
+            LOGGER.warning("glb-request ignored: mesh bridge failed to start")
+            return
+        await bridge.handle_glb_request(client, message)
         return
 
     LOGGER.debug(

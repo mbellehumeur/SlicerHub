@@ -24,6 +24,8 @@ _DEFAULT_ALLOWED_SUFFIXES: Tuple[str, ...] = (
     ".zip",
     ".tar",
     ".gz",
+    # MetaQuest / glb-send mesh snapshots (scene.glb).
+    ".glb",
     # Content-addressed LiveScene / mrson chunk blobs (sha256-<hex>.bin).
     ".bin",
 )

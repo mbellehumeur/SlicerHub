@@ -164,6 +164,8 @@ VolView publishes study/series/slice data as a single **binary batch** `dicom-se
 
 A caller uses **HTTP** to ask the hub to dispatch a **typed** request to every matching subscriber. The request body includes top-level `id` and `timestamp` (like publish). Each target receives a WebSocket message with `hub.event = <datatype>-request` and `context.id` set to that correlation id. Targets reply on `/bind/{endpoint}` with `hub.event = <datatype>-response` and the same `context.id`. The hub waits (default 2s, `HUB_REQUEST_TIMEOUT_SECONDS`) and returns one collated JSON body.
 
+**Timeouts:** pass `event.context.timeoutSeconds` (max 300) to override the default per call. Without that, `idc-claude-request` floors at 180s and `dicom-request` floors at 120s (local DICOM export); other request types keep the 2s env default.
+
 **Entry point:** `POST /api/hub` when `event.hub.event` ends with `-request`
 
 ```mermaid

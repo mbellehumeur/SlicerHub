@@ -46,6 +46,8 @@ ANNOTATION_DELETE = "annotation-delete"
 DICOM_SEND = "dicom-send"
 NIFTI_SEND = "nifti-send"
 PNG_SEND = "png-send"
+GLB_SEND = "glb-send"
+MESHSCENE_UPDATE = "meshscene-update"
 IDC_CLAUDE_SEND = "idc-claude-send"
 CONFERENCE_CHAT = "conference-chat"
 CONFERENCE_START = "conference-start"
@@ -539,6 +541,8 @@ def _entry_file_byte_length(entry: Dict[str, Any]) -> Optional[int]:
 
 def _default_binary_batch_file_name(hub_event: str, index: int) -> str:
     name = (hub_event or "").strip().lower()
+    if name.startswith("glb"):
+        return "scene.glb" if index == 0 else f"scene-{index + 1}.glb"
     if name.startswith("nifti"):
         return "nifti-send.nii.gz" if index == 0 else f"nifti-send-{index + 1}.nii.gz"
     return "dicom-send.dcm" if index == 0 else f"dicom-send-{index + 1}.dcm"
@@ -546,6 +550,8 @@ def _default_binary_batch_file_name(hub_event: str, index: int) -> str:
 
 def _default_binary_batch_mime_type(hub_event: str) -> str:
     name = (hub_event or "").strip().lower()
+    if name.startswith("glb"):
+        return "model/gltf-binary"
     if name.startswith("nifti"):
         return "application/octet-stream"
     return "application/dicom"
@@ -590,6 +596,7 @@ _HUB_BINARY_EVENT_PREFIXES = (
     "nrrd",
     "imagingstudy",
     "scene",  # scene-update (LiveSync HubBlobs multipart)
+    "glb",  # glb-send (MetaQuest mesh snapshots)
 )
 
 

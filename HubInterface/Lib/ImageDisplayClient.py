@@ -331,12 +331,14 @@ class ImageDisplayClientWidget:
                     self.topicEdit.text = restored
 
     def _on_oidc_toggled(self, checked: bool) -> None:
-        # Clearing only when turning OIDC on; turning off restores mock topic.
+        # Clearing only when turning OIDC on; turning off resets mock topic to USER-1.
         self._apply_oidc_topic_ui(clear_when_enabling=bool(checked))
         if checked and self.topicEdit and not self.topicEdit.text.strip():
             email = self._slicer_user_email()
             if email:
                 self.topicEdit.text = email
+        elif not checked and self.topicEdit:
+            self.topicEdit.text = DEFAULT_DISPLAY_TOPIC
         self._save_settings()
 
     @staticmethod

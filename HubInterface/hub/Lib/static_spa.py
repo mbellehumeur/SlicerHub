@@ -22,6 +22,7 @@ SPA_CLIENTS = [
     ("classroom-client", "classroom-client"),
     ("slicerlive", "slicerlive"),
     ("hub-mirror", "hub-mirror"),
+    ("metaquest", "metaquest"),
     ("slim", "slim"),
     ("ohif", "OHIF-client"),
 ]

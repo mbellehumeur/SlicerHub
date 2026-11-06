@@ -51,6 +51,9 @@ def _request_context_data_type(
 
 
 IDC_CLAUDE_REQUEST_TIMEOUT_SECONDS = 180.0
+# Local DICOM export + multipart dicom-send often exceeds the snappy 2s default
+# while Image Display is busy on the Slicer main thread.
+DICOM_REQUEST_TIMEOUT_SECONDS = 120.0
 
 
 def _request_timeout_seconds(request_data: Dict) -> float:
@@ -73,4 +76,6 @@ def _request_timeout_seconds(request_data: Dict) -> float:
     request_event = _request_hub_event_from_body(request_data)
     if request_event == "idc-claude-request":
         return max(HUB_REQUEST_TIMEOUT_SECONDS, IDC_CLAUDE_REQUEST_TIMEOUT_SECONDS)
+    if request_event == "dicom-request":
+        return max(HUB_REQUEST_TIMEOUT_SECONDS, DICOM_REQUEST_TIMEOUT_SECONDS)
     return HUB_REQUEST_TIMEOUT_SECONDS
