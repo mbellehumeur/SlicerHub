@@ -38,7 +38,7 @@ def local_hub_preset() -> Dict[str, Any]:
     except ImportError:
         return {
             "hub_endpoint": "http://127.0.0.1:2018/api/hub",
-            "authorization_endpoint": "http://127.0.0.1:2018/oauth/authorize",
+            "authorization_endpoint": "http://127.0.0.1:2018/oauth/login",
             "token_endpoint": "http://127.0.0.1:2018/oauth/token",
             "client_id": "130c3d9c-4157-4dd1-aa1d-slicer",
             "client_secret": "client_secret_3d_Slicer",

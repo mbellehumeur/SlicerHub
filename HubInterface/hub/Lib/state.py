@@ -48,8 +48,6 @@ class Hub:
         #                  completion: asyncio.Event, lock: asyncio.Lock,
         #                  data_type, started_at, request_topic }
         self.pending_requests: Dict[str, Dict[str, Any]] = {}
-        # OAuth authorization codes: code -> { user_name, topic, count, expires_at, used }
-        self.auth_codes: Dict[str, Dict[str, Any]] = {}
         # OIDC login PKCE state: state -> { code_verifier, return_to, expires_at }
         self.oidc_login_states: Dict[str, Dict[str, Any]] = {}
         # One entry per authenticated user (keyed by topic):
@@ -761,15 +759,14 @@ class Hub:
         self.audit_log_counter = 0
         self.user_count = 0
         self.pending_requests.clear()
-        self.auth_codes.clear()
         self.oidc_login_states.clear()
         self.authentications.clear()
         self.admin_revision = 0
         self.last_admin_refresh_time = 0.0
 
         self.log(
-            f"Hub reset - all subscriptions, conferences, audit log, authentications, "
-            f"and auth codes cleared; "
+            f"Hub reset - all subscriptions, conferences, audit log, and authentications "
+            f"cleared; "
             f"{len(disconnected_endpoints)} subscriber WebSocket(s) disconnected"
         )
 

@@ -111,15 +111,13 @@ async def handle_status_request(
     ) -> Dict[str, Any]:
         from build_sceneview_response import build_sceneview_response_payload
         from local_dicom_worklist import list_local_dicom_worklist_studies
-        from live_scene_export import live_scene_status_study_row
 
         sceneview = build_sceneview_response_payload(
             product_name,
             open_context,
             fast_placeholder_thumbnails=fast_placeholder_thumbnails,
         )
-        studies = [live_scene_status_study_row()]
-        studies.extend(list_local_dicom_worklist_studies())
+        studies = list_local_dicom_worklist_studies()
         return {
             "source": "status",
             "product": product_name,

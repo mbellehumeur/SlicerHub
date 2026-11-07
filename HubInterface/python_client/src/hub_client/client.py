@@ -1354,12 +1354,13 @@ class SlicerHubClient(HubClient):
             )
         return self._http
 
-    def _authorization_endpoint(self) -> str:
-        explicit = (self._hub.authorization_endpoint or "").strip()
-        if explicit:
-            return explicit
-        parsed = urlparse(self._hub.token_endpoint)
-        return f"{parsed.scheme}://{parsed.netloc}/oauth/authorize"
+    def _login_url(self, auth_config: Optional[Dict[str, Any]] = None) -> str:
+        cfg = auth_config or {}
+        from_config = str(cfg.get("login_url") or "").strip()
+        if from_config:
+            return from_config
+        origin = self._hub_origin()
+        return f"{origin}/oauth/login" if origin else ""
 
     def _hub_origin(self) -> str:
         for raw in (
@@ -1654,7 +1655,7 @@ class SlicerHubClient(HubClient):
             return {
                 "user_name": self._session_cfg.user_name or "",
                 "code": "",
-                "mode": "oidc",
+                "mode": self._auth_mode or "mock",
                 "tokens_ready": True,
             }
 
@@ -1664,27 +1665,27 @@ class SlicerHubClient(HubClient):
         if mode == "oidc":
             return await self._authenticate_oidc(auth_config)
 
-        authorize_endpoint = self._authorization_endpoint()
-        if not authorize_endpoint:
+        login_url = self._login_url(auth_config)
+        if not login_url:
             raise ValueError(
-                "SlicerHubClient.authenticate: no authorization_endpoint"
+                "SlicerHubClient.authenticate: no login_url or hub origin"
             )
 
-        form: Dict[str, str] = {
+        params: Dict[str, str] = {
             "client_product_name": self._product_name_for_oauth(),
         }
         if self._last_id_token:
-            form["id_token"] = self._last_id_token
+            params["id_token"] = self._last_id_token
         elif self._session_cfg.user_name:
-            form["user_name"] = self._session_cfg.user_name
+            params["user_name"] = self._session_cfg.user_name
         if self._session_cfg.topic:
-            form["topic"] = self._session_cfg.topic
+            params["topic"] = self._session_cfg.topic
 
         http = await self._get_http()
-        async with http.post(
-            authorize_endpoint,
-            data=form,
-            headers={"Content-Type": "application/x-www-form-urlencoded"},
+        async with http.get(
+            login_url,
+            params=params,
+            headers={"Accept": "application/json"},
         ) as response:
             if response.status != 200:
                 text = await response.text()
@@ -1692,13 +1693,29 @@ class SlicerHubClient(HubClient):
                     f"authenticate failed HTTP {response.status}: {text}"
                 )
             data = await response.json()
-        if isinstance(data.get("user_name"), str) and data["user_name"]:
-            self._session_cfg.user_name = data["user_name"]
+        if not isinstance(data, dict):
+            raise RuntimeError("authenticate: mock login response was not an object")
+        access = data.get("access_token")
+        if not isinstance(access, str) or not access.strip():
+            raise RuntimeError("authenticate: mock login missing access_token")
+        topic = data.get("topic") if isinstance(data.get("topic"), str) else ""
+        user_name = (
+            data.get("user_name") if isinstance(data.get("user_name"), str) else ""
+        )
+        id_token = data.get("id_token") if isinstance(data.get("id_token"), str) else ""
+        self._apply_session_tokens(
+            access_token=access.strip(),
+            id_token=id_token or "",
+            topic=topic or "",
+            user_name=user_name or "",
+            oidc_session=True,
+        )
         return {
-            "user_name": data.get("user_name") or "",
-            "code": data.get("code") or "",
+            "user_name": self._session_cfg.user_name or "",
+            "code": "",
             "expires_in": data.get("expires_in"),
             "mode": "mock",
+            "tokens_ready": True,
         }
 
     async def get_token(self, code: str) -> bool:

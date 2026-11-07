@@ -46,8 +46,8 @@ poetry run python server_with_hub.py --port 4014
 | `GET` | `/api/hub/admin/snapshot` | JSON dashboard (subscriptions, conferences, audit) |
 | `WS` | `/ws/admin` | `admin.refresh` notifications (revision bump) |
 | `GET` | `/api/hub/auth/config` | Auth mode discovery (`mock` \| `oidc`) for HubClient |
-| `GET` | `/oauth/login`, `/oauth/callback` | Browser OIDC (Google-ready PKCE); oidc mode only |
-| `POST` | `/oauth/authorize`, `/oauth/token` | Dev/mock OAuth (503 when `HUB_AUTH_MODE=oidc`) |
+| `GET` | `/oauth/login`, `/oauth/callback` | Mock: JSON session tokens; OIDC: browser IdP + callback |
+| `POST` | `/oauth/token` | OIDC `client_credentials` (SP M2M); unused for mock human login |
 
 ### Authentication modes
 
@@ -59,7 +59,7 @@ Primary switch: **`HUB_AUTH_MODE=mock|oidc`** (default `mock`). Full setup (Auth
 | **OIDC (Google)** | `HUB_AUTH_MODE=oidc` + issuer/client/JWT secret | Browser login via HubClient; hub mints session JWT; Bearer required; topic must match JWT |
 | **Admin token (hosted demos)** | `HUB_ADMIN_TOKEN=<secret>` | Admin snapshot/metrics/clear-audit/reset and `/ws/admin` require `X-Hub-Admin-Token` (or `?admin_token=` / Bearer equal to the secret) |
 
-Bearer / admin-token validation lives in [`Lib/oauth_tokens.py`](Lib/oauth_tokens.py) (HS256 hub session + discovery JWKS for IdP id_tokens + `HUB_ADMIN_TOKEN`). Admin snapshot omits subscription `secret` values. `DELETE /api/hub` only unsubscribes a specific endpoint/callback+topic (no mass clear; use `POST /api/admin/reset`). Python `hub_client` OIDC is deferred (mock authorize only).
+Bearer / admin-token validation lives in [`Lib/oauth_tokens.py`](Lib/oauth_tokens.py) (HS256 hub session + discovery JWKS for IdP id_tokens + `HUB_ADMIN_TOKEN`). Admin snapshot omits subscription `secret` values. `DELETE /api/hub` only unsubscribes a specific endpoint/callback+topic (no mass clear; use `POST /api/admin/reset`). Python `hub_client` supports mock `GET /oauth/login` and OIDC browser / M2M.
 
 Conference UI: `/api/hub/conference-client`, APIs under `/api/hub/conference` and `/api/hub/conference-topics`.
 
@@ -310,7 +310,7 @@ Each item in `responses` is one subscriber's `<datatype>-response` payload. The 
 | [`hub_api.py`](Lib/routes/hub_api.py) | `POST`/`DELETE`/`OPTIONS` `/api/hub` |
 | [`bind_ws.py`](Lib/routes/bind_ws.py) | `WS` `/bind/{endpoint}` |
 | [`admin.py`](Lib/routes/admin.py) | Admin pages, snapshot, metrics, reset, `WS` `/ws/admin` |
-| [`oauth.py`](Lib/routes/oauth.py) | `/api/hub/auth/config`, `/oauth/login`, `/oauth/callback`, mock `/oauth/authorize` + `/oauth/token` |
+| [`oauth.py`](Lib/routes/oauth.py) | `/api/hub/auth/config`, `/oauth/login` (mock JSON / OIDC redirect), `/oauth/callback`, `/oauth/token` (OIDC M2M) |
 | [`conference.py`](Lib/routes/conference.py) | Conference HTTP APIs + client page |
 | [`payloads.py`](Lib/routes/payloads.py) | `GET` `/api/hub/payloads/{token}` |
 | [`samples.py`](Lib/routes/samples.py) | Sample catalog + file download |
@@ -328,7 +328,7 @@ For workspace-wide Hub protocol rules (event-name sync across Python/JS/TS, line
 **Subscriber identity:** Clients generate `subscriber.name` locally as
 `<productName>-<6 random A–Z0-9>` when the session is created (see
 `generate_subscriber_name` in Python and `generateSubscriberName` in `@slicer-hub/client`).
-Mock OAuth (`/oauth/authorize`, `/oauth/token`) returns tokens and **topic** only;
+Mock OAuth (`GET /oauth/login`) returns tokens and **topic** only;
 the hub registers the subscriber name from the subscribe form body.
 
 **Standalone subscriber:** [`3dslicer-hub-ai-interface.py`](3dslicer-hub-ai-interface.py) connects to a remote hub over HTTP/WebSocket. Hub endpoints and OAuth credentials are hardcoded at the top of that file (copied from [`Viewers/platform/app/public/config/hub.js`](../../../../Viewers/platform/app/public/config/hub.js) `hub.hubs`). Edit `HUB_NAME` and `TOPIC` before running.

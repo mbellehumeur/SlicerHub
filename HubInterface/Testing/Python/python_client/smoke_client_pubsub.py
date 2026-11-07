@@ -46,11 +46,14 @@ async def _connect_client(label: str, events: list[str], *, use_connect: bool = 
             raise RuntimeError(f"{label}: connect HTTP {status}")
     else:
         auth = await client.authenticate()
-        code = str(auth.get("code") or "").strip()
-        if not code:
-            raise RuntimeError(f"{label}: authenticate returned no code")
-        if not await client.get_token(code):
-            raise RuntimeError(f"{label}: get_token failed")
+        if auth.get("tokens_ready") and client.has_token:
+            pass
+        else:
+            code = str(auth.get("code") or "").strip()
+            if not code:
+                raise RuntimeError(f"{label}: authenticate returned no code")
+            if not await client.get_token(code):
+                raise RuntimeError(f"{label}: get_token failed")
         status = await client.subscribe()
         if status != 202:
             raise RuntimeError(f"{label}: subscribe HTTP {status}")

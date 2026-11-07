@@ -280,8 +280,8 @@ def main():
         if HUB_OIDC_ISSUER:
             print(f"  OIDC issuer: {HUB_OIDC_ISSUER}")
     elif HUB_MOCK_OAUTH:
-        print(f"  POST   http://{args.host}:{args.port}/oauth/authorize")
-        print(f"  POST   http://{args.host}:{args.port}/oauth/token")
+        print(f"  GET    http://{args.host}:{args.port}/oauth/login (JSON tokens)")
+        print(f"  GET    http://{args.host}:{args.port}/api/hub/auth/config")
     else:
         print("  Mock OAuth disabled (HUB_MOCK_OAUTH=false)")
     if HUB_REQUIRE_AUTH:

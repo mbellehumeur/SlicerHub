@@ -4,8 +4,10 @@ The hub supports two auth modes via `HUB_AUTH_MODE`:
 
 | Mode | Login | API Bearer |
 |------|--------|------------|
-| `mock` (default) | `POST /oauth/authorize` → `POST /oauth/token` | Optional (`HUB_REQUIRE_AUTH`) |
+| `mock` (default) | `GET /oauth/login` → JSON hub session tokens (no redirect) | Optional (`HUB_REQUIRE_AUTH`) |
 | `oidc` | Browser: `GET /oauth/login` → IdP → `GET /oauth/callback` | **Required**; Bearer = hub-minted session JWT |
+
+`POST /oauth/token` is for OIDC `client_credentials` (service providers) only.
 
 
 ## Deployed hubs
@@ -86,8 +88,8 @@ Flow: SP → hub `POST /oauth/token` (`grant_type=client_credentials`) → hub e
 
 `GET /api/hub/auth/config` returns:
 
-- mock: `{ "mode": "mock", "authorize_url", "token_url", "require_auth" }`
-- oidc: `{ "mode": "oidc", "login_url", "issuer", "require_auth": true }`
+- mock: `{ "mode": "mock", "login_url", "token_url", "require_auth" }`
+- oidc: `{ "mode": "oidc", "login_url", "token_url", "issuer", "require_auth": true }`
 
 ## Token delivery on `return_to`
 
@@ -103,7 +105,7 @@ Example native login URL:
 ## JS HubClient (`@slicer-hub/client`)
 
 1. `authenticate()` fetches auth config.
-2. Mock: existing POST authorize + `getToken(code)`.
+2. Mock: `GET login_url` with optional `user_name` / `topic` / `id_token`; applies JSON tokens (`tokensReady`); `getToken` is a no-op.
 3. OIDC: redirects to `/oauth/login?return_to=<SPA URL>`; on return, parses hash tokens into `model.hub.token`, topic, and userName; `getToken` is a no-op when tokens are already present.
 
 Prefer full-page redirect with `return_to` (popup optional later for embedded viewers).
@@ -118,17 +120,17 @@ Create/join/leave/lead (`POST`/`PATCH`/`DELETE` `/api/hub/conference*`) require 
 
 ## Python `hub_client` / Image Display
 
-1. `GET /api/hub/auth/config` — if `mode=mock`, existing authorize/token.
+1. `GET /api/hub/auth/config` — if `mode=mock`, `GET /oauth/login` JSON tokens (`tokens_ready`).
 2. If `mode=oidc`: open the **system browser** to hub `/oauth/login?…&response_mode=query` with `return_to` a local `127.0.0.1` loopback; wait for query tokens; then subscribe with Bearer.
 3. Qt / Slicer does **not** embed Auth0 — only status (“Opening browser…”). A one-line HTML “Login complete” page is shown in the browser on the loopback URL.
 4. Service providers: under oidc use `HubClientOptions.use_client_credentials=True` (no browser); credentials from env / QSettings / mock presets.
 
 ## Verify checklist
 
-1. Mock: `smoke_hub_http` / JS mock login still works.
+1. Mock: `smoke_hub_http` (login JSON) / JS+Python client pubsub smokes.
 2. OIDC without required env: hub exits at startup.
 3. OIDC + Auth0: HubClient → callback → Bearer subscribe/publish OK; no Bearer → 401.
-4. Mock authorize under oidc → 503.
+4. Mock `GET /oauth/login` under oidc → IdP redirect (or 503 if not configured).
 5. Native: `/oauth/login?response_mode=query` → tokens on `return_to` query string.
 6. OIDC + M2M: SP `client_credentials` → subscribe `topic=*` with 202; human JWT still cannot use `*`.
 

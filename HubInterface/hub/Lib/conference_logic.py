@@ -61,21 +61,6 @@ def _host_user_name_for_topic(topic: str, explicit: str = "") -> str:
         candidate = str(auth_entry.get("user_name") or "").strip()
         if candidate:
             return candidate
-    # Prefer a still-valid auth code for this topic (may already be consumed).
-    try:
-        from routes.oauth import _purge_expired_auth_codes
-
-        _purge_expired_auth_codes()
-    except Exception:
-        pass
-    for info in hub.auth_codes.values():
-        if not isinstance(info, dict):
-            continue
-        if str(info.get("topic") or "").strip() != topic:
-            continue
-        candidate = str(info.get("user_name") or "").strip()
-        if candidate:
-            return candidate
     return ""
 
 

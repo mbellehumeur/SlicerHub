@@ -46,7 +46,6 @@ router = APIRouter()
 
 
 JWT_EXPIRY_SECONDS = int(os.environ.get("HUB_JWT_EXPIRY_SECONDS", "3600"))
-_AUTH_CODE_TTL_SECONDS = 60
 _OIDC_STATE_TTL_SECONDS = 600
 
 
@@ -79,7 +78,10 @@ def _issue_jwt_pair(
 
 
 def _resolve_authorize_identity(request_data: Dict[str, Any]) -> Dict[str, Any]:
-    """Resolve user_name / topic for /oauth/authorize (mock only)."""
+    """Resolve user_name / topic for mock GET /oauth/login.
+
+    Does not bump ``hub.user_count``; ``_mint_hub_session`` owns the counter.
+    """
     user_name: Optional[str] = None
     topic: Optional[str] = None
 
@@ -101,14 +103,11 @@ def _resolve_authorize_identity(request_data: Dict[str, Any]) -> Dict[str, Any]:
     if not user_name and isinstance(asserted_user, str) and asserted_user.strip():
         user_name = asserted_user.strip()
 
+    next_count = hub.user_count + 1
     if user_name is None:
-        hub.user_count += 1
-        count = hub.user_count
-        user_name = f"USER-{count}"
+        user_name = f"USER-{next_count}"
         topic = topic or user_name
     else:
-        hub.user_count += 1
-        count = hub.user_count
         topic = topic or user_name
 
     if hub.single_user_mode:
@@ -122,18 +121,8 @@ def _resolve_authorize_identity(request_data: Dict[str, Any]) -> Dict[str, Any]:
     return {
         "user_name": user_name,
         "topic": topic,
-        "count": count,
+        "count": next_count,
     }
-
-
-def _purge_expired_auth_codes() -> None:
-    now = time.time()
-    expired = [
-        code for code, info in hub.auth_codes.items()
-        if info.get("used") or info.get("expires_at", 0) <= now
-    ]
-    for code in expired:
-        hub.auth_codes.pop(code, None)
 
 
 def _purge_expired_oidc_states() -> None:
@@ -151,7 +140,7 @@ def _mock_oauth_disabled_detail() -> Dict[str, str]:
     return {
         "error": "mock_oauth_disabled",
         "error_description": (
-            "Hub mock OAuth is disabled (HUB_AUTH_MODE=oidc). "
+            "Hub mock OAuth is disabled (HUB_AUTH_MODE=oidc or HUB_MOCK_OAUTH=false). "
             "Use GET /oauth/login for browser OIDC login."
         ),
     }
@@ -411,17 +400,28 @@ async def get_auth_config(request: Request):
     payload: Dict[str, Any] = {
         "mode": HUB_AUTH_MODE,
         "require_auth": bool(HUB_REQUIRE_AUTH),
+        "login_url": f"{base}/oauth/login",
+        "token_url": f"{base}/oauth/token",
     }
     if HUB_AUTH_MODE == "oidc":
-        payload["login_url"] = f"{base}/oauth/login"
-        payload["token_url"] = f"{base}/oauth/token"
         payload["issuer"] = HUB_OIDC_ISSUER
         if HUB_OIDC_M2M_AUDIENCE:
             payload["m2m_audience"] = HUB_OIDC_M2M_AUDIENCE
-    else:
-        payload["authorize_url"] = f"{base}/oauth/authorize"
-        payload["token_url"] = f"{base}/oauth/token"
     return payload
+
+
+async def _mock_oauth_login(request: Request) -> Dict[str, Any]:
+    """Mint hub session tokens as JSON (no redirect / no auth code)."""
+    if not HUB_MOCK_OAUTH:
+        raise HTTPException(status_code=503, detail=_mock_oauth_disabled_detail())
+    request_data = dict(request.query_params)
+    identity = _resolve_authorize_identity(request_data)
+    session = _mint_hub_session(identity["user_name"], identity["topic"])
+    await hub.send_admin_refresh_command()
+    return {
+        **session,
+        "hub_auth": "mock",
+    }
 
 
 @router.get("/oauth/login")
@@ -430,11 +430,14 @@ async def oauth_login(
     return_to: str = "",
     response_mode: str = "",
 ):
-    """Start OIDC authorization-code + PKCE flow (browser redirect to IdP).
+    """Login entrypoint for both auth modes.
 
-    ``response_mode=query`` puts hub session tokens on ``return_to`` as a query
-    string (for native loopback clients). Default is fragment (SPAs).
+    Mock: return hub session tokens as JSON (no browser redirect).
+    OIDC: browser redirect to IdP; ``response_mode=query`` puts tokens on
+    ``return_to`` as a query string (native loopback). Default is fragment (SPAs).
     """
+    if HUB_AUTH_MODE == "mock":
+        return await _mock_oauth_login(request)
     if HUB_AUTH_MODE != "oidc":
         raise HTTPException(
             status_code=503,
@@ -606,41 +609,9 @@ async def oauth_callback(
     return RedirectResponse(url=f"{return_to}#{token_params}", status_code=302)
 
 
-@router.post("/oauth/authorize")
-async def post_oauth_authorize(request: Request):
-    """Mock OAuth 2.0 authorization endpoint (disabled when HUB_AUTH_MODE=oidc)."""
-    if not HUB_MOCK_OAUTH:
-        raise HTTPException(status_code=503, detail=_mock_oauth_disabled_detail())
-    try:
-        request_data = await _parse_request_body(request)
-    except Exception:
-        request_data = {}
-    request_data.update(dict(request.query_params))
-
-    identity = _resolve_authorize_identity(request_data)
-
-    _purge_expired_auth_codes()
-    code = secrets.token_urlsafe(32)
-    hub.auth_codes[code] = {
-        "user_name": identity["user_name"],
-        "topic": identity["topic"],
-        "count": identity["count"],
-        "expires_at": time.time() + _AUTH_CODE_TTL_SECONDS,
-        "used": False,
-    }
-
-    await hub.send_admin_refresh_command()
-
-    return {
-        "user_name": identity["user_name"],
-        "code": code,
-        "expires_in": _AUTH_CODE_TTL_SECONDS,
-    }
-
-
 @router.post("/oauth/token")
 async def post_oauth_token(request: Request):
-    """OAuth token: mock authorization_code, or oidc client_credentials (SP M2M)."""
+    """OAuth token: oidc client_credentials (SP M2M). Mock humans use GET /oauth/login."""
     try:
         request_data = await _parse_request_body(request)
     except Exception:
@@ -651,68 +622,13 @@ async def post_oauth_token(request: Request):
     if HUB_AUTH_MODE == "oidc" and grant_type == "client_credentials":
         return await _token_client_credentials(request_data)
 
-    if not HUB_MOCK_OAUTH:
-        raise HTTPException(status_code=503, detail=_mock_oauth_disabled_detail())
-
-    code = (request_data.get("code") or "").strip()
-
-    if grant_type and grant_type != "authorization_code":
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "unsupported_grant_type",
-                "error_description": (
-                    f"grant_type '{grant_type}' is not supported; "
-                    "use authorization_code (mock) or client_credentials (oidc)"
-                ),
-            },
-        )
-    if not code:
-        raise HTTPException(
-            status_code=400,
-            detail={
-                "error": "invalid_request",
-                "error_description": "Missing 'code' (obtain one via POST /oauth/authorize)",
-            },
-        )
-
-    info = hub.auth_codes.get(code)
-    if info is None or info.get("used") or info.get("expires_at", 0) <= time.time():
-        raise HTTPException(
-            status_code=401,
-            detail={
-                "error": "invalid_grant",
-                "error_description": "Authorization code is missing, used, or expired",
-            },
-        )
-    info["used"] = True
-
-    user_name = info["user_name"]
-    topic = info["topic"]
-    count = info["count"]
-    if hub.single_user_mode:
-        user_name = "SINGLE-USER"
-        topic = "SINGLE-USER"
-
-    access_token = _issue_jwt_pair(
-        token_type="access",
-        count=count,
-        topic=topic,
-        user_name=user_name,
+    raise HTTPException(
+        status_code=400,
+        detail={
+            "error": "unsupported_grant_type",
+            "error_description": (
+                f"grant_type '{grant_type or '(missing)'}' is not supported; "
+                "use client_credentials (oidc) or GET /oauth/login (mock)"
+            ),
+        },
     )
-    id_token = _issue_jwt_pair(
-        token_type="id",
-        count=count,
-        topic=topic,
-        user_name=user_name,
-    )
-    hub.upsert_authentication(user_name=user_name, topic=topic)
-    await hub.send_admin_refresh_command()
-    return {
-        "token_type": "Bearer",
-        "expires_in": JWT_EXPIRY_SECONDS,
-        "scope": "openid",
-        "topic": topic,
-        "id_token": id_token,
-        "access_token": access_token,
-    }

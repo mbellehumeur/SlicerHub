@@ -20,7 +20,7 @@ HUBS: Dict[str, Dict[str, Any]] = {
     # Mock auth cloud hub (Fly bellehumeur-hub / apex).
     "SLICER-HUB-CLOUD": {
         "hub_endpoint": "https://bellehumeur-engineering.com/api/hub",
-        "authorization_endpoint": "https://bellehumeur-engineering.com/oauth/authorize",
+        "authorization_endpoint": "https://bellehumeur-engineering.com/oauth/login",
         "token_endpoint": "https://bellehumeur-engineering.com/oauth/token",
         "client_id": "130c3d9c-4157-4dd1-aa1d-slicer",
         "client_secret": _MOCK_CLIENT_SECRET,
@@ -29,7 +29,7 @@ HUBS: Dict[str, Dict[str, Any]] = {
     # OIDC cloud hub (Fly bellehumeur-hub-oidc). SP M2M still via resolve_sp_oauth_credentials.
     "SLICER-HUB-CLOUD-OIDC": {
         "hub_endpoint": "https://oidc.bellehumeur-engineering.com/api/hub",
-        "authorization_endpoint": "https://oidc.bellehumeur-engineering.com/oauth/authorize",
+        "authorization_endpoint": "https://oidc.bellehumeur-engineering.com/oauth/login",
         "token_endpoint": "https://oidc.bellehumeur-engineering.com/oauth/token",
         "client_id": "130c3d9c-4157-4dd1-aa1d-slicer",
         "client_secret": _MOCK_CLIENT_SECRET,
@@ -37,7 +37,7 @@ HUBS: Dict[str, Dict[str, Any]] = {
     },
     "SLICER-HUB": {
         "hub_endpoint": "http://127.0.0.1:2018/api/hub",
-        "authorization_endpoint": "http://127.0.0.1:2018/oauth/authorize",
+        "authorization_endpoint": "http://127.0.0.1:2018/oauth/login",
         "token_endpoint": "http://127.0.0.1:2018/oauth/token",
         "client_id": "130c3d9c-4157-4dd1-aa1d-slicer",
         "client_secret": _MOCK_CLIENT_SECRET,

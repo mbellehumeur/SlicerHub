@@ -36,7 +36,9 @@ async def hub_request_logging_middleware(request: Request, call_next):
     if path.startswith("/api/hub") and method in ("GET", "POST", "DELETE"):
         if not hub_path_excluded_from_request_log(path):
             should_log = True
-    elif path in ("/oauth/token", "/oauth/authorize") and method == "POST":
+    elif path == "/oauth/token" and method == "POST":
+        should_log = True
+    elif path in ("/oauth/login", "/oauth/callback") and method == "GET":
         should_log = True
 
     if not should_log:
