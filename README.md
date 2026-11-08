@@ -23,6 +23,25 @@ This python extension supplies the **HUB**, service provider example scripts, an
 - **IDENTITY_PROVIDER** actor: authentication / identity provider with integration to the hub [OIDC endpoints](HubInterface/hub/docs/oidc.md) or built-in hub anonymous/mock authentication
 
 
+Javascript applications can easily connect to the hub and publih/receive events with the JS client:
+
+```javascript
+import HubClient from '@slicer-hub/client';
+
+const client = new HubClient(
+  {
+    hub_endpoint: 'http://127.0.0.1:2018/api/hub',
+    productName: 'WORKLIST',
+    events: ['imagingstudy-open', 'imagingstudy-close'],
+    autoReconnect: true 
+  }
+);
+
+client.onMessage((message) => console.log(message));
+
+// authenticate + token + subscribe (OIDC may redirect in the browser)
+await client.connect();
+```
 
 The extension also includes features for education that are independent of the IHE Integrated Reporting workflow:
 
@@ -270,8 +289,6 @@ Slicer Hub is distributed under the [MIT License](LICENSE.txt).
 **IDC Claude** — builds custom worklists from natural-language queries against the [Imaging Data Commons](https://portal.imaging.datacommons.cancer.gov/) (National Cancer Institute) using Anthropic Claude. Query guidance follows the [IDC skill](https://github.com/ImagingDataCommons/imaging-data-commons-skill).
 
 **idc-index** — official [Imaging Data Commons](https://github.com/ImagingDataCommons/idc-index) Python package for local DuckDB SQL against IDC metadata and DICOM series download URLs; used by the IDC Claude service provider. If you use it in research, cite Fedorov A, et al., *Radiographics* ([2023](https://doi.org/10.1148/rg.230180)).
-
-**VolView** — open-source web viewer from [Kitware, Inc.](https://github.com/Kitware/VolView).
 
 **OHIF** — open-source zero-footprint viewer from the [Open Health Imaging Foundation](https://ohif.org/).
 
