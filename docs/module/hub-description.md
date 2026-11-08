@@ -75,5 +75,7 @@ upload through the hub). While the server runs, it publishes **status-update**
 lines to the viewer’s job log so the user sees progress. When the job finishes,
 the server sends the result segmentation with another **dicom-send** and the
 viewer loads the overlay.
+In a normal clinical workflow, the input data is not sent over the hub (unless its an outside study);  
+it is fetched from PACS or is already there through PACS routing rule.   
 
 

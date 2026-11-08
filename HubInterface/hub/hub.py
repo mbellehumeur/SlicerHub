@@ -108,6 +108,7 @@ from env import (
     HUB_UVICORN_WS_PING_TIMEOUT,
     HUB_WS_KEEPALIVE,
     HUB_WS_KEEPALIVE_INTERVAL_SECONDS,
+    cors_allow_config,
 )
 from logging_setup import (
     _configure_hub_logging,
@@ -146,6 +147,11 @@ async def lifespan(app: FastAPI):
         raise
     _install_uvicorn_access_log_filter()
     hub_logger.info("Slicer hub auth mode: %s", HUB_AUTH_MODE)
+    hub_logger.info(
+        "Slicer hub CORS: origins=%s credentials=%s",
+        _cors_origins,
+        _cors_credentials,
+    )
     if HUB_WS_KEEPALIVE:
         hub_logger.info(
             "Slicer hub WebSocket keepalive: on (interval=%ss, JSON ping/pong)",
@@ -211,11 +217,13 @@ app = FastAPI(title="Slicer Hub", lifespan=lifespan)
 _proxy_trusted_hosts = os.environ.get("HUB_PROXY_TRUSTED_HOSTS", "*").strip() or "*"
 app.add_middleware(ProxyHeadersMiddleware, trusted_hosts=_proxy_trusted_hosts)
 
-# Enable CORS with explicit configuration for Azure
+# CORS: default * without credentials (Bearer clients use credentials:omit).
+# Pin with HUB_CORS_ORIGINS=https://a.example,https://b.example to enable credentials.
+_cors_origins, _cors_credentials = cors_allow_config()
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=_cors_origins,
+    allow_credentials=_cors_credentials,
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"],
@@ -290,8 +298,6 @@ def main():
         print("  Admin APIs: gated by HUB_ADMIN_TOKEN (X-Hub-Admin-Token / ?admin_token=)")
     elif HUB_REQUIRE_AUTH:
         print("  Admin APIs: gated by Bearer JWT (HUB_REQUIRE_AUTH)")
-    else:
-        print("  Admin APIs: open (set HUB_ADMIN_TOKEN or HUB_REQUIRE_AUTH to gate)")
     print("")
     print(f"WebSocket connections: ws://{args.host}:{args.port}/bind/<endpoint>")
     print("")

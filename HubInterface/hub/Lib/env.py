@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import os
-from typing import Optional
+from typing import List, Optional, Tuple
 
 # Default hub-request fan-out timeout (seconds). Collated HTTP reply returns
 # when all targets respond or this cap is reached (partial + timedOut ok).
@@ -15,6 +15,24 @@ def _env_flag(name: str, default: bool = False) -> bool:
     if raw is None:
         return default
     return raw.strip().lower() in ("1", "true", "yes", "on")
+
+
+def cors_allow_config() -> Tuple[List[str], bool]:
+    """Return ``(allow_origins, allow_credentials)`` for CORSMiddleware.
+
+    ``HUB_CORS_ORIGINS`` is a comma-separated origin list, or ``*`` (default).
+    Browsers forbid ``Access-Control-Allow-Origin: *`` together with
+    ``Allow-Credentials: true``, so credentials are enabled only when origins
+    are explicitly pinned. Hub JS clients use Bearer tokens with
+    ``credentials: "omit"``, so open ``*`` without credentials is correct.
+    """
+    raw = os.environ.get("HUB_CORS_ORIGINS", "*").strip()
+    if not raw or raw == "*":
+        return ["*"], False
+    origins = [part.strip().rstrip("/") for part in raw.split(",") if part.strip()]
+    if not origins or origins == ["*"]:
+        return ["*"], False
+    return origins, True
 
 
 HUB_WS_KEEPALIVE = _env_flag("HUB_WS_KEEPALIVE", default=False)

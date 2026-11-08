@@ -81,7 +81,7 @@ It can be used without the Slicer extension by running the `hub.py` script.
 
 ### Service Providers
 
-Service Providers are scripts that typically run on inference servers to connect them the hub with a websocket connection. The provider will receive instructions over the websocket to process a dataset with specific options, download the data, process and return result to the viewer.  This allows users to view results without having to send them to the PACS archive first.  The service can run on a local machine (only the hub needs to be on the internet with a domain name) therefore avoiding cloud GPU leasing expenses. 
+Service Providers are scripts that typically run on inference servers to connect them the hub with a websocket connection. The provider will receive instructions over the websocket to process a dataset with specific options, download the data (from PACS or from the viewer application over the hub) , process and return result to the viewer.  This allows users to view results without having to send them to the PACS archive first.  The service can run on a local machine (only the hub needs to be on the internet with a domain name) therefore avoiding cloud GPU leasing expenses. 
 
 The service provider tab provides a visual description of how processing resources can be connected to the hub and made available to hub workflows.
 
@@ -97,7 +97,7 @@ Service Providers subscribe to all user topics for status-request and dicom/nift
   </a>
 </p>
 
-Since these resources do not log in as a user, they need a *service provider entry* (Auth0 Machine-to-Machine application) in the customer's authorization server. That provides a client id and client secret used by the SP against hub `POST /oauth/token` (`client_credentials`). Configure the hub with `HUB_OIDC_M2M_AUDIENCE` (and optional `HUB_SP_CLIENT_IDS`); put the M2M credentials on the SP via Slicer settings or `HUB_SP_CLIENT_ID` / `HUB_SP_CLIENT_SECRET`. See [`HubInterface/hub/docs/oidc.md`](HubInterface/hub/docs/oidc.md).
+Since these resources do not log in as a user, they need a *service provider entry* (Machine-to-Machine application) in the customer's authorization server. That provides a client id and client secret used by the SP against hub `POST /oauth/token` (`client_credentials`). Configure the hub with `HUB_OIDC_M2M_AUDIENCE` (and optional `HUB_SP_CLIENT_IDS`); put the M2M credentials on the SP via Slicer settings or `HUB_SP_CLIENT_ID` / `HUB_SP_CLIENT_SECRET`. See [`HubInterface/hub/docs/oidc.md`](HubInterface/hub/docs/oidc.md).
 
 ### Image Display Client
 

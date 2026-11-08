@@ -3,7 +3,8 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, TYPE_CHECKING
+import time
+from typing import Any, Dict, Optional, TYPE_CHECKING
 
 from hub_client import IMAGINGSTUDY_CLOSE, IMAGINGSTUDY_OPEN
 from imaging_study_context import (
@@ -17,6 +18,8 @@ if TYPE_CHECKING:
     from image_display_client_hub import ImageDisplayClientConnection
 
 LOGGER = logging.getLogger("HubInterface.ImageDisplay")
+
+_LOAD_PROGRESS_MINIMUM_SECONDS = 1.0
 
 
 def _clear_hub_loaded_study(connection: "ImageDisplayClientConnection") -> None:
@@ -33,6 +36,60 @@ def _is_stale_open_load(
     connection: "ImageDisplayClientConnection", load_generation: int
 ) -> bool:
     return load_generation != connection.get_open_load_generation()
+
+
+def _show_load_progress(study_id: str) -> Any:
+    """Indeterminate busy dialog for imagingstudy-open (no cancel)."""
+    import slicer
+
+    label = f"Loading study {study_id}…" if study_id else "Loading study…"
+    progress = slicer.util.createProgressDialog(
+        parent=None,
+        windowTitle="Image Display",
+        labelText=label,
+        maximum=0,
+    )
+    try:
+        progress.setCancelButton(None)
+    except Exception:
+        try:
+            progress.setCancelButtonText("")
+            progress.setCancelEnabled(False)
+        except Exception:
+            pass
+    try:
+        progress.show()
+        slicer.app.processEvents()
+    except Exception:
+        pass
+    return progress
+
+
+def _hold_progress_minimum(
+    started_at: float,
+    minimum_seconds: float = _LOAD_PROGRESS_MINIMUM_SECONDS,
+) -> None:
+    """Keep the UI responsive until the minimum dialog duration elapses."""
+    import slicer
+
+    while time.monotonic() - started_at < minimum_seconds:
+        try:
+            slicer.app.processEvents()
+        except Exception:
+            break
+        remaining = minimum_seconds - (time.monotonic() - started_at)
+        if remaining <= 0:
+            break
+        time.sleep(min(0.05, remaining))
+
+
+def _close_load_progress(progress: Any) -> None:
+    if progress is None:
+        return
+    try:
+        progress.close()
+    except Exception:
+        pass
 
 
 def _schedule_clear(connection: "ImageDisplayClientConnection") -> None:
@@ -64,31 +121,49 @@ def _schedule_load(
             )
             return
 
-        LOGGER.info(
-            "Image Display clearing viewport before imagingstudy-open load "
-            "(generation %s)",
-            load_generation,
-        )
-        _clear_hub_loaded_study(connection)
+        study_id = extract_study_display_id(context)
+        progress: Optional[Any] = None
+        started_at: Optional[float] = None
+        try:
+            try:
+                progress = _show_load_progress(study_id)
+                started_at = time.monotonic()
+            except Exception as exc:
+                LOGGER.warning(
+                    "Image Display load progress dialog unavailable: %s", exc
+                )
+                progress = None
+                started_at = None
 
-        if _is_stale_open_load(connection, load_generation):
-            return
-
-        result = load_imaging_study_open(context)
-        if _is_stale_open_load(connection, load_generation):
-            clear_loaded_study(
-                result.get("loaded_node_ids") or [],
-                str(result.get("temp_dir") or "").strip(),
-            )
             LOGGER.info(
-                "Image Display discarded stale imagingstudy-open result "
+                "Image Display clearing viewport before imagingstudy-open load "
                 "(generation %s)",
                 load_generation,
             )
-            return
+            _clear_hub_loaded_study(connection)
 
-        connection.apply_load_result(result)
-        connection.notify_load_finished()
+            if _is_stale_open_load(connection, load_generation):
+                return
+
+            result = load_imaging_study_open(context)
+            if _is_stale_open_load(connection, load_generation):
+                clear_loaded_study(
+                    result.get("loaded_node_ids") or [],
+                    str(result.get("temp_dir") or "").strip(),
+                )
+                LOGGER.info(
+                    "Image Display discarded stale imagingstudy-open result "
+                    "(generation %s)",
+                    load_generation,
+                )
+                return
+
+            connection.apply_load_result(result)
+            connection.notify_load_finished()
+        finally:
+            if started_at is not None:
+                _hold_progress_minimum(started_at)
+            _close_load_progress(progress)
 
     connection.schedule_main_thread(run_load)
 
