@@ -48,5 +48,5 @@ primary_region = "iad"
     path = "/api/hub/auth/config"
 
 [[vm]]
-  size = "shared-cpu-1x"
+  size = "shared-cpu-4x"
   memory = "1024mb"

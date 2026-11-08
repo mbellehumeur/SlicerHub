@@ -19,6 +19,7 @@ deploy/
 HubInterface/hub/worklist-client/
 HubInterface/hub/reporting-client/
 HubInterface/hub/classroom-client/
+HubInterface/hub/metaquest/
 HubInterface/hub/slicerlive/
 HubInterface/hub/hub-mirror/
 HubInterface/hub/vtkjs-worklist-client/
