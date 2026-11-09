@@ -23,23 +23,21 @@ This python extension supplies the **HUB**, service provider example scripts, an
 - **IDENTITY_PROVIDER** actor: authentication / identity provider with integration to the hub [OIDC endpoints](HubInterface/hub/docs/oidc.md) or built-in hub anonymous/mock authentication
 
 
-Javascript applications can easily connect to the hub and publih/receive events with the JS client:
+Javascript applications can easily connect to the hub and publish/receive events with the JS client:
 
 ```javascript
 import HubClient from '@slicer-hub/client';
 
-const client = new HubClient(
-  {
+const client = new HubClient({
     hub_endpoint: 'http://127.0.0.1:2018/api/hub',
     productName: 'WORKLIST',
     events: ['imagingstudy-open', 'imagingstudy-close'],
     autoReconnect: true 
-  }
-);
+  });
 
 client.onMessage((message) => console.log(message));
 
-// authenticate + token + subscribe (OIDC may redirect in the browser)
+// authenticate + token + subscribe 
 await client.connect();
 ```
 
@@ -100,7 +98,7 @@ It can be used without the Slicer extension by running the `hub.py` script.
 
 ### Service Providers
 
-Service Providers are scripts that typically run on inference servers to connect them the hub with a websocket connection. The provider will receive instructions over the websocket to process a dataset with specific options, download the data (from PACS or from the viewer application over the hub) , process and return result to the viewer.  This allows users to view results without having to send them to the PACS archive first.  The service can run on a local machine (only the hub needs to be on the internet with a domain name) therefore avoiding cloud GPU leasing expenses. 
+Service Providers are scripts that connect inference docker containers to the hub with a websocket connection.  The provider will receive instructions over the websocket to process a dataset with specific options, download the data (from PACS or from the viewer application over the hub) , process and return result to the viewer.  This allows users to view results without having to send them to the PACS archive first.  The service can run on a local machine (only the hub needs to be on the internet with a domain name) therefore avoiding cloud GPU leasing expenses. 
 
 The service provider tab provides a visual description of how processing resources can be connected to the hub and made available to hub workflows.
 
